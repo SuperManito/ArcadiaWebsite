@@ -1,0 +1,37 @@
+﻿---
+title: 更改状态
+description: /env/changeStatusItem、/env/changeStatus
+---
+import APITable from '@/components/APITable';
+import { PUT } from '@/components/RequestTag';
+
+## 变量项
+
+<PUT>/env/changeStatusItem</PUT>
+
+### 请求
+
+<APITable>
+
+| 名称 | 类型 | 必填 | 描述 |
+| :-: | :-: | :-: | --- |
+| `id` | `number \| number[]` | 是 | 唯一标识 |
+| `enable` | `number<0 \| 1>` | 是 | 状态 `1 启用 \| 0 禁用` |
+
+</APITable>
+
+
+## 变量组
+
+<PUT>/env/changeStatus</PUT>
+
+### 请求
+
+<APITable>
+
+| 名称 | 类型 | 必填 | 描述 |
+| :-: | :-: | :-: | --- |
+| `id` | `number \| number[]` | 是 | 唯一标识 |
+| `enable` | `number<0 \| 1>` | 是 | 状态 `1 启用 \| 0 禁用` |
+
+</APITable>

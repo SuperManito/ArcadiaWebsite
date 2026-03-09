@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^\\$files = @\\(\"d:\\\\Repository\\\\Arcadia Website Next\\\\content\\\\docs\\\\start\\\\install-container-service\\.mdx\", \"d:\\\\Repository\\\\Arcadia Website Next\\\\content\\\\docs\\\\start\\\\install\\.mdx\", \"d:\\\\Repository\\\\Arcadia Website Next\\\\content\\\\docs\\\\dev\\\\api\\\\open\\\\cron\\.mdx\"\\); foreach \\(\\$f in \\$files\\) \\{ \\$results = Select-String -Path \\$f -Pattern \"TabItem\\|@theme\\|@site\\|@docusaurus\\|:::\" ; if \\(\\$results\\) \\{ Write-Host \"=== \\$f ===\"; \\$results \\| ForEach-Object \\{ Write-Host \"\\$\\(\\$_\\.LineNumber\\): \\$\\(\\$_\\.Line\\)\" \\} \\} else \\{ Write-Host \"=== \\$f === CLEAN\" \\} \\}$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

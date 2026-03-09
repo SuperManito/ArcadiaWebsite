@@ -1,0 +1,108 @@
+﻿---
+title: 分页查询
+---
+import APITable from '@/components/APITable';
+import { GET } from '@/components/RequestTag';
+
+<GET>/cron</GET>
+
+## 请求
+
+<APITable>
+
+| 名称 | 类型 | 必填 | 描述 |
+| :-: | :-: | :-: | --- |
+| `page` | `string` | 否 | 指定页数，默认1 |
+| `size` | `string` | 否 | 指定分页大小数量，默认`20` |
+| `type` | `string` | 否 | 任务类型过滤，当前固定分为 `user` 和 `system` |
+| `search` | `string` | 否 | 搜索内容过滤，仅涉及任务名称和任务执行命令 |
+| `active` | `string<'0' \| '1'>` | 否 | 启用/禁用状态过滤 `1 启用 \| 0 禁用`，默认不过滤 |
+| `tags` | `string` | 否 | 任务标签过滤（仅限系统任务，取自 `bind` 值的中间字段，可通过 [bindGroup](./bind-group) 获取，支持多个用英文逗号分隔） |
+| `orderBy` | `string<'sort' \| 'last_runtime' \| 'last_run_use'>` | 否 | 指定排序字段，默认 `sort` |
+| `order` | `string<'0' \| '1'>` | 否 | 指定排序方式 `0 升序 \| 1 降序`，默认降序 |
+
+</APITable>
+
+## 响应
+
+<APITable>
+
+| 名称 | 类型 | 描述 |
+| :-: | :-: | --- |
+| `data` | `object[]` | 数据项 |
+| `page` | `number` | 当前页码 |
+| `size` | `number` | 每页数据量 |
+| `total` | `number` | 数据总量 |
+
+</APITable>
+
+数据项（主要为数据库 `tasks` 表字段）
+
+<APITable>
+
+| 名称 | 类型 | 描述 |
+| :-: | :-: | --- |
+| `id` | `number` | 唯一标识 |
+| `name` | `string` | 任务名称 |
+| `type` | `string` | 任务类型，当前固定分为 user 和 system |
+| `cron` | `string` | 定时规则（5位或6位的定时表达式） |
+| `shell` | `string` | 执行的命令 |
+| `active` | `number<0 \| 1>` | 状态 `1 启用 \| 0 禁用` |
+| `config` | `string<object>` | 高级配置 |
+| `tags` | `string` | 任务标签 |
+| `last_runtime` | `string` | 最后一次运行的时间 |
+| `last_run_use` | `number` | 最后一次运行的时长（单位秒，精确到小数点后3位） |
+| `sort` | `number` | 在分页中的位置序号（正整数），默认按照先后顺序递增 |
+| `create_time` | `string` | 任务创建时间 |
+| `remark` | `string` | 备注 |
+| `bind` | `string` | 后端用于关联底层内容的参数（仅系统任务使用） |
+| `is_running` | `boolean` | 当前运行状态（任务是否正在运行） |
+
+</APITable>
+
+```json title="示例"
+{
+  "data": [
+    {
+      "id": 2,
+      "name": "系统测试任务",
+      "type": "system",
+      "cron": "30 */2 * * *",
+      "shell": "arcadia run example.js",
+      "active": 1,
+      "config": "",
+      "tags": "",
+      "last_runtime": null,
+      "last_run_use": null,
+      "sort": 1,
+      "create_time": "2024-01-01 00:00:00",
+      "remark": "",
+      "bind": "",
+      "is_running": false
+    },
+    {
+      "id": 1,
+      "name": "个人测试任务",
+      "type": "user",
+      "cron": "0 0 * * *",
+      "shell": "arcadia rmlog",
+      "active": 0,
+      "config": "",
+      "tags": "",
+      "last_runtime": "2024-01-01 00:00:00",
+      "last_run_use": 1,
+      "sort": 1,
+      "create_time": "2024-01-01 00:00:00",
+      "remark": "",
+      "bind": "",
+      "is_running": true
+    },
+    ...
+  ],
+  "total": 5,
+  "page": 1,
+  "size": 20
+}
+```
+
+> 默认倒序返回

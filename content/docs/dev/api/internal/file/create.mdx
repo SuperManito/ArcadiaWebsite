@@ -1,0 +1,19 @@
+﻿---
+title: 创建
+---
+import APITable from '@/components/APITable';
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/create</POST>
+
+## 请求
+
+<APITable>
+
+| 名称 | 类型 | 必填 | 描述 |
+| :-: | :-: | :-: | --- |
+| `path` | `string` | 是 | 存放路径 |
+| `name` | `string` | 是 | 名称 |
+| `type` | `string<'folder' \| 'file'>` | 是 | 文件类型  |
+
+</APITable>

@@ -1,0 +1,51 @@
+﻿---
+title: 查询属性
+---
+import APITable from '@/components/APITable';
+import { GET } from '@/components/RequestTag';
+
+<GET>/file/info</GET>
+
+## 请求
+
+<APITable>
+
+| 名称 | 类型 | 必填 | 描述 |
+| :-: | :-: | :-: | --- |
+| `path` | `string` | 是 | 绝对路径 |
+
+</APITable>
+
+## 响应
+
+<APITable>
+
+| 名称 | 类型 | 描述 |
+| :-: | :-: | --- |
+| `type` | `string<'folder' \| 'file'>` | 文件类型 |
+| `name` | `string` | 名称 |
+| `parent_path` | `string` | 存储位置路径 |
+| `mode` | `string` | 权限（3位数字） |
+| `size` | `number` | 大小（单位字节） |
+| `display_size` | `string` | 格式化大小（带单位） |
+| `modified_time` | `string` | 内容最后一次被修改的时间 |
+| `accessed_time` | `string` | 最后一次被访问的时间 |
+| `created_time` | `string` | 创建时间 |
+| `changed_time` | `string` | 属性（如权限或链接）最后一次被更改的时间 |
+
+</APITable>
+
+```json title="示例"
+{
+  "type": "file",
+  "name": "example",
+  "parent_path": "/arcadia/log",
+  "mode": "644",
+  "size": 2048,
+  "display_size": "2.00 KB",
+  "modified_time": "2024-01-01 00:00:00",
+  "accessed_time": "2024-01-01 00:00:00",
+  "created_time": "2024-01-01 00:00:00",
+  "changed_time": "2024-01-01 00:00:00"
+}
+```
