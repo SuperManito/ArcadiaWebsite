@@ -40,7 +40,7 @@ import APITable from '@/components/APITable';
 
 必须提供配置名称、链接地址、分支名称，命令选项后需跟选项值
 
-## 命令选项 
+## 命令选项
 
 <APITable>
 

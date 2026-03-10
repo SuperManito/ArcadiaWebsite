@@ -1,18 +1,18 @@
 'use client'
 
-import React, { useMemo, useRef, useState, useEffect } from 'react'
 import type { InputRef } from 'antd'
-import { Button, Col, Checkbox, Divider, Flex, Input, InputNumber, Popover, Row, Segmented, Space, Select, Switch, ConfigProvider, theme } from 'antd'
-import { DockerIcon, PodmanIcon, Icon } from '../Icon'
+import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Input, InputNumber, Popover, Row, Segmented, Select, Space, Switch, theme } from 'antd'
 import { useTheme } from 'next-themes'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { DockerIcon, Icon, PodmanIcon } from '../Icon'
 
-function useInstallSharedState () {
+function useInstallSharedState() {
   const [windowWidth, setWindowWidth] = useState<number | null>(null)
   useEffect(() => {
     setWindowWidth(window.innerWidth)
-    const handler = () => { setWindowWidth(window.innerWidth) }
+    const handler = () => setWindowWidth(window.innerWidth)
     window.addEventListener('resize', handler)
-    return () => { window.removeEventListener('resize', handler) }
+    return () => window.removeEventListener('resize', handler)
   }, [])
   const isMobile = windowWidth !== null && windowWidth < 997
 
@@ -33,7 +33,7 @@ function useInstallSharedState () {
   const addMirrorItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     e.preventDefault()
     const target = mirrorInput
-    if (target && !mirrorItems.find(item => item.value === target)) {
+    if (target && !mirrorItems.some(item => item.value === target)) {
       setMirrorItems([...mirrorItems, { label: target, value: target }])
     }
     setMirror(target)
@@ -75,8 +75,8 @@ function useInstallSharedState () {
 
   const mountPrefix = useCurrentDir ? '.' : '/opt/arcadia'
 
-  const getComposeMountLines = () => (selectedMounts.length > 0 ? '\n    volumes:\n' + selectedMounts.map(mount => `      - ${mountPrefix}/${mount}:/arcadia/${mount}`).join('\n') : '')
-  const getRunMountLines = () => (selectedMounts.length > 0 ? '\n' + selectedMounts.map(mount => `-v ${useCurrentDir ? '$(pwd)' : '/opt/arcadia'}/${mount}:/arcadia/${mount} \\`).join('\n') : '')
+  const getComposeMountLines = () => (selectedMounts.length > 0 ? `\n    volumes:\n${selectedMounts.map(mount => `      - ${mountPrefix}/${mount}:/arcadia/${mount}`).join('\n')}` : '')
+  const getRunMountLines = () => (selectedMounts.length > 0 ? `\n${selectedMounts.map(mount => `-v ${useCurrentDir ? '$(pwd)' : '/opt/arcadia'}/${mount}:/arcadia/${mount} \\`).join('\n')}` : '')
 
   return {
     isMobile,
@@ -112,7 +112,7 @@ function useInstallSharedState () {
   }
 }
 
-function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
+function PopoverContent({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
   const {
     containerName,
     setContainerName,
@@ -149,11 +149,11 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
             <span style={{ fontWeight: 600 }}>基础配置</span>
             <Flex align="center" gap="middle">
               <span>容器名称</span>
-              <Input size="small" style={{ width: '140px' }} placeholder="请输入" value={containerName} onChange={e => { setContainerName(e.target.value ?? 'arcadia') }} />
+              <Input size="small" style={{ width: '140px' }} placeholder="请输入" value={containerName} onChange={(e) => { setContainerName(e.target.value ?? 'arcadia') }} />
             </Flex>
             <Flex align="center" gap="middle">
               <span>主机名称</span>
-              <Input size="small" style={{ width: '140px' }} placeholder="请输入" value={hostname} onChange={e => { setHostname(e.target.value ?? 'arcadia') }} />
+              <Input size="small" style={{ width: '140px' }} placeholder="请输入" value={hostname} onChange={(e) => { setHostname(e.target.value ?? 'arcadia') }} />
             </Flex>
             <Flex align="center" gap="middle">
               <span>网络模式</span>
@@ -161,7 +161,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                 size="small"
                 style={{ width: '140px' }}
                 placeholder="请选择"
-                popupRender={(menu) => (
+                popupRender={menu => (
                   <>
                     {menu}
                     <Divider style={{ margin: '4px 0' }} />
@@ -171,7 +171,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                         placeholder="请输入"
                         ref={networkInputRef}
                         value={selectInput}
-                        onChange={e => { setSelectInput(e.target.value) }}
+                        onChange={(e) => { setSelectInput(e.target.value) }}
                         onKeyDown={(e) => { e.stopPropagation() }}
                       />
                       <Button size="small" type="text" style={{ padding: '0 4px' }} onClick={addNetworkItem}>
@@ -180,7 +180,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                     </Flex>
                   </>
                 )}
-                options={networkItems.map((item) => ({ label: item, value: item }))}
+                options={networkItems.map(item => ({ label: item, value: item }))}
                 defaultValue={network}
                 onChange={(value: string) => { setNetwork(value ?? 'bridge') }}
               />
@@ -196,7 +196,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                 style={{ width: '140px' }}
                 popupMatchSelectWidth={false}
                 placeholder="请选择"
-                popupRender={(menu) => (
+                popupRender={menu => (
                   <>
                     {menu}
                     <Divider style={{ margin: '4px 0' }} />
@@ -206,7 +206,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                         placeholder="请输入镜像地址"
                         ref={mirrorInputRef}
                         value={mirrorInput}
-                        onChange={e => { setMirrorInput(e.target.value) }}
+                        onChange={(e) => { setMirrorInput(e.target.value) }}
                         onKeyDown={(e) => { e.stopPropagation() }}
                       />
                       <Button size="small" type="text" style={{ padding: '0 4px' }} onClick={addMirrorItem}>
@@ -215,7 +215,7 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
                     </Flex>
                   </>
                 )}
-                options={mirrorItems.map((item) => ({ label: item.label, value: item.value }))}
+                options={mirrorItems.map(item => ({ label: item.label, value: item.value }))}
                 value={mirror}
                 onChange={(value: string) => { setMirror(value ?? '') }}
               />
@@ -239,31 +239,39 @@ function PopoverContent ({ s }: { s: ReturnType<typeof useInstallSharedState> })
   )
 }
 
-export function CliInstall () {
+export function CliInstall() {
   const s = useInstallSharedState()
   const { isMobile, algorithm, containerName, hostname, network, port, mirror, getRunMountLines } = s
   const [type, setType] = useState('docker') // 类型
 
-  function Docker () {
+  function Docker() {
     return (
-      <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">{`docker run -dit \\
+      <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre">
+        <code className="language-bash">
+          {`docker run -dit \\
 --name ${containerName} \\
 --hostname ${hostname} \\
 --network ${network} \\
 --restart always \\
 -p ${port}:5678 \\${getRunMountLines()}
-${mirror}supermanito/arcadia:beta`}</code></pre>
+${mirror}supermanito/arcadia:beta`}
+        </code>
+      </pre>
     )
   }
 
-  function Podman () {
+  function Podman() {
     return (
-      <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">{`podman run -dit \\
+      <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre">
+        <code className="language-bash">
+          {`podman run -dit \\
 --name ${containerName} \\
 --hostname ${hostname} \\
 --network ${network} \\
 -p ${port}:5678 \\${getRunMountLines()}
-${mirror || 'docker.io/'}supermanito/arcadia:beta`}</code></pre>
+${mirror || 'docker.io/'}supermanito/arcadia:beta`}
+        </code>
+      </pre>
     )
   }
 
@@ -297,26 +305,26 @@ ${mirror || 'docker.io/'}supermanito/arcadia:beta`}</code></pre>
   )
 }
 
-export function ComposeInstall () {
+export function ComposeInstall() {
   const s = useInstallSharedState()
   const { isMobile, algorithm, getComposeMountLines, mirror, containerName, hostname, network, port, useCurrentDir } = s
   const [type, setType] = useState('docker-compose-v2') // 类型
 
-  function DockerCompose ({ isV2 = true }: { isV2?: boolean }) {
+  function DockerCompose({ isV2 = true }: { isV2?: boolean }) {
     const fileName = 'docker-compose.yaml'
     return (
       <>
         <h3>新建 YAML 文件</h3>
         <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">{`${useCurrentDir ? `vim ${fileName}` : `mkdir -p /opt/arcadia && cd /opt/arcadia\nvim ${fileName}`}`}</code></pre>
         <h3>编辑内容</h3>
-        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-yaml">{`${!isV2 ? "version: '2.0'\n" : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`}</code></pre>
+        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-yaml">{`${!isV2 ? 'version: \'2.0\'\n' : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`}</code></pre>
         <h3>启动容器</h3>
-        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">{`docker-compose up -d`}</code></pre>
+        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">docker-compose up -d</code></pre>
       </>
     )
   }
 
-  function PodmanCompose () {
+  function PodmanCompose() {
     const fileName = 'podman-compose.yaml'
     return (
       <>
@@ -325,7 +333,7 @@ export function ComposeInstall () {
         <h3>编辑内容</h3>
         <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-yaml">{`version: '3.8'\nservices:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`}</code></pre>
         <h3>启动容器</h3>
-        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">{`podman-compose up -d`}</code></pre>
+        <pre className="not-prose overflow-x-auto rounded-lg bg-fd-secondary p-4 text-sm font-mono whitespace-pre"><code className="language-bash">podman-compose up -d</code></pre>
       </>
     )
   }

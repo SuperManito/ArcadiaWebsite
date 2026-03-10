@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react'
-import { Renderer, Program, Mesh, Triangle, Vec2 } from 'ogl'
+import { Mesh, Program, Renderer, Triangle, Vec2 } from 'ogl'
+import React, { useEffect, useRef } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 
 const vertex = `
@@ -17,7 +17,7 @@ interface Props {
   resolutionScale?: number
 }
 
-export default function DarkVeil ({
+export default function DarkVeil({
   hueShift = 0,
   noiseIntensity = 0,
   scanlineIntensity = 0,
@@ -30,9 +30,8 @@ export default function DarkVeil ({
   const { isDark } = useTheme()
   const fragmentBrightness = isDark ? '2.6' : '0.5'
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const canvas = ref.current!
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const parent = canvas.parentElement!
     const renderer = new Renderer({
       dpr: Math.min(window.devicePixelRatio, 2),
@@ -145,8 +144,8 @@ void main(){
     let frame = 0
 
     const loop = () => {
-      program.uniforms.uTime.value =
-        ((performance.now() - start) / 1000) * speed
+      program.uniforms.uTime.value
+        = ((performance.now() - start) / 1000) * speed
       program.uniforms.uHueShift.value = hueShift
       program.uniforms.uNoise.value = noiseIntensity
       program.uniforms.uScan.value = scanlineIntensity

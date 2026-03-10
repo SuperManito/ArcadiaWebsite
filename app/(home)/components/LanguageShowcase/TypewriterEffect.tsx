@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
+import React, { useEffect, useState } from 'react'
 import cn from '../../lib/utils'
 
 export interface TypewriterWord {
@@ -13,7 +13,7 @@ interface TypewriterEffectProps {
   cursorClassName?: string
 }
 
-export default function TypewriterEffect ({
+export default function TypewriterEffect({
   words,
   className,
   cursorClassName,
@@ -21,9 +21,9 @@ export default function TypewriterEffect ({
   const [fileType, setFileType] = useState((words as any)[words.length - 1].text)
 
   const staticWords = words.slice(0, -1)
-  const dynamicWord = words[words.length - 1]
+  const dynamicWord = words.at(-1)
 
-  const staticWordsArray = staticWords.map((word) => ({
+  const staticWordsArray = staticWords.map(word => ({
     ...word,
     text: word.text.split(''),
   }))
@@ -48,7 +48,7 @@ export default function TypewriterEffect ({
 
   const renderDynamicWord = () => (
     <motion.div
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
       className={cn('inline-block', (dynamicWord as any).className)}
       key={fileType}
       initial={{ opacity: 0, filter: 'blur(10px)', y: 10 }}

@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import { Icon } from '@iconify/react'
 import { Button, ConfigProvider, Image, Modal, Space, theme } from 'antd'
 import { useTheme } from 'next-themes'
-import { Icon } from '@iconify/react'
+import React, { useMemo, useState } from 'react'
 
-export default function DonateModal () {
+export default function DonateModal() {
   const { resolvedTheme } = useTheme()
   const algorithm = useMemo(() => {
     return resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
@@ -28,7 +28,8 @@ export default function DonateModal () {
   return (
     <ConfigProvider theme={{ algorithm }}>
       <Button type="primary" style={{ backgroundColor: '#ce26ef29', color: '#ce26ef', fontWeight: '550' }} onClick={showModal}>
-        <Icon icon="line-md:heart" style={{ fontSize: '20px' }}></Icon>&nbsp;点击捐赠
+        <Icon icon="line-md:heart" style={{ fontSize: '20px' }}></Icon>
+&nbsp;点击捐赠
       </Button>
       <Modal centered width={340} styles={{ body: { justifyContent: 'center', display: 'flex', height: '340px' } }} closable={false} open={isModalOpen} cancelText="" onOk={handleOk} onCancel={handleCancel} footer={[]}>
         <Space direction="vertical">

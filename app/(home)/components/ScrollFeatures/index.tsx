@@ -1,8 +1,9 @@
-import React from 'react'
+import type { ScrollFeatureItem } from './data'
 import { motion } from 'motion/react'
-import { scrollFeatures, type ScrollFeatureItem } from './data'
+import React from 'react'
+import { scrollFeatures } from './data'
 
-function ScrollFeature ({ feature, index }: { feature: ScrollFeatureItem, index: number }) {
+function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: number }) {
   const isReversed = index % 2 !== 0
   const imgLight = feature.imgUrlLight
   const imgDark = feature.imgUrlDark
@@ -44,7 +45,7 @@ function ScrollFeature ({ feature, index }: { feature: ScrollFeatureItem, index:
   )
 }
 
-export default function ScrollFeaturesSection () {
+export default function ScrollFeaturesSection() {
   return (
     <div className="py-16 sm:py-24 bg-white dark:bg-neutral-950 overflow-hidden border-neutral-100 dark:border-neutral-900">
       <div className="container mx-auto px-4 max-w-7xl">

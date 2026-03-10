@@ -6,7 +6,7 @@ type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   to?: string
 }
 
-export default function Link ({ href, to, ...props }: LinkProps) {
+export default function Link({ href, to, ...props }: LinkProps) {
   const url = href || to || '/'
   return <NextLink href={url} {...props as Record<string, unknown>} />
 }

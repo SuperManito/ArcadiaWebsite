@@ -1,13 +1,15 @@
-import React from 'react'
+import type { FeatureItem } from './data'
 import { motion } from 'motion/react'
+import React from 'react'
 import { Icon } from '../Icon'
-import { features, type FeatureItem } from './data'
+import { features } from './data'
 
-export default function FeatureGrid () {
+export default function FeatureGrid() {
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return
+    if (!containerRef.current)
+      return
     const cards = containerRef.current.querySelectorAll('.feature-card')
     cards.forEach((card) => {
       const rect = card.getBoundingClientRect()
@@ -16,7 +18,7 @@ export default function FeatureGrid () {
 
       const centerX = rect.width / 2
       const centerY = rect.height / 2
-      const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2))
+      const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2)
       const borderOpacity = Math.max(0, 1 - distance / 400)
 
       ;(card as HTMLDivElement).style.setProperty('--x', `${x}px`)
@@ -26,7 +28,8 @@ export default function FeatureGrid () {
   }
 
   const handleMouseLeave = () => {
-    if (!containerRef.current) return
+    if (!containerRef.current)
+      return
     const cards = containerRef.current.querySelectorAll('.feature-card')
     cards.forEach((card) => {
       ;(card as HTMLDivElement).style.setProperty('--border-opacity', '0')
@@ -53,7 +56,7 @@ export default function FeatureGrid () {
   )
 }
 
-function FeatureCard ({
+function FeatureCard({
   feature,
   index,
 }: {

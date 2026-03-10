@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Icon } from '../Icon'
 
-export default function Pronounce () {
+export default function Pronounce() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const play = () => {
     (audioRef.current as any).play()

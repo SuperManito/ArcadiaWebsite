@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from '../Link'
 
-export default function Footer () {
+export default function Footer() {
   const logoDark = '/images/logo/arcadia-dark-sub.png'
   const logoLight = '/images/logo/arcadia-light-sub.png'
 
@@ -60,7 +60,11 @@ export default function Footer () {
             <img className="h-8 md:h-10 hidden dark:block select-none" alt="Arcadia Logo" draggable={false} src={logoDark} />
           </div>
           <div className="text-sm text-neutral-500 dark:text-neutral-500">
-            Copyright © {new Date().getFullYear()} SuperManito
+            Copyright ©
+            {' '}
+            {new Date().getFullYear()}
+            {' '}
+            SuperManito
           </div>
         </div>
       </div>

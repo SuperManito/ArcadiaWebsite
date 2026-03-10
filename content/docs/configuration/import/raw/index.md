@@ -34,12 +34,12 @@ import APITable from '@site/src/components/APITable';
 
 ```yaml
 raw:
-  - name: "Repo1"
-    url: "https://gihub.com/User1/Repo1/raw/master/example.js"
+  - name: Repo1
+    url: 'https://gihub.com/User1/Repo1/raw/master/example.js'
     cronSettings:
       updateTaskList: true
-  - name: "Repo2"
-    url: "https://gihub.com/User2/Repo2/raw/master/template.py"
+  - name: Repo2
+    url: 'https://gihub.com/User2/Repo2/raw/master/template.py'
 ```
 
 配置好后你需要执行 `arcadia update raw` 命令来使该配置生效
@@ -56,7 +56,7 @@ raw:
 
 ```yaml
 gobal:
-  rawDependencyFilter: "" # string
+  rawDependencyFilter: '' # string
 ```
 基于 [**grep**](https://www.runoob.com/linux/linux-comm-grep.html) 指令进行过滤（默认使用 `-E` 命令选项用于匹配多个表达式），支持正则表达式。如果要匹配多个表达式，那么根据该指令规范你需要使用 `|` 字符来进行分割，与代码仓库的定时任务黑白名单配置用法相同
 

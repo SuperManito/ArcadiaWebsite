@@ -24,14 +24,14 @@ info:
 
   version: 1.0.0
 servers:
-  - url: "{url}{path}"
+  - url: '{url}{path}'
     description: 基准地址
     variables:
       url:
-        default: "http://localhost:5678"
+        default: 'http://localhost:5678'
         description: 地址
       path:
-        default: "/api/open"
+        default: /api/open
         description: 路径
 security:
   - OpenApiToken: []
@@ -112,7 +112,7 @@ components:
           oneOf:
             - type: array
               items:
-                $ref: "#/components/schemas/EnvData"
+                $ref: '#/components/schemas/EnvData'
             - type: number
               description: 成员数量
     CronData:
@@ -128,8 +128,8 @@ components:
           type: string
           description: 任务类型，当前固定分为 user 和 system
           enum:
-            - "user"
-            - "system"
+            - user
+            - system
         cron:
           type: string
           description: 定时规则（5位或6位的定时表达式）
@@ -175,7 +175,7 @@ paths:
     get:
       summary: 获取文件列表
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters:
@@ -186,7 +186,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -238,7 +238,7 @@ paths:
     get:
       summary: 获取文件内容
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters:
@@ -249,7 +249,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             text/plain:
@@ -258,7 +258,7 @@ paths:
     post:
       summary: 保存文件内容
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters: []
@@ -278,7 +278,7 @@ paths:
                 - path
                 - content
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -288,7 +288,7 @@ paths:
     post:
       summary: 删除
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters: []
@@ -309,7 +309,7 @@ paths:
               required:
                 - path
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -319,7 +319,7 @@ paths:
     get:
       summary: 查询属性
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters:
@@ -330,7 +330,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -374,7 +374,7 @@ paths:
     post:
       summary: 创建
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters: []
@@ -401,7 +401,7 @@ paths:
                 - name
                 - type
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -411,7 +411,7 @@ paths:
     post:
       summary: 移动
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters: []
@@ -431,7 +431,7 @@ paths:
                 - path
                 - newPath
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -441,7 +441,7 @@ paths:
     post:
       summary: 重命名
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters: []
@@ -461,7 +461,7 @@ paths:
                 - path
                 - name
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -471,7 +471,7 @@ paths:
     get:
       summary: 下载
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters:
@@ -482,7 +482,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -492,7 +492,7 @@ paths:
     post:
       summary: 上传
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - File 文件系统
       parameters:
@@ -503,7 +503,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -514,7 +514,7 @@ paths:
     get:
       summary: 分页查询
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters:
@@ -525,9 +525,9 @@ paths:
           schema:
             type: string
             enum:
-              - "ordinary"
-              - "composite"
-              - "composite_value"
+              - ordinary
+              - composite
+              - composite_value
         - name: compositeId
           in: query
           description: 查看复合变量的值时需要指定此参数为复合变量(组)的唯一标识
@@ -541,8 +541,8 @@ paths:
           schema:
             type: string
             enum:
-              - "0"
-              - "1"
+              - '0'
+              - '1'
         - name: search
           in: query
           description: 搜索内容过滤，涉及变量名称、用户标签
@@ -556,8 +556,8 @@ paths:
           schema:
             type: string
             enum:
-              - "sort"
-              - "update_time"
+              - sort
+              - update_time
         - name: order
           in: query
           description: 指定排序方式 0 升序 | 1 降序，默认降序
@@ -565,8 +565,8 @@ paths:
           schema:
             type: string
             enum:
-              - "0"
-              - "1"
+              - '0'
+              - '1'
         - name: page
           in: query
           description: 指定页数，默认1
@@ -580,7 +580,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -591,10 +591,10 @@ paths:
                     oneOf:
                       - type: array
                         items:
-                          $ref: "#/components/schemas/EnvData"
+                          $ref: '#/components/schemas/EnvData'
                       - type: array
                         items:
-                          $ref: "#/components/schemas/EnvGroupData"
+                          $ref: '#/components/schemas/EnvGroupData'
                   page:
                     type: number
                     description: 当前页码
@@ -608,7 +608,7 @@ paths:
     get:
       summary: 全局查询
       deprecated: false
-      description: "至少需要提供 `name`、`description` 的其中一个参数"
+      description: 至少需要提供 `name`、`description` 的其中一个参数
       tags:
         - Env 环境变量
       parameters:
@@ -625,7 +625,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -637,20 +637,20 @@ paths:
                     category:
                       type: string
                       enum:
-                        - "ordinary"
-                        - "composite"
-                        - "composite_value"
+                        - ordinary
+                        - composite
+                        - composite_value
                     data:
                       type: array
                       items:
                         oneOf:
-                          - $ref: "#/components/schemas/EnvData"
-                          - $ref: "#/components/schemas/EnvGroupData"
+                          - $ref: '#/components/schemas/EnvData'
+                          - $ref: '#/components/schemas/EnvGroupData'
   /env/v1/queryMember:
     get:
       summary: 查询复合变量（组）的成员
       deprecated: false
-      description: "至少需要提供 `value`、`remark` 的其中一个参数"
+      description: 至少需要提供 `value`、`remark` 的其中一个参数
       tags:
         - Env 环境变量
       parameters:
@@ -673,19 +673,19 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/EnvData"
+                  $ref: '#/components/schemas/EnvData'
   /env/v1/queryById:
     get:
       summary: 精准查询
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters:
@@ -696,9 +696,9 @@ paths:
           schema:
             type: string
             enum:
-              - "ordinary"
-              - "composite"
-              - "composite_value"
+              - ordinary
+              - composite
+              - composite_value
         - name: id
           in: query
           description: 目标变量的唯一标识（注意是 id 而不是 group_id）
@@ -706,21 +706,21 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
                 oneOf:
                   - type: object
-                    $ref: "#/components/schemas/EnvData"
+                    $ref: '#/components/schemas/EnvData'
                   - type: object
-                    $ref: "#/components/schemas/EnvGroupData"
+                    $ref: '#/components/schemas/EnvGroupData'
   /env/v1/create:
     post:
       summary: 创建
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters: []
@@ -735,9 +735,9 @@ paths:
                   type: string
                   description: 变量类型
                   enum:
-                    - "ordinary"
-                    - "composite"
-                    - "composite_value"
+                    - ordinary
+                    - composite
+                    - composite_value
                 compositeId:
                   type: string
                   description: 创建复合变量的值时需要指定此参数为复合变量(组)的唯一标识
@@ -809,16 +809,16 @@ paths:
                           - type
 
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
                 oneOf:
                   - type: object
-                    $ref: "#/components/schemas/EnvData"
+                    $ref: '#/components/schemas/EnvData'
                   - type: object
-                    $ref: "#/components/schemas/EnvGroupData"
+                    $ref: '#/components/schemas/EnvGroupData'
                   - type: object
                     properties:
                       count:
@@ -828,7 +828,7 @@ paths:
     post:
       summary: 更新
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters: []
@@ -842,9 +842,9 @@ paths:
                   type: string
                   description: 变量类型
                   enum:
-                    - "ordinary"
-                    - "composite"
-                    - "composite_value"
+                    - ordinary
+                    - composite
+                    - composite_value
                 data:
                   oneOf:
                     - type: object
@@ -918,7 +918,7 @@ paths:
                         required:
                           - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -926,19 +926,19 @@ paths:
                 oneOf:
                   - type: array
                     items:
-                      $ref: "#/components/schemas/EnvData"
+                      $ref: '#/components/schemas/EnvData'
                   - type: array
                     items:
-                      $ref: "#/components/schemas/EnvGroupData"
+                      $ref: '#/components/schemas/EnvGroupData'
                   - type: object
-                    $ref: "#/components/schemas/EnvData"
+                    $ref: '#/components/schemas/EnvData'
                   - type: object
-                    $ref: "#/components/schemas/EnvGroupData"
+                    $ref: '#/components/schemas/EnvGroupData'
   /env/v1/changeStatus:
     post:
       summary: 更改状态
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters: []
@@ -972,7 +972,7 @@ paths:
                 - id
                 - status
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -982,12 +982,12 @@ paths:
     post:
       summary: 调整排序
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters: []
       requestBody:
-        description: "至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。另外只有复合变量值的排序有实际意义，并且在前端设计中只有管理复合变量值的表格中加上了正向排序的功能。"
+        description: 至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。另外只有复合变量值的排序有实际意义，并且在前端设计中只有管理复合变量值的表格中加上了正向排序的功能。
         content:
           application/json:
             schema:
@@ -1014,7 +1014,7 @@ paths:
               required:
                 - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1024,7 +1024,7 @@ paths:
     post:
       summary: 删除
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Env 环境变量
       parameters: []
@@ -1051,7 +1051,7 @@ paths:
               required:
                 - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1062,43 +1062,43 @@ paths:
     get:
       summary: 分页查询
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters:
         - name: type
           in: query
-          description: "任务类型过滤，当前固定分为 user 和 system"
+          description: 任务类型过滤，当前固定分为 user 和 system
           required: false
           schema:
             type: string
             enum:
-              - "user"
-              - "system"
+              - user
+              - system
         - name: active
           in: query
-          description: "启用/禁用状态过滤 1 启用 | 0 禁用，默认不过滤"
+          description: '启用/禁用状态过滤 1 启用 | 0 禁用，默认不过滤'
           required: false
           schema:
             type: string
             enum:
-              - "0"
-              - "1"
+              - '0'
+              - '1'
         - name: tags
           in: query
-          description: "任务标签过滤（仅限系统任务，具体通过下方 “获取标签列表” 获取，支持多个用英文逗号分隔）"
+          description: 任务标签过滤（仅限系统任务，具体通过下方 “获取标签列表” 获取，支持多个用英文逗号分隔）
           required: false
           schema:
             type: string
         - name: search
           in: query
-          description: "搜索内容过滤，过滤字段：name、shell"
+          description: 搜索内容过滤，过滤字段：name、shell
           required: false
           schema:
             type: string
         - name: orderBy
           in: query
-          description: "指定排序字段，默认 sort"
+          description: 指定排序字段，默认 sort
           required: false
           schema:
             type: string
@@ -1108,27 +1108,27 @@ paths:
               - last_run_use
         - name: order
           in: query
-          description: "指定排序方式 0 升序 | 1 降序，默认降序"
+          description: '指定排序方式 0 升序 | 1 降序，默认降序'
           required: false
           schema:
             type: string
             enum:
-              - "0"
-              - "1"
+              - '0'
+              - '1'
         - name: page
           in: query
-          description: "指定页数，默认1"
+          description: 指定页数，默认1
           required: false
           schema:
             type: string
         - name: size
           in: query
-          description: "指定分页大小数量，默认20"
+          description: 指定分页大小数量，默认20
           required: false
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1138,7 +1138,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/CronData"
+                      $ref: '#/components/schemas/CronData'
                   page:
                     type: number
                     description: 当前页码
@@ -1158,22 +1158,22 @@ paths:
       parameters:
         - name: id
           in: query
-          description: ""
+          description: ''
           required: true
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CronData"
+                $ref: '#/components/schemas/CronData'
   /cron/v1/create:
     post:
       summary: 创建
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
@@ -1208,17 +1208,17 @@ paths:
                 - cron
                 - shell
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CronData"
+                $ref: '#/components/schemas/CronData'
   /cron/v1/update:
     post:
       summary: 更新
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
@@ -1254,17 +1254,17 @@ paths:
               required:
                 - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CronData"
+                $ref: '#/components/schemas/CronData'
   /cron/v1/delete:
     post:
       summary: 删除
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
@@ -1285,7 +1285,7 @@ paths:
               required:
                 - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1295,7 +1295,7 @@ paths:
     post:
       summary: 调整排序
       deprecated: false
-      description: "至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。"
+      description: 至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。
       tags:
         - Cron 定时任务
       parameters: []
@@ -1320,7 +1320,7 @@ paths:
               required:
                 - id
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1330,12 +1330,12 @@ paths:
     get:
       summary: 获取标签列表
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1357,22 +1357,22 @@ paths:
     get:
       summary: 查询运行中的任务
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CronData"
+                $ref: '#/components/schemas/CronData'
   /cron/v1/run:
     post:
       summary: 运行任务
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
@@ -1391,7 +1391,7 @@ paths:
                         type: number
                         description: 唯一标识
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:
@@ -1401,7 +1401,7 @@ paths:
     post:
       summary: 终止任务
       deprecated: false
-      description: ""
+      description: ''
       tags:
         - Cron 定时任务
       parameters: []
@@ -1420,7 +1420,7 @@ paths:
                         type: number
                         description: 唯一标识
       responses:
-        "200":
+        '200':
           description: 响应
           content:
             application/json:

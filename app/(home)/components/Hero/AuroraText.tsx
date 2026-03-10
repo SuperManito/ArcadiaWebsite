@@ -17,12 +17,14 @@ const AuroraText = memo(({ children, className = '', colors = ['#0084dc', '#0090
   }
   return (
     <>
-      <style>{`
+      <style>
+        {`
         @keyframes aurora-text-flow {
           0% { background-position: 200% center; }
           100% { background-position: 0% center; }
         }
-      `}</style>
+      `}
+      </style>
       <span className={`relative inline bg-clip-text text-transparent ${className}`} style={gradientStyle}>
         {children}
       </span>

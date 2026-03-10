@@ -1,12 +1,12 @@
-import React, { useRef } from 'react'
+import type { MotionProps, UseInViewOptions, Variants } from 'motion/react'
 import {
   AnimatePresence,
   motion,
+
   useInView,
-  type UseInViewOptions,
-  type Variants,
-  type MotionProps,
+
 } from 'motion/react'
+import React, { useRef } from 'react'
 
 type MarginType = UseInViewOptions['margin']
 
@@ -26,7 +26,7 @@ interface BlurFadeProps extends MotionProps {
   blur?: string
 }
 
-export default function BlurFade ({
+export default function BlurFade({
   children,
   className,
   variant,

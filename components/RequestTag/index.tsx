@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Method = ({ method, color, children }: { method: string, color: string, children: string }) => {
+function Method({ method, color, children }: { method: string, color: string, children: string }) {
   return (
     <h4
       style={{

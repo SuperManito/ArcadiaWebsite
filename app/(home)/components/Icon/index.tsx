@@ -1,5 +1,5 @@
-import React from 'react'
 import { Icon as IconifyIcon } from '@iconify/react'
+import React from 'react'
 
 interface IconProps {
   icon?: string
@@ -11,9 +11,10 @@ interface IconProps {
   children?: string
 }
 
-export function Icon ({ icon, size, width, height, color, style, children }: IconProps) {
+export function Icon({ icon, size, width, height, color, style, children }: IconProps) {
   const iconName = icon || children
-  if (!iconName) return null
+  if (!iconName)
+    return null
 
   const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '1.125em'
   const verticalAlign = style?.verticalAlign ?? '-0.15em'

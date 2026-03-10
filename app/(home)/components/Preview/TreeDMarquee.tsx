@@ -1,14 +1,14 @@
-import React from 'react'
 import { motion } from 'motion/react'
+import React from 'react'
 import cn from '../../lib/utils'
 
-const ThreeDMarquee = ({
+function ThreeDMarquee({
   images = [],
   className,
 }: {
   images: string[]
   className?: string
-}) => {
+}) {
   // Split the images array into 4 equal parts
   const chunkSize = Math.ceil(images.length / 4)
   const chunks = Array.from({ length: 4 }, (_, colIndex) => {
@@ -38,7 +38,7 @@ const ThreeDMarquee = ({
                   repeat: Infinity,
                   repeatType: 'reverse',
                 }}
-                key={colIndex + 'marquee'}
+                key={`${colIndex}marquee`}
                 className="flex flex-col items-start gap-8"
               >
                 <GridLineVertical className="-left-4" offset="80px" />
@@ -72,17 +72,17 @@ const ThreeDMarquee = ({
   )
 }
 
-const GridLineHorizontal = ({
+function GridLineHorizontal({
   className,
   offset,
 }: {
   className?: string
   offset?: string
-}) => {
+}) {
   return (
     <div
       style={
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+
         {
           '--background': '#ffffff',
           '--color': 'rgba(0, 0, 0, 0.2)',
@@ -91,7 +91,7 @@ const GridLineHorizontal = ({
           '--fade-stop': '90%',
           '--offset': offset || '200px', // -100px if you want to keep the line inside
           '--color-dark': 'rgba(255, 255, 255, 0.2)',
-          maskComposite: 'exclude',
+          'maskComposite': 'exclude',
         } as React.CSSProperties
       }
       className={cn(
@@ -104,21 +104,22 @@ const GridLineHorizontal = ({
         'dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]',
         className,
       )}
-    ></div>
+    >
+    </div>
   )
 }
 
-const GridLineVertical = ({
+function GridLineVertical({
   className,
   offset,
 }: {
   className?: string
   offset?: string
-}) => {
+}) {
   return (
     <div
       style={
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+
         {
           '--background': '#ffffff',
           '--color': 'rgba(0, 0, 0, 0.2)',
@@ -127,7 +128,7 @@ const GridLineVertical = ({
           '--fade-stop': '90%',
           '--offset': offset || '150px', // -100px if you want to keep the line inside
           '--color-dark': 'rgba(255, 255, 255, 0.2)',
-          maskComposite: 'exclude',
+          'maskComposite': 'exclude',
         } as React.CSSProperties
       }
       className={cn(
@@ -140,7 +141,8 @@ const GridLineVertical = ({
         'dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]',
         className,
       )}
-    ></div>
+    >
+    </div>
   )
 }
 

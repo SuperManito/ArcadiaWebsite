@@ -7,10 +7,9 @@
 
 'use client'
 
+import type { ComponentProps, ReactElement, ReactNode } from 'react'
 import React, {
-  type ComponentProps,
-  type ReactElement,
-  type ReactNode,
+
   isValidElement,
 } from 'react'
 import styles from './styles.module.css'
@@ -21,14 +20,13 @@ interface Props {
 }
 
 // ReactNode equivalent of HTMLElement#innerText
-function getRowName (node: ReactElement): string {
+function getRowName(node: ReactElement): string {
   let curNode: ReactNode = node
   while (isValidElement(curNode)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     [curNode] = React.Children.toArray((curNode as any).props.children)
   }
   if (typeof curNode !== 'string') {
-    throw new Error(
+    throw new TypeError(
       `Could not extract APITable row name from JSX tree:\n${JSON.stringify(
         node,
         null,
@@ -39,7 +37,7 @@ function getRowName (node: ReactElement): string {
   return curNode
 }
 
-function APITableRow (
+function APITableRow(
   {
     name,
     children,
@@ -59,16 +57,19 @@ function APITableRow (
  * assumptions about how the children looks; however, those assumptions
  * should be generally correct in the MDX context.
  */
-export default function APITable ({ children, name }: Props): ReactNode {
+export default function APITable({ children, name }: Props): ReactNode {
   // In fumadocs-mdx, block-level content inside JSX may be passed as a Fragment,
   // an array of nodes, or directly as a table element. Search recursively.
-  function findTable (node: ReactNode): ReactElement<ComponentProps<'table'>> | undefined {
-    if (!isValidElement(node)) return undefined
-    if ((node as any).type === 'table') return node as ReactElement<ComponentProps<'table'>>
+  function findTable(node: ReactNode): ReactElement<ComponentProps<'table'>> | undefined {
+    if (!isValidElement(node))
+      return undefined
+    if ((node as any).type === 'table')
+      return node as ReactElement<ComponentProps<'table'>>
     const childNodes = React.Children.toArray((node as any).props?.children ?? [])
     for (const child of childNodes) {
       const found = findTable(child)
-      if (found) return found
+      if (found)
+        return found
     }
     return undefined
   }
@@ -79,7 +80,8 @@ export default function APITable ({ children, name }: Props): ReactNode {
     const childArray = React.Children.toArray(children as any)
     for (const child of childArray) {
       tableElement = findTable(child)
-      if (tableElement) break
+      if (tableElement)
+        break
     }
   }
 
@@ -92,7 +94,7 @@ export default function APITable ({ children, name }: Props): ReactNode {
     ReactElement<{ children: ReactElement[] }>,
   ]
   const rows = React.Children.map(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
     (tbody as any).props.children,
     (row: ReactElement<ComponentProps<'tr'>>) => (
       <APITableRow name={name}>

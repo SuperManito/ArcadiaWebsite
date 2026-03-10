@@ -1,14 +1,14 @@
-import React from 'react'
 import { motion } from 'motion/react'
-import cn from '../../lib/utils'
-import Link from '../Link'
-import { Icon } from '../Icon'
-import AuroraText from './AuroraText'
-import FeatureGrid from '../FeatureGrid'
-import DarkVeil from './DarkVeil'
+import React from 'react'
 import { useTheme } from '../../hooks/useTheme'
+import cn from '../../lib/utils'
+import FeatureGrid from '../FeatureGrid'
+import { Icon } from '../Icon'
+import Link from '../Link'
+import AuroraText from './AuroraText'
+import DarkVeil from './DarkVeil'
 
-function Background ({
+function Background({
   children,
   className,
   containerClassName,
@@ -44,7 +44,7 @@ function Background ({
   )
 }
 
-export default function HeroSection () {
+export default function HeroSection() {
   return (
     <Background
       containerClassName="pt-[80px] pb-[60px] lg:pt-[120px] lg:pb-[100px]"

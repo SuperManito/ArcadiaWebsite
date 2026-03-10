@@ -1,5 +1,5 @@
-import PageContent from './components/PageContent';
+import PageContent from './components/PageContent'
 
 export default function HomePage() {
-  return <PageContent />;
+  return <PageContent />
 }

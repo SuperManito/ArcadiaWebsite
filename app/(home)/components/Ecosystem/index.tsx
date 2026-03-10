@@ -1,9 +1,9 @@
-import React from 'react'
 import { motion } from 'motion/react'
+import React from 'react'
 import { Icon } from '../Icon'
 import { languageIcons } from './data'
 
-export default function EcosystemSection () {
+export default function EcosystemSection() {
   return (
     <div className="md:mt-24 py-10 md:py-24 bg-white dark:bg-neutral-950 relative overflow-hidden border-neutral-100 dark:border-neutral-900">
       <div className="container mx-auto px-4 relative z-10 max-w-7xl">

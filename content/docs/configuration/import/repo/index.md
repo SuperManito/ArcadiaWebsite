@@ -42,7 +42,7 @@ import APITable from '@site/src/components/APITable';
 
     #### `scriptsPath`
 
-    根据导入工作原理，匹配文件不会递归仓库下的所有目录，不设置该项或键值为空即代表默认根目录  
+    根据导入工作原理，匹配文件不会递归仓库下的所有目录，不设置该项或键值为空即代表默认根目录
     如果你想配置匹配指定目录下的文件则需要手动配置，多个路径需要使用空格来进行分割，仓库根目录用 `/` 来表示
     ```yaml title="示例"
     scriptsPath: "/ test"
@@ -103,7 +103,7 @@ import APITable from '@site/src/components/APITable';
         | `username` | 是 | `string` | 无 | 用户名 |
         | `password` | 是 | `string` | 无 | 密码或令牌 |
         </APITable>
-        部分代码托管平台例如 `GitHub` 取消了通过账号密码对私有仓库的访问  
+        部分代码托管平台例如 `GitHub` 取消了通过账号密码对私有仓库的访问
         届时仅支持令牌访问，具体创建令牌的方法详见 [管理个人访问令牌](https://docs.github.com/zh/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
       </TabItem>
     </Tabs>
@@ -117,9 +117,9 @@ import APITable from '@site/src/components/APITable';
 
 ```yaml
 repo:
-  - name: "仓库1"
-    url: "https://gihub.com/User1/Repo1.git"
-    branch: "main"
+  - name: 仓库1
+    url: 'https://gihub.com/User1/Repo1.git'
+    branch: main
     enable: true
     isPrivate: false
     cronSettings:
@@ -132,17 +132,17 @@ repo:
         - js
       whiteList: ''
       blackList: ''
-  - name: "仓库2"
-    url: "https://gitlab.com/User2/Repo2.git"
-    branch: "master"
+  - name: 仓库2
+    url: 'https://gitlab.com/User2/Repo2.git'
+    branch: master
     enable: true
     isPrivate: true
     authSettings:
-      method: "ssh"
+      method: ssh
       sshConfig:
-        alias: "Repo2"
-        hostName: "gitlab.com"
-        privateKeyPath: "/arcadia/config/repo2_rsa"
+        alias: Repo2
+        hostName: gitlab.com
+        privateKeyPath: /arcadia/config/repo2_rsa
 ```
 
 配置好后你需要执行 `arcadia update repo` 命令来使该配置生效
@@ -157,15 +157,15 @@ repo:
 
 ### 删除已配置的代码仓库
 
-1). 手动删除配置文件中的仓库配置  
-2). 手动删除相关定时任务，你可以通过管理面板的定时任务页进行操作，在任务名称列设置过滤后批量删除  
+1). 手动删除配置文件中的仓库配置
+2). 手动删除相关定时任务，你可以通过管理面板的定时任务页进行操作，在任务名称列设置过滤后批量删除
 3). 手动删除本地仓库文件，一般在 **repo** 目录下，文件夹名格式为 `作者名_仓库名`
 
 ### 关于定时任务
 
 根据工作原理，你可能会遇到下方提到的特殊情况，你应该了解这些情况并且知道如何解决
 
-1). 修改定时过滤规则并不会影响已经添加的定时任务，所以如果有不合适的定时任务则需要你手动进行删除。  
+1). 修改定时过滤规则并不会影响已经添加的定时任务，所以如果有不合适的定时任务则需要你手动进行删除。
 2). 匹配定时任务仅支持处理基于文件增删变动的情况，这意味着如果在首次克隆仓库之后再配置启用仓库定时任务是无效的，因为没有检测到文件变动。不过你可以通过删除本地仓库目录来解决这个问题，这样在下次更新时就会因为克隆仓库而检测到文件变动，不过这样会覆盖用户关于导入定时任务的手动修改数据，所以最好从一开始就确定使用需求。
 
 ### 快速添加配置

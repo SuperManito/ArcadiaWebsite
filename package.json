@@ -8,6 +8,11 @@
     "start": "serve out",
     "check": "fumadocs-mdx && next typegen && tsc --noEmit",
     "postinstall": "fumadocs-mdx",
+    "clean:cache": "rimraf .source && rimraf .next && rimraf node_modules/.cache/",
+    "clean:build": "rimraf build && rimraf out && rimraf coverage",
+    "clean:lock": "rimraf yarn.lock && rimraf pnpm-lock.yaml && rimraf package.lock.json",
+    "clean:lib": "rimraf node_modules",
+    "clean": "pnpm clean:build && pnpm clean:cache && pnpm clean:lock && pnpm clean:lib",
     "lint": "eslint",
     "lint:fix": "eslint --fix --ext .ts,tsx,js,jsx,mjs,mdx"
   },
@@ -19,6 +24,7 @@
     "clsx": "^2.1.1",
     "fumadocs-core": "16.6.10",
     "fumadocs-mdx": "14.2.9",
+    "fumadocs-typescript": "^5.1.5",
     "fumadocs-ui": "16.6.10",
     "lucide-react": "^0.577.0",
     "motion": "^12.35.1",
@@ -30,14 +36,15 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^7.7.0",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/mdx": "^2.0.13",
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.0.2",
-    "eslint-config-next": "16.1.6",
+    "eslint": "^9.39.3",
     "postcss": "^8.5.8",
+    "rimraf": "^6.1.3",
     "serve": "^14.2.6",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"

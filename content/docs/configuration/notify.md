@@ -8,7 +8,7 @@ title: 推送通知
 
 # 推送通知
 
-用于在运行脚本后将指定内容推送到你的设备上，推送内容由脚本而定，可同时使用多个渠道的推送通知服务  
+用于在运行脚本后将指定内容推送到你的设备上，推送内容由脚本而定，可同时使用多个渠道的推送通知服务
 目前提供：Server酱、Bark、Telegram、钉钉、企业微信、iGot、pushplus、go-cqhttp、WxPusher
 
 此功能基于底层 `sendNotify.js` 脚本实现
@@ -76,7 +76,7 @@ title: 推送通知
 
 ***
 
-## Telegram 
+## Telegram
 
 <Callout type="warn" title="注意">
 注意网络连通性问题，可能需要魔法
@@ -107,7 +107,7 @@ title: 推送通知
       ```
       代理类型为 http，例如你的代理是 [http://127.0.0.1:1080](http://127.0.0.1:1080) 则填写 `127.0.0.1`
 
-  - #代理端口（选填）
+  - # 代理端口（选填）
 
       ```bash
       export TG_PROXY_PORT=""
@@ -131,7 +131,7 @@ title: 推送通知
 
 ***
 
-## 钉钉 
+## 钉钉
 官方文档：https://developers.dingtalk.com/document/app/custom-robot-access
 
 - token后面的内容（必填）
@@ -167,7 +167,7 @@ title: 推送通知
 ***
 
 ## 企业微信应用
-参考文档：http://note.youdao.com/s/HMiudGkb  
+参考文档：http://note.youdao.com/s/HMiudGkb
 ㅤㅤㅤㅤㅤhttp://note.youdao.com/noteshare?id=1a0c8aff284ad28cbd011b29b3ad0191
 
 - id（必填）
@@ -214,8 +214,8 @@ title: 推送通知
 ***
 
 ## WxPusher
-官方仓库：https://github.com/wxpusher/wxpusher-client  
-官方文档：https://wxpusher.zjiecode.com/docs  
+官方仓库：https://github.com/wxpusher/wxpusher-client
+官方文档：https://wxpusher.zjiecode.com/docs
 微信公众号：WxPusher 消息推送平台
 
 - appToken（必填）
