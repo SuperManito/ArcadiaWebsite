@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Banner } from 'fumadocs-ui/components/banner'
 import { Inter } from 'next/font/google'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Provider } from '@/components/provider'
+
 import './global.css'
 
 export const metadata: Metadata = {
@@ -43,6 +45,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       <body className="flex flex-col min-h-screen">
         <BannerComponent />
         <Provider>{children}</Provider>
+        <GoogleAnalytics />
       </body>
     </html>
   )

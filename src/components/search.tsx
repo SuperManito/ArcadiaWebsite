@@ -1,6 +1,7 @@
 'use client'
 import type { SharedProps } from 'fumadocs-ui/components/dialog/search'
 import { create } from '@orama/orama'
+import { createTokenizer } from '@orama/tokenizers/mandarin'
 import { useDocsSearch } from 'fumadocs-core/search/client'
 import {
   SearchDialog,
@@ -16,10 +17,13 @@ import {
 import { useI18n } from 'fumadocs-ui/contexts/i18n'
 
 function initOrama() {
+  const { locale } = useI18n() // (optional) for i18n
   return create({
     schema: { _: 'string' },
     // https://docs.orama.com/docs/orama-js/supported-languages
-    language: 'chinese',
+    components: {
+      tokenizer: locale === 'cn' ? createTokenizer() : undefined,
+    },
   })
 }
 
