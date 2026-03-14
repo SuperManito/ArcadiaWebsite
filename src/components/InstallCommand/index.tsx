@@ -265,8 +265,7 @@ function PopoverContent({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
   )
 }
 
-function CliInstall() {
-  const s = useInstallSharedState()
+function CliInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
   const { isMobile, containerName, hostname, network, port, mirror, getRunMountLines } = s
   const [type, setType] = useState('docker') // 类型
 
@@ -314,14 +313,13 @@ ${mirror || 'docker.io/'}supermanito/arcadia:beta`
   )
 }
 
-function ComposeInstall() {
-  const s = useInstallSharedState()
+function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
   const { isMobile, getComposeMountLines, mirror, containerName, hostname, network, port, useCurrentDir } = s
   const [type, setType] = useState('docker-compose-v2') // 类型
 
   const composeFileName = type === 'podman-compose' ? 'podman-compose.yaml' : 'docker-compose.yaml'
   const composeFileContent = type === 'podman-compose'
-    ? `version: '3.8'\nservices:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
+    ? `services:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
     : `${type === 'docker-compose-v1' ? 'version: \'2.0\'\n' : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
 
   return (
@@ -375,12 +373,12 @@ export function InstallCommand() {
     {
       key: 'cli',
       label: <span className="text-base font-semibold font-mono">CLI 命令行</span>,
-      children: <CliInstall />,
+      children: <CliInstall s={s} />,
     },
     {
       key: 'compose',
       label: <span className="text-base font-semibold font-mono">Compose 编排</span>,
-      children: <ComposeInstall />,
+      children: <ComposeInstall s={s} />,
     },
   ]
   return (
