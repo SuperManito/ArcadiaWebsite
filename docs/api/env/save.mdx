@@ -1,0 +1,99 @@
+---
+title: 更新插入
+description: /env/saveItem、/env/save
+---
+import { POST } from '@/components/RequestTag';
+
+## 变量项
+
+<POST>/env/saveItem</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+    },
+    group_id: {
+      description: 'envsGroup 表 id 字段关联记录',
+      typeDescription: '为0时表示普通变量',
+      type: 'number',
+    },
+    type: {
+      description: '变量名称（如果是复合变量的值则需传递空值）',
+      type: 'string',
+      required: true,
+    },
+    tag_list: {
+      description: '标签',
+      typeDescription: 'label 名称，color 颜色(HEX)',
+      type: 'string<{ label: string, color: string }[]>',
+    },
+    description: {
+      description: '描述',
+      type: 'string',
+    },
+    remark: {
+      description: '备注',
+      type: 'string',
+    },
+    value: {
+      description: '值',
+      type: 'string',
+    },
+    sort: {
+      description: '在分页中的位置序号（正整数），默认按照先后顺序递增',
+      type: 'number',
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      default: 1,
+    },
+  }}
+/>
+
+## 变量组
+
+<POST>/env/save</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+    },
+    type: {
+      description: '变量名称',
+      type: 'string',
+      required: true,
+    },
+    description: {
+      description: '描述',
+      type: 'string',
+    },
+    tag_list: {
+      description: '标签',
+      typeDescription: 'label 名称，color 颜色(HEX)',
+      type: 'string<{ label: string, color: string }[]>',
+    },
+    separator: {
+      description: '分割字符',
+      type: 'string',
+    },
+    sort: {
+      description: '在分页中的位置序号（正整数），默认按照先后顺序递增',
+      type: 'number',
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+    },
+  }}
+/>

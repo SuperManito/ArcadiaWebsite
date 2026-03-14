@@ -1,0 +1,22 @@
+/* Fumadocs UI Component - Steps */
+.fd-step:before {
+  width: calc(var(--spacing) * 6);
+  height: calc(var(--spacing) * 6);
+  inset-inline-start: calc(var(--spacing) * -3);
+}
+.fd-steps {
+  margin-inline-start: calc(var(--spacing) * 1);
+  padding-inline-start: calc(var(--spacing) * 4);
+}
+
+@media (min-width: 40rem) {
+  .fd-steps {
+    margin-inline-start: calc(var(--spacing) * 3);
+    padding-inline-start: calc(var(--spacing) * 7);
+  }
+  .fd-step:before {
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+    inset-inline-start: calc(var(--spacing) * -3.5);
+  }
+}

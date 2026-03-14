@@ -1,47 +1,51 @@
-# arcadia-website
+<p align="center">
+    <a href="https://arcadia.cool">
+        <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="brand/img/arcadia-dark-sub.png" width="320">
+            <img src="brand/img/arcadia-light-sub.png" alt="Arcadia" width="320">
+        </picture>
+    </a>
+</p>
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+<p align="center">
+    <strong>
+        一站式代码自动化运维平台
+    </strong>
+</p>
 
-It is a Next.js app with [Static Export](https://nextjs.org/docs/app/guides/static-exports) configured.
+<p align="center">
+    <strong>
+        <a href="https://arcadia.cool" style="text-decoration: none;">官方网站</a>
+    </strong>
+</p>
 
-Run development server:
+# 文档
+
+文档引擎使用 [Fumadocs](https://fumadocs.dev) + [Next.js](https://nextjs.org) 进行构建
+
+### 安装
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+pnpm i
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+### 本地预览
 
-## Explore
+```bash
+pnpm dev
+```
 
-In the project, you can see:
+### 构建
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+```bash
+pnpm build
+```
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+### 生成 OpenAPI 文档
 
-### Fumadocs MDX
+从 `openapi.yaml` 生成对应的 MDX 文档页面，输出至 `docs/openapi/`
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
-
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
-
-## Learn More
-
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+```bash
+pnpm build:openapi
+```
+> 注意文件目录结构变化，该命令不会自动删除已经生成的文档文件

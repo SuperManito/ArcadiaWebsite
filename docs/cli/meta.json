@@ -1,0 +1,24 @@
+{
+  "title": "Arcadia CLI",
+  "root": true,
+  "pages": [
+    "---介绍---",
+    "index",
+    "---代码文件---",
+    "script/run",
+    "script/list",
+    "script/process",
+    "---更新与升级---",
+    "update/update",
+    "update/upgrade",
+    "---配置管理---",
+    "config/envm",
+    "config/repo",
+    "config/raw",
+    "---服务管理---",
+    "server/service",
+    "server/tgbot",
+    "---其它---",
+    "sundry/rmlog"
+  ]
+}

@@ -1,0 +1,20 @@
+---
+title: 终止
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/cron/terminate</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number | number[]',
+      required: true,
+    },
+  }}
+/>
+
+支持批量操作

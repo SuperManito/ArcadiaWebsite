@@ -1,0 +1,71 @@
+---
+title: 获取列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/token</GET>
+
+## 请求
+
+无参数
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '配置名称',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '令牌',
+      type: 'string',
+      required: true,
+    },
+    expire_time: {
+      description: '过期时间（时间戳），空为永久',
+      type: 'number',
+      required: true,
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      required: true,
+      default: 1,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+[
+  {
+    "id": 1,
+    "name": "新建令牌",
+    "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456",
+    "expire_time": null,
+    "enable": 1,
+    "create_time": "2024-01-01 00:00:00",
+    "update_time": "2024-01-01 00:00:00",
+  },
+  ...
+]
+```
+

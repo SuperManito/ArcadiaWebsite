@@ -1,0 +1,17 @@
+{
+  "title": "File 文件系统",
+  "icon": "FolderOpen",
+  "pages": [
+    "list",
+    "tree",
+    "get-content",
+    "save-content",
+    "delete",
+    "attribute",
+    "create",
+    "move",
+    "rename",
+    "download",
+    "upload"
+  ]
+}

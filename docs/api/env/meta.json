@@ -1,0 +1,13 @@
+{
+  "title": "Env 环境变量",
+  "icon": "Variable",
+  "pages": [
+    "schema",
+    "page",
+    "create",
+    "save",
+    "delete",
+    "order",
+    "changeStatus"
+  ]
+}

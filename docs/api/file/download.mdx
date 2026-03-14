@@ -1,0 +1,22 @@
+---
+title: 下载
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/file/download</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+<Callout>
+  下载目录时会压缩成 `zip` 文件
+</Callout>

@@ -1,0 +1,118 @@
+---
+title: 获取操作日志
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/log/login</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    search: {
+      description: '日志内容过滤',
+      type: 'string',
+    },
+    type: {
+      description: '日志类型过滤',
+      type: "string<'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'>",
+      typeDescription: '多个类型用英文逗号分隔',
+    },
+    order: {
+      description: '指定时间列的排序方式',
+      typeDescription: '0 升序，1 降序',
+      type: "string<'0' | '1'>",
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'object[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+数据项
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: 'ID',
+      type: 'number',
+      required: true,
+    },
+    time: {
+      description: '记录时间',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '日志内容',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '日志类型',
+      type: "string<'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'>",
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "data": [
+    {
+        "id": 2,
+        "time": "2026-01-01 00:00:00",
+        "content": "用户已建立 WebSocket 连接",
+        "type": "info"
+    },
+    {
+        "id": 1,
+        "time": "2026-01-01 00:00:00",
+        "content": "用户 admin 已登录，登录地址：192.168.1.1 局域网",
+        "type": "info"
+    }
+    ...
+],
+  "total": 5,
+  "page": 1,
+  "size": 20
+}
+```
+
+默认倒序返回

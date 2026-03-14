@@ -1,0 +1,37 @@
+---
+title: 删除
+description: /env/deleteItem、/env/delete
+---
+import { DELETE } from '@/components/RequestTag';
+
+## 变量项
+
+<DELETE>/env/deleteItem</DELETE>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number | number[]',
+      required: true,
+    },
+  }}
+/>
+
+## 变量组
+
+<DELETE>/env/delete</DELETE>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number | number[]',
+      required: true,
+    },
+  }}
+/>

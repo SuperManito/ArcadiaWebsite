@@ -1,0 +1,157 @@
+---
+title: 快速开始
+description: 安装 Arcadia 平台
+icon: Rocket
+---
+import { File, Folder, Files } from 'fumadocs-ui/components/files';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { GithubInfo } from 'fumadocs-ui/components/github-info';
+import { InstallCommand } from '@/components/InstallCommand';
+
+本项目依托容器技术需要安装相关容器服务才可以部署，由于运行环境复杂程度较高目前没有计划适配更多部署方式  
+关于部署 Arcadia 平台所需要的最低配置：`2GB` 磁盘空闲、`256MB` 内存，不支持 ARMv6 / ARMv7
+
+<Steps>
+
+<Step>
+## 启动容器
+
+<InstallCommand />
+
+<Callout type="info" title="命令帮助">
+  1. 点击右侧的 “高级配置” 可以自定义参数配置，建议优先通过该组件修改命令以防出错
+  2. 提示 `-bash: docker：Command not found/未找到命令` ? 请阅读下方 _“如何安装 Docker”_
+  3. 如果你正在使用旁路由则可能需要将网络模式切换为 **host** 类型，点击 “高级配置” 将网络模式设置为 `host`
+  4. 不可以更改参数中 `:` 右边的内容，否则会导致后端服务无法正常访问
+</Callout>
+
+<Accordions type="single">
+  <Accordion title="如何安装 Docker ？">
+    <Tabs defaultValue="Linux">
+      <TabsList>
+        <TabsTrigger value="Linux">
+          <Icon style={{ verticalAlign: '-0.2rem' }}>simple-icons:linux</Icon>
+          Linux
+        </TabsTrigger>
+        <TabsTrigger value="Windows">
+          <Icon>mage:microsoft-windows</Icon>
+          Windows
+        </TabsTrigger>
+        <TabsTrigger value="macOS">
+          <Icon>simple-icons:apple</Icon>
+          macOS
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="Linux">
+        ```bash
+        bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
+        ```
+        <GithubInfo owner="SuperManito" repo="LinuxMirrors" className='p-0! pl-2! h-8' />
+        该一键脚本由本项目作者开发，如果你觉得脚本好用麻烦送颗星⭐
+      </TabsContent>
+      <TabsContent value="Windows">
+        建议使用 [**Docker Desktop**](https://docs.docker.com/desktop/windows/install)
+      </TabsContent>
+      <TabsContent value="macOS">
+        建议使用 [**Docker Desktop**](https://docs.docker.com/desktop/mac/install)，支持 Apple Silicon 芯片
+      </TabsContent>
+    </Tabs>
+  </Accordion>
+  <Accordion title="挂载目录的作用是什么？">
+    容器挂载目录的作用是将宿主机的文件系统目录或文件挂载到容器内。这样，容器内的程序可以像访问本地文件一样访问挂载的文件或目录，同时宿主机上的应用也可以直接访问这些文件或目录。这种机制提供了一种在容器和宿主机之间共享文件的方式，使得数据持久化成为可能，因为即使容器被删除，挂载的数据仍然存在于宿主机上，便于用户迁移数据。
+  </Accordion>
+  <Accordion title="关于 Arcadia 平台的占用空间">
+    目前底层镜像基于 `GNU/Linux Debian` 构建，这导致 Arcadia 平台镜像的占用空间大小达到了 **1.1GB**，在不更换底层构建镜像的前提下已经最大化压缩了镜像大小，考虑到实际使用环境的生态多样性因此这是取舍利弊后的决策选择，实际上在使用期间会安装很多依赖内容，届时镜像大小的差异与容器总体占用空间的差异相比就显得不再那么重要了，你应该预留出 `2GB` 的空间以供使用。
+  </Accordion>
+</Accordions>
+</Step>
+
+<Step>
+## 等待初始化
+
+```bash title="检查启动状态和初始化进度"
+docker logs -f arcadia
+```
+
+请查看容器启动后的初始化进度并**等待其运行完毕**，当输出**容器启动成功**字样后即可通过 `Ctrl + C` 退出查看  
+如果报错导致容器没有启动成功那么请先自查原因，绝大多数问题都是由网络环境导致，你可以在 [社区](/docs/about#社区) 内寻求帮助
+
+目前容器会在启动时自动更新 Arcadia 源代码（注：非强制等待，有超时机制），为了确保你能够使用最新的版本如果查看到日志显示更新失败请 [手动更新](/docs/update#更新源码)
+</Step>
+
+<Step>
+## 开始使用
+
+访问 [http://localhost:5678](http://localhost:5678) 进入管理面板，初始用户名和密码分别是 `useradmin` `passwd`，首次登录后会引导你修改此认证信息。
+
+无法访问？我们提供了一份排除故障指南，希望对你有所帮助。
+
+<Accordions type="single">
+  <Accordion title="排除控制面板故障">
+    下面是解决步骤顺序和思路
+
+    - 检查容器运行状态，是否正常运行并初始化成功
+
+      查看容器状态（宿主机）
+      ```bash
+      docker ps -a
+      ```
+      查看容器日志（宿主机）
+      ```bash
+      docker logs arcadia
+      ```
+
+    - 检查面板服务状态，查看有无报错并进行验证
+
+      查看服务状态（容器环境）
+      ```bash
+      pm2 status arcadia_server
+      ```
+      查看服务日志（容器环境）
+      ```bash
+      pm2 logs arcadia_server
+      ```
+      查看网页内容（容器环境）
+      ```bash
+      curl 127.0.0.1:5678/auth
+      ```
+
+      执行完此命令后如果有网页内容则表示服务启动正常
+
+    - 检查网络连通性
+
+      若你使用 **VPS** 平台，请进入你所使用平台提供商的网络防火墙功能设置，检查是否已放开相关端口、允许`HTTP/HTTPS`流量通过等重要设置
+
+      ```bash
+      ping xxx
+      nslookup xxx
+      curl xxx
+      ```
+      1. 在容器内通过 `curl` 命令能获取到网页元素证明服务正常
+      2. 在客户端通过 `ping` 命令不能获取到返回值证明存在网络连通性问题
+      3. 在宿主机通过 `curl` 命令能获取到网页元素证明容器正常
+      4. 在客户端通过 `curl` 命令不能获取到网页元素证明可能有防火墙介入
+  </Accordion>
+  <Accordion title="Arcadia 平台文件目录结构">
+    <Files>
+      <Folder name="arcadia" defaultOpen>
+        <Folder name="config ㅤㅤㅤㅤ 配置文件目录（用户）" />
+        <Folder name="logㅤㅤㅤㅤㅤㅤ日志文件目录（用户）" />
+        <Folder name="repoㅤㅤㅤㅤㅤ 代码仓库目录（用户）" />
+        <Folder name="raw ㅤㅤㅤㅤㅤ 代码文件目录（用户）" />
+        <Folder name="scriptsㅤㅤㅤㅤ 个人文件目录（用户）" />
+        <Folder name="tgbotㅤㅤㅤㅤㅤTG Bot 组件目录（用户）" />
+        <Folder name="srcㅤㅤㅤㅤㅤㅤ项目源代码目录" defaultOpen>
+          <Folder name="backendㅤㅤ 后端源代码目录" />
+          <Folder name="public ㅤㅤㅤ 静态文件目录" />
+          <Folder name="sampleㅤㅤㅤ配置文件模板目录" />
+          <Folder name="shellㅤㅤㅤㅤ 底层CLI源代码目录" />
+          <Folder name="utilsㅤㅤㅤㅤ 其它工具源代码目录" />
+        </Folder>
+      </Folder>
+    </Files>
+  </Accordion>
+</Accordions>
+</Step>
+
+</Steps>

@@ -1,0 +1,322 @@
+---
+title: 分页查询
+description: /env/pageItem、/env/page
+---
+import { GET } from '@/components/RequestTag';
+
+## 变量项
+
+<GET>/env/pageItem</GET>
+
+### 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    group_id: {
+      description: 'envsGroup 表 id 字段关联记录，为0时则返回普通变量记录，指定则返回目标复合变量的值',
+      type: 'string',
+      default: 0,
+    },
+    search: {
+      description: '搜索内容过滤，涉及变量名称、用户标签',
+      type: 'string',
+    },
+    enable: {
+      description: '变量状态过滤',
+      typeDescription: '1 启用，0 禁用',
+      type: "string<'0' | '1'>",
+    },
+    orderBy: {
+      description: '指定排序字段',
+      type: 'string',
+      default: 'sort',
+    },
+    order: {
+      description: '指定排序方式',
+      typeDescription: '0 升序，1 降序',
+      type: "string<'0' | '1'>",
+    },
+  }}
+/>
+
+### 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'object[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+数据项（主要为数据库 `envs` 表字段）
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    group_id: {
+      description: 'envsGroup 表 id 字段关联记录（关联的复合变量(组)唯一标识）',
+      type: 'number',
+      required: true,
+    },
+    type: {
+      description: '变量名称',
+      type: 'string',
+      required: true,
+    },
+    tag_list: {
+      description: '标签',
+      typeDescription: 'label 名称，color 颜色(HEX)',
+      type: 'string<{ label: string, color: string }[]>',
+      required: true,
+    },
+    description: {
+      description: '描述',
+      type: 'string',
+      required: true,
+    },
+    remark: {
+      description: '备注',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '值',
+      type: 'string',
+      required: true,
+    },
+    sort: {
+      description: '在分页中的位置序号（正整数），默认按照先后顺序递增',
+      type: 'number',
+      required: true,
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "data": [
+    {
+      "id": 1,
+      "group_id": 0,
+      "type": "TEST1",
+      "tag_list": "[{\"label\":\"test\",\"color\":\"#2080f0\"}]",
+      "description": "",
+      "remark": "",
+      "update_time": "2024-05-01 00:00:00",
+      "value": "测试1",
+      "sort": 0,
+      "enable": 1
+    },
+    {
+      "id": 2,
+      "group_id": 0,
+      "type": "TEST2",
+      "tag_list": "",
+      "description": "",
+      "remark": "",
+      "update_time": "2024-05-01 00:00:01",
+      "value": "测试2",
+      "sort": 0,
+      "enable": 0
+    },
+    ...
+  ],
+  "total": 5,
+  "page": 1,
+  "size": 20
+}
+```
+
+
+## 变量组
+
+<GET>/env/page</GET>
+
+### 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    search: {
+      description: '搜索内容过滤，涉及变量名称、用户标签',
+      type: 'string',
+    },
+    enable: {
+      description: '变量状态过滤',
+      typeDescription: '1 启用，0 禁用',
+      type: "string<'0' | '1'>",
+    },
+    orderBy: {
+      description: '指定排序字段',
+      type: 'string',
+      default: 'sort',
+    },
+    order: {
+      description: '指定排序方式',
+      typeDescription: '0 升序，1 降序',
+      type: "string<'0' | '1'>",
+    },
+  }}
+/>
+
+### 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'object[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+数据项（主要为数据库 envsGroup 表记录）
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    type: {
+      description: '变量名称',
+      type: 'string',
+      required: true,
+    },
+    description: {
+      description: '描述',
+      type: 'string',
+      required: true,
+    },
+    tag_list: {
+      description: '标签',
+      typeDescription: 'label 名称，color 颜色(HEX)',
+      type: 'string<{ label: string, color: string }[]>',
+      required: true,
+    },
+    separator: {
+      description: '分割字符',
+      type: 'string',
+      required: true,
+    },
+    sort: {
+      description: '在分页中的位置序号（正整数），默认按照先后顺序递增',
+      type: 'number',
+      required: true,
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      required: true,
+    },
+    envs: {
+      description: '成员（复合变量的值）长度',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "data": [
+    {
+      "id": 1,
+      "type": "TEST1",
+      "description": "",
+      "update_time": "2024-05-01 00:00:00",
+      "tag_list": "",
+      "separator": "",
+      "sort": 1,
+      "enable": 1,
+      "envs": 0
+    },
+    {
+      "id": 2,
+      "type": "TEST2",
+      "description": "@",
+      "update_time": "2024-05-01 00:00:01",
+      "tag_list": "",
+      "separator": "",
+      "sort": 0,
+      "enable": 1,
+      "envs": 3
+    },
+    ...
+  ],
+  "total": 3,
+  "page": 1,
+  "size": 20
+}
+```
+
+默认倒序返回

@@ -1,0 +1,11 @@
+{
+  "title": "User 用户",
+  "icon": "User",
+  "pages": [
+    "auth",
+    "info",
+    "change-password",
+    "two-factor-auth",
+    "revoke-all-tokens"
+  ]
+}

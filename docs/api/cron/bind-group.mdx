@@ -1,0 +1,45 @@
+---
+title: 获取标签列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/cron/bindGroup</GET>
+
+## 请求
+
+无参数
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    bind: {
+      description: '分类名称',
+      type: 'string',
+      required: true,
+    },
+    count: {
+      description: '任务数量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+[
+  {
+    "bind": "",
+    "count": 1
+  },
+  {
+    "bind": "xxx_xxx",
+    "count": 2
+  }
+]
+```
+
+<Callout>
+  目前用于系统定时任务类型过滤，使用分页接口的 `tags` 参数，具体取自 `bind` 记录值的中间字段。
+</Callout>

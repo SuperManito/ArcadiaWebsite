@@ -1,0 +1,15 @@
+{
+  "title": "Env 环境变量",
+  "icon": "Variable",
+  "pages": [
+    "page-get",
+    "query-get",
+    "queryMember-get",
+    "queryById-get",
+    "create-post",
+    "update-post",
+    "changeStatus-post",
+    "order-post",
+    "delete-post"
+  ]
+}

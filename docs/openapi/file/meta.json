@@ -1,0 +1,16 @@
+{
+  "title": "File 文件系统",
+  "icon": "FolderOpen",
+  "pages": [
+    "list-get",
+    "content-get",
+    "content-post",
+    "delete-post",
+    "info-get",
+    "create-post",
+    "move-post",
+    "rename-post",
+    "download-get",
+    "upload-post"
+  ]
+}

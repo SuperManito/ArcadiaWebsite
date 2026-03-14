@@ -1,0 +1,23 @@
+---
+title: 移动
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/move</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径（原）',
+      type: 'string',
+      required: true,
+    },
+    newPath: {
+      description: '绝对路径（新）',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

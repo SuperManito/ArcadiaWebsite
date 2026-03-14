@@ -1,0 +1,19 @@
+---
+title: 删除
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/file/delete</DELETE>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string | String[]',
+      required: true,
+    },
+  }}
+/>
+支持批量

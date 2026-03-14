@@ -1,0 +1,84 @@
+---
+title: 修改
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/cron</PUT>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '任务名称',
+      type: 'string',
+    },
+    cron: {
+      description: '定时表达式',
+      type: 'string',
+    },
+    shell: {
+      description: '执行的命令',
+      type: 'string',
+    },
+    active: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+    },
+    remark: {
+      description: '任务备注',
+      type: 'string',
+    },
+    type: {
+      description: '任务类型，当前固定分为 user 和 system',
+      type: "string<'user' | 'system'>",
+    },
+    bind: {
+      description: '后端关联代码文件参数',
+      type: 'string',
+    },
+    config: {
+      description: '高级配置',
+      type: 'string<object>',
+      typeDescription: '值为 JSON 序列化后的字符串',
+    },
+  }}
+/>
+
+- `config` 高级配置字段说明
+
+<TypeTable
+  type={{
+    before_task_shell: {
+      description: '任务运行前的执行命令',
+      type: 'string',
+    },
+    after_task_shell: {
+      description: '任务运行后的执行命令',
+      type: 'string',
+    },
+    log_directory: {
+      description: '日志目录路径（纯前端功能关联数据）',
+      type: 'string',
+    },
+    source_file: {
+      description: '源码文件路径（纯前端功能关联数据）',
+      type: 'string',
+    },
+    allow_concurrency: {
+      description: '是否允许并发',
+      type: 'boolean',
+    },
+  }}
+/>
+支持批量操作（改成数组）
+
+## 响应
+
+返回布尔值，如果是批量创建只要有一个失败就返回 `false`

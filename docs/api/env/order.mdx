@@ -1,0 +1,53 @@
+---
+title: 调整排序
+description: /env/orderItem、/env/order
+---
+import { PUT } from '@/components/RequestTag';
+
+## 变量项
+
+<PUT>/env/orderItem</PUT>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    order: {
+      description: '目的修改位置',
+      type: 'number',
+    },
+    moveToEnd: {
+      description: '是否移动到最后',
+      type: 'boolean',
+    },
+  }}
+/>
+
+## 变量组
+
+<PUT>/env/order</PUT>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    order: {
+      description: '目的修改位置',
+      type: 'number',
+    },
+    moveToEnd: {
+      description: '是否移动到最后',
+      type: 'boolean',
+    },
+  }}
+/>

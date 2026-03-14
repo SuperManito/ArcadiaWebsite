@@ -1,0 +1,17 @@
+---
+title: 上传文件
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/upload</POST>
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+接口特殊，使用 query 即 `URLParams` 传参，暂不支持上传目录

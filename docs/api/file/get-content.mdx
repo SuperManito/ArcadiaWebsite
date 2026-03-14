@@ -1,0 +1,24 @@
+---
+title: 获取文件内容
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/file/content</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+```json title="示例"
+function template() {\n    console.log(\"Hello World\");\n}
+```

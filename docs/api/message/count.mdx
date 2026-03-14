@@ -1,0 +1,31 @@
+---
+title: 统计数量
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/count</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    limit: {
+      description: '限制返回条数',
+      type: 'string',
+      default: 10,
+    },
+    status: {
+      description: '状态过滤，支持多选（逗号分隔）',
+      type: "string<'read' | 'unread'>",
+    },
+    source: {
+      description: '消息来源',
+      type: "string<'system' | 'user'>",
+    },
+  }}
+/>
+
+## 响应
+
+```json title="示例"
+```

@@ -1,0 +1,8 @@
+{
+  "title": "代码同步",
+  "icon": "RefreshCw",
+  "pages": [
+    "repo/index",
+    "raw/index"
+  ]
+}

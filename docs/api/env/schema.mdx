@@ -1,0 +1,122 @@
+---
+title: 数据关系模型
+---
+
+<Callout>
+  此部分API与数据模型紧密相连，如果你无法理解项目应用程序设计那么请谨慎操作，建议先了解前端实现或直接使用 Open API
+</Callout>
+
+## 数据关系模型
+
+数据库对于该功能设计了两个数据表 `envs` `envsGroup`，分别代表变量项和变量组
+
+```prisma
+model envs {
+  id          Int         @id @default(autoincrement())
+  group_id    Int
+  type        String
+  tag_list    String      @default("")
+  description String      @default("")
+  remark      String      @default("")
+  value       String      @default("")
+  sort        Int         @default(0)
+  enable      Int         @default(1)
+  envs_group  envs_group? @relation(fields: [group_id], references: [id])
+
+  @@index([type])
+}
+
+model envsGroup {
+  id          Int    @id @default(autoincrement())
+  type        String
+  description String @default("")
+  tag_list    String @default("")
+  separator   String @default("")
+  sort        Int    @default(0)
+  enable      Int    @default(1)
+  envs        envs[]
+
+  @@index([type])
+}
+```
+
+- `envs` 表
+
+    用于存储所有普通变量和复合变量的值，复合变量的值不使用 `type`、`tag_list`、`description` 字段  
+    其中 `group_id` 字段用于关联 envsGroup 表的 `id` 字段，为 `0` 时表示记录项是一个普通变量
+
+- envsGroup 表
+
+    用于存储组变量（复合变量）
+
+<Callout type="idea" title="总结"> 
+  `envs` 表存储所有普通变量和复合变量(组)成员的值，其中 `group_id` 为 `0` 时视为普通变量。envsGroup 表存储所有复合变量(组)。
+</Callout>
+
+## 具体字段说明
+
+### 通用字段
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+    },
+    type: {
+      description: '变量名称',
+      type: 'string',
+    },
+    description: {
+      description: '描述',
+      type: 'string',
+    },
+    tag_list: {
+      description: '标签',
+      typeDescription: 'label 名称，color 颜色(HEX)',
+      type: 'string<{ label: string, color: string }[]>',
+    },
+    enable: {
+      description: '状态 `1 启用 | 0 禁用`',
+      type: 'number<0 | 1>',
+    },
+  }}
+/>
+
+### `envs` 表专用字段
+
+<TypeTable
+  type={{
+    group_id: {
+      description: '所关联 envsGroup 表的唯一标识',
+      type: 'number',
+    },
+    remark: {
+      description: '备注',
+      type: 'string',
+    },
+    value: {
+      description: '值',
+      type: 'string',
+    },
+    sort: {
+      description: '在分页中的位置序号（正整数），默认按照先后顺序递增',
+      type: 'number',
+    },
+  }}
+/>
+
+### envsGroup 表专用字段
+
+<TypeTable
+  type={{
+    separator: {
+      description: '分割字符',
+      type: 'string',
+    },
+    envs: {
+      description: '成员（复合变量的值）长度',
+      type: 'number',
+    },
+  }}
+/>

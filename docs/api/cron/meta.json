@@ -1,0 +1,17 @@
+{
+  "title": "Cron 定时任务",
+  "icon": "Clock",
+  "pages": [
+    "schema",
+    "page",
+    "create",
+    "update",
+    "delete",
+    "order",
+    "bind-group",
+    "running-tasks",
+    "run",
+    "terminate",
+    "dashboard"
+  ]
+}

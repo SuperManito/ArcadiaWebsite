@@ -1,0 +1,91 @@
+---
+title: 查询属性
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/file/info</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    type: {
+      description: '文件类型',
+      type: "string<'folder' | 'file'>",
+      required: true,
+    },
+    name: {
+      description: '名称',
+      type: 'string',
+      required: true,
+    },
+    parent_path: {
+      description: '存储位置路径',
+      type: 'string',
+      required: true,
+    },
+    mode: {
+      description: '权限（3位数字）',
+      type: 'string',
+      required: true,
+    },
+    size: {
+      description: '大小（单位字节）',
+      type: 'number',
+      required: true,
+    },
+    display_size: {
+      description: '格式化大小（带单位）',
+      type: 'string',
+      required: true,
+    },
+    modified_time: {
+      description: '内容最后一次被修改的时间',
+      type: 'string',
+      required: true,
+    },
+    accessed_time: {
+      description: '最后一次被访问的时间',
+      type: 'string',
+      required: true,
+    },
+    created_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    changed_time: {
+      description: '属性（如权限或链接）最后一次被更改的时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "type": "file",
+  "name": "example",
+  "parent_path": "/arcadia/log",
+  "mode": "644",
+  "size": 2048,
+  "display_size": "2.00 KB",
+  "modified_time": "2024-01-01 00:00:00",
+  "accessed_time": "2024-01-01 00:00:00",
+  "created_time": "2024-01-01 00:00:00",
+  "changed_time": "2024-01-01 00:00:00"
+}
+```

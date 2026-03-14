@@ -1,0 +1,23 @@
+---
+title: 重命名
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/rename</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+    name: {
+      description: '新的名称',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

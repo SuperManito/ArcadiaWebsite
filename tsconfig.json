@@ -8,7 +8,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["src/*"],
       "fumadocs-mdx:collections/*": [".source/*"]
     },
     "resolveJsonModule": true,

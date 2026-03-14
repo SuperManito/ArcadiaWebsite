@@ -1,0 +1,100 @@
+---
+title: 配置双重认证 (2FA)
+---
+import { GET, POST } from '@/components/RequestTag';
+
+基于 TOTP (Time-Based One-Time Passwords) [RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238) 标准
+
+## 获取启用状态
+
+<GET>/user/twoFactorAuth/status</GET>
+
+### 请求
+
+无参数
+
+## 初始化配置
+
+<POST>/user/twoFactorAuth/setup</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    issuer: {
+      description: '服务名称',
+      type: 'string',
+      default: 'Arcadia',
+    },
+  }}
+/>
+
+### 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    secret: {
+      description: 'TOTP 密钥（Base32 编码）',
+      type: 'string',
+      required: true,
+    },
+    otpauthUrl: {
+      description: 'otpauth URI（用于生成二维码）',
+      type: 'string',
+      required: true,
+    },
+    issuer: {
+      description: '服务名称',
+      type: 'string',
+      required: true,
+    },
+    message: {
+      description: '提示信息',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "secret": "JBSWY3DPEHPK3PXP",
+  "otpauthUrl": "otpauth://totp/Arcadia:useradmin?secret=JBSWY3DPEHPK3PXP&issuer=Arcadia&algorithm=SHA1&digits=6&period=30",
+  "issuer": "Arcadia",
+  "message": "请使用 Google Authenticator 或 Microsoft Authenticator 扫描二维码"
+}
+```
+
+## 启用
+
+<POST>/user/twoFactorAuth/enable</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    secret: {
+      description: 'TOTP 密钥（从 setup 接口获取）',
+      type: 'string',
+      required: true,
+    },
+    code: {
+      description: '6 位动态验证码（纯数字）',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+<Callout title="需要验证传参">
+  验证通过才会启用
+</Callout>
+
+## 关闭
+
+<POST>/user/twoFactorAuth/disable</POST>
+
+### 请求
+
+无参数

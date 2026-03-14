@@ -1,0 +1,14 @@
+---
+title: '清理日志'
+description: 删除代码文件的运行日志以及项目产生的各类日志文件
+---
+
+```bash
+arcadia rmlog
+```
+
+默认删除 `7` 天以上的日志，可以通过修改配置文件中的 `RmLogDaysAgo` 变量更改此默认时间
+
+```bash title="删除指定天数的日志"
+arcadia rmlog <days>
+```

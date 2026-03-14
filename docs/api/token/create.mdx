@@ -1,0 +1,30 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/token</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '配置名称',
+      type: 'string',
+      required: true,
+    },
+    expire_time: {
+      description: '过期时间（时间戳），不提供为永久',
+      type: 'number',
+    },
+    permissions: {
+      description: '访问权限，默认为空（即不限制访问权限），仅支持 env | cron | file 三种类型，用逗号拼接',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+参考[获取列表响应](/docs/api/token/list#响应)

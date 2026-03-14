@@ -1,0 +1,28 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/create</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '存放路径',
+      type: 'string',
+      required: true,
+    },
+    name: {
+      description: '名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '文件类型',
+      type: "string<'folder' | 'file'>",
+      required: true,
+    },
+  }}
+/>

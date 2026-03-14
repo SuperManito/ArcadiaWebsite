@@ -1,0 +1,21 @@
+{
+  "title": "文档",
+  "root": true,
+  "icon": "BookOpen",
+  "pages": [
+    "---介绍---",
+    "quick-start",
+    "index",
+    "CHANGELOG",
+    "about",
+    "---配置---",
+    "environment",
+    "configuration",
+    "sync",
+    "tgbot/index",
+    "notify",
+    "---使用---",
+    "panel",
+    "update"
+  ]
+}

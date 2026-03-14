@@ -1,0 +1,49 @@
+---
+title: 更改状态
+description: /env/changeStatusItem、/env/changeStatus
+---
+import { PUT } from '@/components/RequestTag';
+
+## 变量项
+
+<PUT>/env/changeStatusItem</PUT>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number | number[]',
+      required: true,
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      required: true,
+    },
+  }}
+/>
+
+## 变量组
+
+<PUT>/env/changeStatus</PUT>
+
+### 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number | number[]',
+      required: true,
+    },
+    enable: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      required: true,
+    },
+  }}
+/>

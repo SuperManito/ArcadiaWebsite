@@ -1,0 +1,48 @@
+---
+title: 数据关系模型
+---
+
+数据库对于该功能设计了三个数据表 `tasks`、`taskCore` 和 `tasksExecutionStats`。为了提高效率额外设计了 `taskCore` 表，专用于定时任务工作引擎的数据关联。
+
+`tasksExecutionStats` 表用于记录定时任务的执行统计数据。
+
+```prisma
+model taskCore {
+  id       String @id
+  cron     String
+  callback String
+}
+
+model tasks {
+  id            Int       @id @default(autoincrement())
+  name          String
+  cron          String
+  type          String
+  shell         String    @default("")
+  active        Int       @default(1)
+  last_runtime  DateTime?
+  last_run_use  Int?
+  tags          String    @default("")
+  sort          Int       @default(99999)
+  create_time   DateTime  @default(now())
+  config        String    @default("")
+  remark        String    @default("")
+  bind          String    @default("")
+}
+
+model tasksExecutionStats {
+  id             Int      @id @default(autoincrement())
+  task_id        Int
+  task_name      String
+  task_type      String
+  exec_timestamp BigInt
+  duration       Int
+  success        Int
+  create_time    DateTime @default(now())
+
+  @@index([task_id, exec_timestamp])
+  @@index([exec_timestamp])
+  @@index([task_type, exec_timestamp])
+}
+```
+

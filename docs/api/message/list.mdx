@@ -1,0 +1,39 @@
+---
+title: 获取列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/list</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    limit: {
+      description: '限制返回条数',
+      type: 'string',
+      default: 10,
+    },
+    status: {
+      description: '状态过滤，支持多选（逗号分隔）',
+      type: "string<'read' | 'unread'>",
+    },
+    source: {
+      description: '消息来源过滤',
+      type: "string<'system' | 'user'>",
+    },
+    category: {
+      description: '消息类型过滤',
+      type: "string<'info' | 'warn' | 'error' | 'success'>",
+    },
+    search: {
+      description: '搜索内容过滤，仅涉及消息标题和消息内容',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+```json title="示例"
+```

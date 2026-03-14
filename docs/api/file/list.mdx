@@ -1,0 +1,115 @@
+---
+title: 获取文件列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/file/list</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+    title: {
+      description: '目标路径所属目录的名称',
+      type: 'string',
+      required: true,
+    },
+    name: {
+      description: '文件或目录名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '文件类型',
+      type: "string<'folder' | 'file'>",
+      required: true,
+    },
+    updated_at: {
+      description: '最后修改时间',
+      type: 'string',
+      required: true,
+    },
+    created_at: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    children: {
+      description: '成员，即下级内容（注：成员名称字段均为 `name`）',
+      type: 'object[]',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "path": "/arcadia",
+  "title": "arcadia",
+  "type": "folder",
+  "updated_at": "2024-01-01 00:00:00",
+  "created_at": "2024-01-01 00:00:00",
+  "children": [
+    {
+      "path": "/arcadia/config",
+      "name": "config",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    },
+    {
+      "path": "/arcadia/log",
+      "name": "log",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    },
+    {
+      "path": "/arcadia/raw",
+      "name": "raw",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    },
+    {
+      "path": "/arcadia/repo",
+      "name": "repo",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    },
+    {
+      "path": "/arcadia/scripts",
+      "name": "scripts",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    },
+    {
+      "path": "/arcadia/src",
+      "name": "src",
+      "type": "folder",
+      "updated_at": "2024-01-01 00:00:00",
+      "created_at": "2024-01-01 00:00:00"
+    }
+  ]
+}
+```

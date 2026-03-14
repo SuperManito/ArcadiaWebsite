@@ -1,0 +1,23 @@
+---
+title: 保存文件内容
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/file/content</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '文件内容',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

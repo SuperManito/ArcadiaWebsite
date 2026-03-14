@@ -1,0 +1,16 @@
+{
+  "title": "Cron 定时任务",
+  "icon": "Clock",
+  "pages": [
+    "page-get",
+    "query-get",
+    "create-post",
+    "update-post",
+    "delete-post",
+    "order-post",
+    "tagsList-get",
+    "runningTasks-get",
+    "run-post",
+    "terminate-post"
+  ]
+}

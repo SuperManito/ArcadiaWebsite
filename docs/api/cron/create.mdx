@@ -1,0 +1,82 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/cron</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '任务名称',
+      type: 'string',
+      required: true,
+    },
+    cron: {
+      description: '定时表达式',
+      type: 'string',
+      required: true,
+    },
+    shell: {
+      description: '执行的命令',
+      type: 'string',
+      required: true,
+    },
+    active: {
+      description: '状态',
+      typeDescription: '1 启用，0 禁用',
+      type: 'number<0 | 1>',
+      default: 1,
+    },
+    remark: {
+      description: '任务备注',
+      type: 'string',
+    },
+    type: {
+      description: '任务类型，当前固定分为 user 和 system',
+      type: "string<'user' | 'system'>",
+    },
+    bind: {
+      description: '后端关联代码文件参数',
+      type: 'string',
+    },
+    config: {
+      description: '高级配置',
+      type: 'string<object>',
+      typeDescription: '值为 JSON 序列化后的字符串',
+    },
+  }}
+/>
+
+- `config` 高级配置字段说明
+
+<TypeTable
+  type={{
+    before_task_shell: {
+      description: '任务运行前的执行命令',
+      type: 'string',
+    },
+    after_task_shell: {
+      description: '任务运行后的执行命令',
+      type: 'string',
+    },
+    log_directory: {
+      description: '日志目录路径（纯前端功能关联数据）',
+      type: 'string',
+    },
+    source_file: {
+      description: '源码文件路径（纯前端功能关联数据）',
+      type: 'string',
+    },
+    allow_concurrency: {
+      description: '是否允许并发',
+      type: 'boolean',
+    },
+  }}
+/>
+
+## 响应
+
+参考[分页查询接口响应数据项](/docs/api/cron/page#响应)

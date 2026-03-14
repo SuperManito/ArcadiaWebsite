@@ -3,14 +3,14 @@ import antfu from '@antfu/eslint-config'
 export default antfu(
   {
     nextjs: true,
-    e18en: false,
+    e18e: false,
     ignores: [
       '.next/**',
       'out/**',
       'build/**',
       'next-env.d.ts',
       '.source/**',
-      'content/**',
+      'docs/**',
     ],
     rules: {
       'no-case-declarations': 'off', // 禁止在 case 或 default 子句中出现词法声明

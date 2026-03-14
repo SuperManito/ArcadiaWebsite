@@ -1,0 +1,62 @@
+---
+title: 获取用户信息
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/user/info</GET>
+
+## 请求
+
+无参数
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    username: {
+      description: '用户名',
+      type: 'string',
+      required: true,
+    },
+    lastLoginInfo: {
+      description: '最近一次的登录信息',
+      type: '{ loginIp: string, loginAddress: string, loginTime: string }',
+      required: true,
+    },
+  }}
+/>
+
+- lastLoginInfo
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    loginIp: {
+      description: 'IP地址（IPv4）',
+      type: 'string',
+      required: true,
+    },
+    loginAddress: {
+      description: '物理位置',
+      type: 'string',
+      required: true,
+    },
+    loginTime: {
+      description: '时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "username": "admin",
+  "lastLoginInfo": {
+    "loginIp": "127.0.0.1",
+    "loginAddress": "局域网",
+    "loginTime": "2024-01-01 00:00:00"
+  }
+}
+```

@@ -1,0 +1,10 @@
+{
+  "title": "Token 令牌管理",
+  "icon": "Key",
+  "pages": [
+    "list",
+    "create",
+    "update",
+    "delete"
+  ]
+}

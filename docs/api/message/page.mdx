@@ -1,0 +1,49 @@
+---
+title: 获取分页
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/page</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    status: {
+      description: '状态过滤，支持多选（逗号分隔）',
+      type: "string<'read' | 'unread'>",
+    },
+    source: {
+      description: '消息来源过滤',
+      type: "string<'system' | 'user'>",
+    },
+    category: {
+      description: '消息类型过滤',
+      type: "string<'info' | 'warn' | 'error' | 'success'>",
+    },
+    search: {
+      description: '搜索内容过滤，仅涉及消息标题和消息内容',
+      type: 'string',
+    },
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    order: {
+      description: '指定排序方式',
+      typeDescription: '0 升序，1 降序',
+      type: "string<'0' | '1'>",
+    },
+  }}
+/>
+
+## 响应
+
+```json title="示例"
+```

@@ -1,0 +1,8 @@
+{
+  "title": "Log 系统日志",
+  "icon": "History",
+  "pages": [
+    "server",
+    "login"
+  ]
+}

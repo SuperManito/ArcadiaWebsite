@@ -1,0 +1,67 @@
+---
+title: 概述
+---
+
+## 接口基准地址
+
+- `http://localhost:5678/api`
+
+## 身份认证
+
+在 Header 中添加 `Authorization` 字段，值为 `Bearer {Token}`
+
+关于如何获取 `Token` 详见登录认证接口详见 [登录认证接口](/docs/api/user/auth)
+
+## 响应状态码说明
+
+|  状态码   |         含义           | 说明                             |
+| :------: | :-------------------: | :-----------------------------: |
+|  `200`   |          OK           | 请求成功                          |
+|  `400`   |      BAD REQUEST      | 请求的地址不存在或者包含不支持的参数   |
+|  `401`   |     UNAUTHORIZED      | 未提供授权信息                     |
+|  `403`   |       FORBIDDEN       | 认证失败                          |
+|  `500`   | INTERNAL SERVER ERROR | 内部错误                          |
+
+## 返回内容格式
+
+数据返回格式统一使用 JSON
+
+<TypeTable
+  type={{
+    code: {
+      description: '业务代码（详见下方）',
+      type: 'number<0 | 1>',
+      required: true,
+    },
+    message: {
+      description: '消息',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '类型',
+      type: 'string',
+      required: true,
+    },
+    result: {
+      description: '结果',
+      type: 'boolean | object | string',
+      required: true,
+    },
+  }}
+/>
+
+## 业务代码说明
+
+| 状态码 |   说明   |
+| :---: | :-----: |
+|  `0`  |  请求失败 |
+|  `1`  |  请求成功 |
+
+## 参数传递
+
+除 GET 请求通过 URL 传递参数外，其它请求方式均通过 Body 传递参数
+
+## 接口类别
+
+<DocsCategory />

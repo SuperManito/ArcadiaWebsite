@@ -1,0 +1,85 @@
+---
+title: 控制面板
+icon: AppWindow
+---
+
+默认通过 `http://localhost:5678` 访问，如若更改了面板服务的主机映射端口则需要访问对应端口
+
+用于登录的初始用户名和密码分别为 `useradmin` `passwd`，登录后请按照引导提示尽快修改认证信息。
+
+<Callout type="info" title="浏览器限制">
+由于使用了较新的技术，一些旧版本的浏览器可能存在兼容性问题。建议使用 Chromium 内核的64位浏览器如 Chrome、Edge 等，并且不建议使用 FireFox 等其它内核的浏览器。
+
+在 <Icon>simple-icons:apple</Icon> Apple 设备上使用时，`iOS / iPadOS` 最低需要 `16.4` （不支持2023年4月以前的版本使用），`macOS` 受到的影响较小
+</Callout>
+
+<Accordions type="single">
+  <Accordion title="更改面板服务端口">
+    <Callout title="用途">
+      在不重新部署的情况下更改面板映射端口
+    </Callout>
+
+    请在宿主机执行下面的命令
+
+    - 1. 进入相关目录
+
+      ```bash
+      cd /var/lib/docker/containers/$(docker inspect --format='{{.Id}}' arcadia)
+      ```
+      容器名默认为 `arcadia` ，如果不是则自行修改
+
+    - 2. 一键修改配置文件
+
+      ```bash
+      sed -i "s/HostPort.*\}\]\},/\"HostPort\":\"5678\"\}\]\},/g" hostconfig.json
+      ```
+      将命令中的 `5678` 替换成新的端口号即可
+
+    - 3. 重启 Docker 服务
+
+      ```bash
+      systemctl restart docker
+      ```
+  </Accordion>
+
+  <Accordion title="反向代理">
+    如果你需要通过域名使用建议使用反向代理，这里以 `nginx` 为例
+
+    ```nginx
+    server {
+        listen 80;
+        listen 443 ssl;
+        // highlight-next-line
+        server_name <域名>;
+
+        // highlight-next-line
+        ssl_certificate <证书文件路径（crt）>;
+        // highlight-next-line
+        ssl_certificate_key <证书私钥路径（crt）>;
+
+        location / {
+            // highlight-next-line
+            proxy_pass http://127.0.0.1:5678;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Port $server_port;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="忘记了用户名或密码？">
+    详见 CLI 文档教程 [查看信息](/docs/cli/server/service#查看信息)
+  </Accordion>
+
+  <Accordion title="面板支持用户本地部署">
+    最新编译后的前端代码在仓库 `public` 目录下，你可以自行本地部署 WEB 服务
+
+    通过修改 `app.config.js` 文件中的 VITE_GLOB_API_URL 和 VITE_GLOB_WS_URL 来指定后端服务地址：
+
+    `"VITE_GLOB_API_URL":"http://localhost:5678/api"`  
+    `"VITE_GLOB_WS_URL":"ws://localhost:5678"`
+  </Accordion>
+</Accordions>

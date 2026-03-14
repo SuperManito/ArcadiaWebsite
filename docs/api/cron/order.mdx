@@ -1,0 +1,26 @@
+---
+title: 调整排序
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/cron/order</PUT>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    order: {
+      description: '目的修改位置',
+      type: 'number',
+    },
+    moveToEnd: {
+      description: '是否置尾',
+      type: 'boolean',
+    },
+  }}
+/>

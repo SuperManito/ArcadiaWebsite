@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+@import 'fumadocs-openapi/css/preset.css';
+@import './custom.css';
+
+@theme {
+  --font: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Segoe UI", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-mono: "SF Mono", "Monaspace Neno", "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+
+@font-face {
+  font-family: 'SF Mono';
+  src: url('/fonts/SF-Mono-Regular.otf');
+}
+
+@layer utilities {
+  .theme-teal {
+    --color-fd-primary: #14b8a6; /* teal-500 */
+    --color-fd-primary-foreground: #ffffff;
+  }
+  .dark .theme-teal {
+    --color-fd-primary: #5eead4; /* teal-300 */
+    --color-fd-primary-foreground: #0a0a0a;
+  }
+
+  .theme-sky {
+    --color-fd-primary: #0ea5e9; /* sky-500 */
+    --color-fd-primary-foreground: #ffffff;
+  }
+  .dark .theme-sky {
+    --color-fd-primary: #7dd3fc; /* sky-300 */
+    --color-fd-primary-foreground: #0a0a0a;
+  }
+
+  .theme-amber {
+    --color-fd-primary: #f59e0b; /* amber-500 */
+    --color-fd-primary-foreground: #ffffff;
+  }
+  .dark .theme-amber {
+    --color-fd-primary: #fcd34d; /* amber-300 */
+    --color-fd-primary-foreground: #0a0a0a;
+  }
+
+  .theme-fuchsia {
+    --color-fd-primary: #d946ef; /* fuchsia-500 */
+    --color-fd-primary-foreground: #ffffff;
+  }
+  .dark .theme-fuchsia {
+    --color-fd-primary: #f0abfc; /* fuchsia-300 */
+    --color-fd-primary-foreground: #0a0a0a;
+  }
+}
