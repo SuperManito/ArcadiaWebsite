@@ -12,7 +12,7 @@ export function TabThemeProvider({ children }: { children: ReactNode }) {
   else if (pathname.startsWith('/docs/api'))
     themeClass = 'theme-amber'
   else if (pathname.startsWith('/docs/openapi'))
-    themeClass = 'theme-fuchsia'
+    themeClass = 'theme-purple'
 
   return (
     <div className={`contents ${themeClass}`}>

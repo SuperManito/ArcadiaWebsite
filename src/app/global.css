@@ -34,20 +34,20 @@
   }
 
   .theme-amber {
-    --color-fd-primary: #f59e0b; /* amber-500 */
+    --color-fd-primary: #d97706; /* amber-600 */
     --color-fd-primary-foreground: #ffffff;
   }
   .dark .theme-amber {
-    --color-fd-primary: #fcd34d; /* amber-300 */
+    --color-fd-primary: #fbbf24; /* amber-400 */
     --color-fd-primary-foreground: #0a0a0a;
   }
 
-  .theme-fuchsia {
-    --color-fd-primary: #d946ef; /* fuchsia-500 */
+  .theme-purple {
+    --color-fd-primary: #8b5cf6; /* violet-500 */
     --color-fd-primary-foreground: #ffffff;
   }
-  .dark .theme-fuchsia {
-    --color-fd-primary: #f0abfc; /* fuchsia-300 */
+  .dark .theme-purple {
+    --color-fd-primary: #c4b5fd; /* violet-300 */
     --color-fd-primary-foreground: #0a0a0a;
   }
 }
