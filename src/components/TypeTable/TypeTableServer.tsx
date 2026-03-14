@@ -15,8 +15,8 @@ export async function TypeTableServer({
     Object.entries(type).map(async ([key, value]) => {
       const highlightedType = typeof value.type === 'string'
         ? await highlight(value.type, { lang: 'ts', themes: {
-            light: 'github-light',
-            dark: 'github-dark',
+            light: 'catppuccin-latte',
+            dark: 'catppuccin-frappe',
           } })
         : value.type
       return [key, { ...value, type: highlightedType }] as [string, TypeNode]
