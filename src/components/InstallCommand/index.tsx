@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { DockerIcon, Icon, PodmanIcon } from '@/components/Icon'
+import { shikiThemes } from '@/lib/shiki'
 
 function usePrimaryColor() {
   const { resolvedTheme } = useTheme()
@@ -125,6 +126,16 @@ function useInstallSharedState() {
     getComposeMountLines,
     getRunMountLines,
   }
+}
+
+function CodeBlock({ code }: { code: string }) {
+  return (
+    <DynamicCodeBlock
+      lang="bash"
+      code={code}
+      options={{ themes: shikiThemes }}
+    />
+  )
 }
 
 function PopoverContent({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
@@ -297,10 +308,7 @@ ${mirror || 'docker.io/'}supermanito/arcadia:beta`
         </Popover>
       </Space>
       <div>
-        <DynamicCodeBlock
-          lang="bash"
-          code={type === 'docker' ? docker : podman}
-        />
+        <CodeBlock code={type === 'docker' ? docker : podman} />
       </div>
     </div>
   )
@@ -342,8 +350,7 @@ function ComposeInstall() {
       <div>
         <ul>
           <li>新建 YAML 文件</li>
-          <DynamicCodeBlock
-            lang="bash"
+          <CodeBlock
             code={`${useCurrentDir ? `touch ${composeFileName}` : `mkdir -p /opt/arcadia && cd /opt/arcadia\ntouch ${composeFileName}`}`}
           />
           <li>
@@ -351,15 +358,9 @@ function ComposeInstall() {
             {' '}
             <code>{composeFileName}</code>
           </li>
-          <DynamicCodeBlock
-            lang="yaml"
-            code={composeFileContent}
-          />
+          <CodeBlock code={composeFileContent} />
           <li>启动容器</li>
-          <DynamicCodeBlock
-            lang="bash"
-            code={type === 'podman-compose' ? `podman-compose up -d` : `docker-compose up -d`}
-          />
+          <CodeBlock code={type === 'podman-compose' ? `podman-compose up -d` : `docker-compose up -d`} />
         </ul>
       </div>
     </div>

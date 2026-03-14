@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react'
 import type { TypeNode } from './index'
 import { highlight } from 'fumadocs-core/highlight'
+import { shikiThemes } from '@/lib/shiki'
 import { TypeTable } from './index'
 
 /**
@@ -14,10 +15,7 @@ export async function TypeTableServer({
   const entries = await Promise.all(
     Object.entries(type).map(async ([key, value]) => {
       const highlightedType = typeof value.type === 'string'
-        ? await highlight(value.type, { lang: 'ts', themes: {
-            light: 'catppuccin-latte',
-            dark: 'catppuccin-frappe',
-          } })
+        ? await highlight(value.type, { lang: 'ts', themes: shikiThemes })
         : value.type
       return [key, { ...value, type: highlightedType }] as [string, TypeNode]
     }),

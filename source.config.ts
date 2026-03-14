@@ -1,5 +1,6 @@
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema'
 import { defineConfig, defineDocs } from 'fumadocs-mdx/config'
+import { shikiThemes } from '@/lib/shiki'
 
 export const docs = defineDocs({
   dir: 'docs',
@@ -21,10 +22,7 @@ export default defineConfig({
       parseMdx: true,
     },
     rehypeCodeOptions: {
-      themes: {
-        light: 'catppuccin-latte',
-        dark: 'catppuccin-frappe',
-      },
+      themes: shikiThemes,
     },
   },
 })
