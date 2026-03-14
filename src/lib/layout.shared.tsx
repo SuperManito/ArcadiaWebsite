@@ -24,7 +24,7 @@ export const socialLinks: BaseLayoutProps['links'] = [
 ]
 
 export const Logo = (
-  <div className="h-9 flex items-center">
+  <div>
     <img
       src="/images/logo/arcadia-light-sub.png"
       className="block dark:hidden select-none"
