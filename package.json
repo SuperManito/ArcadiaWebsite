@@ -1,11 +1,15 @@
 {
   "name": "arcadia-website",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.0"
+  },
   "scripts": {
     "build": "next build",
     "build:openapi": "bun ./src/scripts/generate-docs.ts",
     "dev": "next dev",
+    "info": "next info",
     "check": "fumadocs-mdx && next typegen && tsc --noEmit && rimraf tsconfig.tsbuildinfo",
     "postinstall": "fumadocs-mdx",
     "clean:cache": "rimraf .source && rimraf .next && rimraf node_modules/.cache/",
@@ -14,7 +18,8 @@
     "clean:lib": "rimraf node_modules",
     "clean": "pnpm clean:build && pnpm clean:cache && pnpm clean:lock && pnpm clean:lib",
     "lint": "eslint",
-    "lint:fix": "eslint --fix --ext .ts,tsx,js,jsx,mjs,mdx"
+    "lint:fix": "eslint --fix --ext .ts,tsx,js,jsx,mjs,mdx",
+    "prepare": "husky"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
@@ -40,6 +45,8 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.7.2",
+    "@commitlint/cli": "^20.4.4",
+    "@commitlint/config-conventional": "^20.4.4",
     "@next/eslint-plugin-next": "^16.1.6",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/mdx": "^2.0.13",
@@ -47,9 +54,14 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "postcss": "^8.5.8",
     "rimraf": "^6.1.3",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs}": "eslint --fix"
   }
 }
