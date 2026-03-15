@@ -14,25 +14,24 @@ import {
   SearchDialogOverlay,
 
 } from 'fumadocs-ui/components/dialog/search'
-import { useI18n } from 'fumadocs-ui/contexts/i18n'
+// import { useI18n } from 'fumadocs-ui/contexts/i18n'
 
 function initOrama() {
-  const { locale } = useI18n() // (optional) for i18n
   return create({
     schema: { _: 'string' },
     // https://docs.orama.com/docs/orama-js/supported-languages
     components: {
-      tokenizer: locale === 'cn' ? createTokenizer() : undefined,
+      tokenizer: createTokenizer(),
     },
   })
 }
 
 export default function DefaultSearchDialog(props: SharedProps) {
-  const { locale } = useI18n() // (optional) for i18n
+  // const { locale } = useI18n() // (optional) for i18n
   const { search, setSearch, query } = useDocsSearch({
     type: 'static',
     initOrama,
-    locale,
+    // locale,
   })
 
   return (

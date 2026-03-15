@@ -5,15 +5,9 @@ import { source } from '@/lib/source'
 // statically cached
 export const revalidate = false
 export const { staticGET: GET } = createFromSource(source, {
-  localeMap: {
-    cn: {
-      components: {
-        tokenizer: createTokenizer(),
-      },
-      search: {
-        threshold: 0,
-        tolerance: 0,
-      },
-    },
+  tokenizer: createTokenizer(),
+  search: {
+    threshold: 0,
+    tolerance: 0,
   },
 })
