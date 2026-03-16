@@ -25,9 +25,46 @@ import { GET, POST } from '@/components/RequestTag';
 "aBcDeFgHiJkLmNoPqRsTuVwXyZ"
 ```
 
-### 获取实时日志
+## 调试运行代码文件
 
-需要与 `/api/ws` 接口建立 WebSocket 连接，然后监听消息过滤 `runId` 临时id参数，然后判断 `over` 运行状态参数是否结束监听，具体详见前端业务实现
+<POST>/debugRun</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '原始代码文件路径',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '代码文件内容',
+      type: 'string',
+      required: true,
+    },
+    option: {
+      description: '命令选项配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+    env: {
+      description: '环境变量配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+  }}
+/>
+
+### 响应
+
+```json title="示例"
+"aBcDeFgHiJkLmNoPqRsTuVwXyZ"
+```
+
+## 获取实时日志
+
+需要与 `/api/ws` 接口建立 WebSocket 连接，监听 `runLog` 消息，过滤 `runId` 临时id参数，可通过 `over` 参数判断运行状态是否结束监听，具体详见前端业务实现
 
 ## 获取命令的运行状态
 
