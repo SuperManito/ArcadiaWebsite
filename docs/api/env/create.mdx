@@ -1,6 +1,5 @@
 ---
 title: 创建
-description: /env/createItem、/env/create
 ---
 import { POST } from '@/components/RequestTag';
 
@@ -21,7 +20,7 @@ import { POST } from '@/components/RequestTag';
       required: true,
     },
     type: {
-      description: '变量名称（复合变量的值需传递空值）',
+      description: '变量名称（为复合变量的成员值时需传递空值）',
       type: 'string',
       required: true,
     },

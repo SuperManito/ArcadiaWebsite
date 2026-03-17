@@ -1,0 +1,37 @@
+---
+title: 获取运行状态
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/exec/status</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '事件 ID',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    running: {
+      description: '运行状态，是否正在运行中',
+      type: 'boolean',
+      required: true,
+    },
+    startedAt: {
+      description: '任务启动时间',
+      type: 'string',
+      typeDescription: '仅运行中返回，若任务已结束或不存在则不返回该字段',
+      required: true,
+    },
+  }}
+/>

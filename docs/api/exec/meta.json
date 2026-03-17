@@ -1,0 +1,10 @@
+{
+  "title": "Exec 命令执行",
+  "icon": "Command",
+  "pages": [
+    "cmd",
+    "file",
+    "log",
+    "status"
+  ]
+}

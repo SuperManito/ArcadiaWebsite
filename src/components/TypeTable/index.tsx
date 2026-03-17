@@ -146,7 +146,7 @@ function Item({
               </Link>
             )
           : (
-              <span className="@max-xl:hidden">{type}</span>
+              <span className="@max-xl:hidden type-table-type-highlight">{type}</span>
             )}
         <ChevronDown className="absolute inset-e-2 size-4 text-fd-muted-foreground transition-transform group-data-open:rotate-180" />
       </CollapsibleTrigger>

@@ -1,0 +1,12 @@
+{
+  "title": "Exec 命令执行",
+  "icon": "Command",
+  "pages": [
+    "cmd-post",
+    "cmdStream-post",
+    "run-post",
+    "runStream-post",
+    "stopRun-post",
+    "status-get"
+  ]
+}

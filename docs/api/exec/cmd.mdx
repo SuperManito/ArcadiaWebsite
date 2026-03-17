@@ -1,0 +1,22 @@
+---
+title: 执行 Shell 命令
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/exec/cmd</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    cmd: {
+      description: '命令',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+返回事件 ID 字符串，关于如何获取日志详见 [获取实时日志](/docs/api/exec/log)。

@@ -2,7 +2,7 @@
 title: 数据关系模型
 ---
 
-数据库对于该功能设计了三个数据表 `tasks`、`taskCore` 和 `tasksExecutionStats`。为了提高效率额外设计了 `taskCore` 表，专用于定时任务工作引擎的数据关联。
+数据库对于该功能设计了三个数据表 `tasks`、`taskCore` 和 `tasksExecutionStats`。`taskCore` 表专用于关联定时任务工作引擎。
 
 `tasksExecutionStats` 表用于记录定时任务的执行统计数据。
 

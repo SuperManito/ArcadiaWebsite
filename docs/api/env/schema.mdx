@@ -3,7 +3,7 @@ title: 数据关系模型
 ---
 
 <Callout>
-  此部分API与数据模型紧密相连，如果你无法理解项目应用程序设计那么请谨慎操作，建议先了解前端实现或直接使用 Open API
+  此部分与API相连，如果你无法理解项目应用程序设计那么请谨慎操作，建议先了解前端实现或直接使用 OpenAPI
 </Callout>
 
 ## 数据关系模型
@@ -42,7 +42,7 @@ model envsGroup {
 
 - `envs` 表
 
-    用于存储所有普通变量和复合变量的值，复合变量的值不使用 `type`、`tag_list`、`description` 字段  
+    用于存储所有普通变量和复合变量的成员值，复合变量的成员值不使用 `type`、`tag_list`、`description` 字段  
     其中 `group_id` 字段用于关联 envsGroup 表的 `id` 字段，为 `0` 时表示记录项是一个普通变量
 
 - envsGroup 表
@@ -115,7 +115,7 @@ model envsGroup {
       type: 'string',
     },
     envs: {
-      description: '成员（复合变量的值）长度',
+      description: '该复合变量组的成员（值）数量',
       type: 'number',
     },
   }}

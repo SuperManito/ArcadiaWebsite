@@ -1,0 +1,93 @@
+---
+title: 运行代码文件
+---
+import { POST } from '@/components/RequestTag';
+
+## 运行
+
+<POST>/exec/file</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '代码文件路径',
+      type: 'string',
+      required: true,
+    },
+    options: {
+      description: '命令选项配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+    envs: {
+      description: '环境变量配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+  }}
+/>
+
+### 响应
+
+返回事件 ID 字符串，关于如何获取日志详见 [获取实时日志](/docs/api/exec/log)。
+
+
+## 调试运行
+
+<POST>/exec/file/debug</POST>
+
+会创建临时文件并在运行完毕后自动清理，不修改原始代码文件内容。
+
+### 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '代码文件路径',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '代码文件内容',
+      type: 'string',
+      required: true,
+    },
+    options: {
+      description: '命令选项配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+    envs: {
+      description: '环境变量配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+  }}
+/>
+
+### 响应
+
+返回事件 ID 字符串，关于如何获取日志详见 [获取实时日志](/docs/api/exec/log)。
+
+
+## 终止运行
+
+<POST>/exec/file/stop</POST>
+
+### 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '代码文件路径（可以是 CLI 支持的相对路径格式）',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+### 响应
+
+返回事件 ID 字符串，关于如何获取日志详见 [获取实时日志](/docs/api/exec/log)。

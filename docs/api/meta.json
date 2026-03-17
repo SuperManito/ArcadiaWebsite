@@ -9,8 +9,9 @@
     "file",
     "cron",
     "env",
+    "exec",
     "token",
     "log",
-    "main"
+    "captcha/index"
   ]
 }

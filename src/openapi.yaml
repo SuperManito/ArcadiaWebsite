@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.1.1
 info:
   title: Arcadia 一站式代码自动化运维平台 OpenAPI
   description: |
@@ -41,6 +41,7 @@ tags:
   - name: File 文件系统
   - name: Env 环境变量
   - name: Cron 定时任务
+  - name: Exec 命令执行
 
 components:
   securitySchemes:
@@ -171,7 +172,30 @@ components:
         is_running:
           type: boolean
           description: 当前运行状态（任务是否正在运行）
-
+    RunConfigOptions:
+      type: object
+      description: 命令行选项
+      properties:
+        key:
+          type: string
+          description: 选项名称，详见 `arcadia run` 输出
+        value:
+          type: string
+          description: 选项内容（可省略）
+      required:
+        - key
+    RunConfigEnvs:
+      type: object
+      description: 环境变量
+      properties:
+        key:
+          type: string
+          description: 变量名称
+        value:
+          type: string
+          description: 变量内容（可省略）
+      required:
+        - key
 paths:
   /file/v1/list:
     get:
@@ -1189,10 +1213,19 @@ paths:
                   type: string
                   description: 任务备注
                 config:
-                  type: string
-                  description: 高级配置（值为 JSON 序列化后的字符串）
-                  examples:
-                    - '{"before_task_shell": "任务运行前的执行命令", "after_task_shell": "任务运行后的执行命令", "log_directory": "日志目录路径（纯前端功能关联数据）", "source_file": "源码文件路径（纯前端功能关联数据）", "allow_concurrency": "是否允许并发"}'
+                  type: string<object>
+                  description: |
+                    高级配置（值为 JSON 序列化后的字符串）
+
+                    ```ts title="数据格式"
+                    interface CronTaskConfig {
+                      before_task_shell?: string // 任务运行前的执行命令
+                      after_task_shell?: string // 任务运行后的执行命令
+                      log_directory?: string // 日志目录路径（纯前端功能关联数据）
+                      source_file?: string // 源码文件路径（纯前端功能关联数据）
+                      allow_concurrency?: boolean // 是否允许并发
+                    }
+                    ```
               required:
                 - name
                 - cron
@@ -1240,10 +1273,19 @@ paths:
                   type: string
                   description: 任务备注
                 config:
-                  type: string
-                  description: 高级配置（值为 JSON 序列化后的字符串）
-                  examples:
-                    - '{"before_task_shell": "任务运行前的执行命令", "after_task_shell": "任务运行后的执行命令", "log_directory": "日志目录路径（纯前端功能关联数据）", "source_file": "源码文件路径（纯前端功能关联数据）", "allow_concurrency": "是否允许并发"}'
+                  type: string<object>
+                  description: |
+                    高级配置（值为 JSON 序列化后的字符串）
+
+                    ```ts title="数据格式"
+                    interface CronTaskConfig {
+                      before_task_shell?: string // 任务运行前的执行命令
+                      after_task_shell?: string // 任务运行后的执行命令
+                      log_directory?: string // 日志目录路径（纯前端功能关联数据）
+                      source_file?: string // 源码文件路径（纯前端功能关联数据）
+                      allow_concurrency?: boolean // 是否允许并发
+                    }
+                    ```
               required:
                 - id
       responses:
@@ -1425,3 +1467,233 @@ paths:
             application/json:
               schema:
                 type: boolean
+
+  /exec/v1/status:
+    get:
+      summary: 查询运行状态
+      deprecated: false
+      description: 任务结束后记录自动清除，`running` 为 `false` 表示已结束或未找到，可轮询此接口实现队列管理。
+      tags:
+        - Exec 命令执行
+      parameters:
+        - name: id
+          in: query
+          description: runId，由其它接口返回
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  running:
+                    type: boolean
+                    description: 是否正在运行
+                  startedAt:
+                    type: string
+                    description: 启动时间（仅 `running` 为 `true` 时存在）
+  /exec/v1/cmd:
+    post:
+      summary: 执行 Shell 命令
+      deprecated: false
+      description: 立即返回事件id，无法查看实时日志
+      tags:
+        - Exec 命令执行
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cmd:
+                  type: string
+                  description: 要执行的 Shell 命令
+              required:
+                - cmd
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: string
+                description: runId 事件id
+  /exec/v1/cmdStream:
+    post:
+      summary: 执行 Shell 命令（Stream）
+      deprecated: false
+      description: |
+        通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后命令仍继续执行。
+      tags:
+        - Exec 命令执行
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cmd:
+                  type: string
+                  description: 要执行的 Shell 命令
+              required:
+                - cmd
+      responses:
+        '200':
+          description: SSE 文本流
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: |
+                  SSE 流，消息格式：`data:<JSON>\n\n`
+
+                  ```ts title="数据格式"
+                  interface StreamEvent {
+                    type: 'start' | 'log' | 'exit' | 'error' // 事件类型
+                    runId: string // 事件id，仅 `log` 和 `error` 事件存在
+                    stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
+                    log: string // 日志内容，仅 `log` 和 `error` 事件存在
+                  }
+                properties:
+                  type:
+                    type: "'start' | 'log' | 'exit' | 'error'"
+                    description: 事件类型
+                  runId:
+                    type: string
+                    description: 事件id，仅 `log` 和 `error` 事件存在
+                  stream:
+                    type: "'stdout' | 'stderr'"
+                    description: 输出流类型，仅 `log` 事件存在
+                  log:
+                    type: string
+                    description: 日志内容，仅 `log` 和 `error` 事件存在
+            application/json:
+              schema:
+                type: object
+                description: 请求失败或出错时返回全局通用 JSON 格式
+  /exec/v1/run:
+    post:
+      summary: 运行代码文件
+      deprecated: false
+      description: 立即返回事件id，无法查看实时日志
+      tags:
+        - Exec 命令执行
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: 代码文件绝对路径
+                options:
+                  type: array
+                  description: 命令行选项
+                  items:
+                    $ref: '#/components/schemas/RunConfigOptions'
+                envs:
+                  type: array
+                  description: 环境变量配置
+                  items:
+                    $ref: '#/components/schemas/RunConfigEnvs'
+              required:
+                - path
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: string
+                description: runId
+  /exec/v1/runStream:
+    post:
+      summary: 运行代码文件（Stream）
+      deprecated: false
+      description: 通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后任务仍继续运行。
+      tags:
+        - Exec 命令执行
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: 代码文件绝对路径
+                options:
+                  type: array
+                  description: 命令行选项
+                  items:
+                    $ref: '#/components/schemas/RunConfigOptions'
+                envs:
+                  type: array
+                  description: 环境变量配置
+                  items:
+                    $ref: '#/components/schemas/RunConfigEnvs'
+              required:
+                - path
+      responses:
+        '200':
+          description: SSE 文本流
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: |
+                  SSE 流，消息格式：`data:<JSON>\n\n`
+
+                  ```ts title="数据格式"
+                  interface StreamEvent {
+                    type: 'start' | 'log' | 'exit' | 'error' // 事件类型
+                    runId: string // 事件id，仅 `log` 和 `error` 事件存在
+                    stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
+                    log: string // 日志内容，仅 `log` 和 `error` 事件存在
+                  }
+            application/json:
+              schema:
+                type: object
+                description: 请求失败或出错时返回全局通用 JSON 格式
+                  }
+  /exec/v1/stopRun:
+    post:
+      summary: 终止运行代码文件
+      deprecated: false
+      description: 仅适用于代码文件，不适用于自定义 Shell 命令。
+      tags:
+        - Exec 命令执行
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: 代码文件路径（可以是 CLI 支持的相对路径格式）
+              required:
+                - path
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: string
+                description: 执行结果信息

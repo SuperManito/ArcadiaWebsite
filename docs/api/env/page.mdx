@@ -1,6 +1,5 @@
 ---
 title: 分页查询
-description: /env/pageItem、/env/page
 ---
 import { GET } from '@/components/RequestTag';
 
@@ -23,7 +22,7 @@ import { GET } from '@/components/RequestTag';
       default: 20,
     },
     group_id: {
-      description: 'envsGroup 表 id 字段关联记录，为0时则返回普通变量记录，指定则返回目标复合变量的值',
+      description: 'envsGroup 表 id 字段关联记录，为0时则返回普通变量记录，指定则返回目标复合变量的成员值',
       type: 'string',
       default: 0,
     },
@@ -279,7 +278,7 @@ import { GET } from '@/components/RequestTag';
       required: true,
     },
     envs: {
-      description: '成员（复合变量的值）长度',
+      description: '该复合变量组的成员（值）数量',
       type: 'number',
       required: true,
     },
