@@ -1,6 +1,7 @@
 'use client'
 import type { SharedProps } from 'fumadocs-ui/components/dialog/search'
 import { create } from '@orama/orama'
+import { stopwords as mandarinStopwords } from '@orama/stopwords/mandarin'
 import { createTokenizer } from '@orama/tokenizers/mandarin'
 import { useDocsSearch } from 'fumadocs-core/search/client'
 import {
@@ -21,7 +22,10 @@ function initOrama() {
     schema: { _: 'string' },
     // https://docs.orama.com/docs/orama-js/supported-languages
     components: {
-      tokenizer: createTokenizer(),
+      tokenizer: createTokenizer({
+        language: 'mandarin',
+        stopWords: mandarinStopwords,
+      }),
     },
   })
 }
