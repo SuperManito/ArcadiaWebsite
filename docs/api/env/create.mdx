@@ -15,8 +15,8 @@ import { POST } from '@/components/RequestTag';
   type={{
     group_id: {
       description: 'envsGroup 表 id 字段关联记录',
-      typeDescription: '为0时表示普通变量',
-      type: 'number',
+      typeDescription: '为 0 时表示普通变量，否则用于指定复合变量(组)',
+      type: 'integer',
       required: true,
     },
     type: {
@@ -26,8 +26,8 @@ import { POST } from '@/components/RequestTag';
     },
     tag_list: {
       description: '标签',
-      typeDescription: 'label 名称，color 颜色(HEX)',
-      type: 'string<{ label: string, color: string }[]>',
+      typeDescription: 'label 名称',
+      type: 'string<{ label: string }[]>',
     },
     description: {
       description: '描述',
@@ -73,8 +73,8 @@ import { POST } from '@/components/RequestTag';
     },
     tag_list: {
       description: '标签',
-      typeDescription: 'label 名称，color 颜色(HEX)',
-      type: 'string<{ label: string, color: string }[]>',
+      typeDescription: 'label 名称',
+      type: 'string<{ label: string }[]>',
     },
     separator: {
       description: '分割字符',

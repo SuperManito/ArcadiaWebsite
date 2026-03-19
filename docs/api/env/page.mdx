@@ -22,8 +22,9 @@ import { GET } from '@/components/RequestTag';
       default: 20,
     },
     group_id: {
-      description: 'envsGroup 表 id 字段关联记录，为0时则返回普通变量记录，指定则返回目标复合变量的成员值',
-      type: 'string',
+      description: 'envsGroup 表 id 字段关联记录',
+      typeDescription: '为 0 时表示普通变量，否则用于指定复合变量(组)',
+      type: 'string<number>',
       default: 0,
     },
     search: {
@@ -32,8 +33,13 @@ import { GET } from '@/components/RequestTag';
     },
     enable: {
       description: '变量状态过滤',
-      typeDescription: '1 启用，0 禁用',
+      typeDescription: '1 启用，0 禁用，多个用英文逗号分割',
       type: "string<'0' | '1'>",
+    },
+    tags: {
+      description: '标签过滤',
+      typeDescription: '标签名称，多个用英文逗号分割',
+      type: "string",
     },
     orderBy: {
       description: '指定排序字段',
@@ -98,8 +104,8 @@ import { GET } from '@/components/RequestTag';
     },
     tag_list: {
       description: '标签',
-      typeDescription: 'label 名称，color 颜色(HEX)',
-      type: 'string<{ label: string, color: string }[]>',
+      typeDescription: 'label 名称',
+      type: 'string<{ label: string }[]>',
       required: true,
     },
     description: {
@@ -138,7 +144,7 @@ import { GET } from '@/components/RequestTag';
       "id": 1,
       "group_id": 0,
       "type": "TEST1",
-      "tag_list": "[{\"label\":\"test\",\"color\":\"#2080f0\"}]",
+      "tag_list": "[{\"label\":\"test\"}]",
       "description": "",
       "remark": "",
       "update_time": "2024-05-01 00:00:00",
@@ -191,8 +197,13 @@ import { GET } from '@/components/RequestTag';
     },
     enable: {
       description: '变量状态过滤',
-      typeDescription: '1 启用，0 禁用',
+      typeDescription: '1 启用，0 禁用，多个用英文逗号分割',
       type: "string<'0' | '1'>",
+    },
+    tags: {
+      description: '标签过滤',
+      typeDescription: '标签名称，多个用英文逗号分割',
+      type: "string",
     },
     orderBy: {
       description: '指定排序字段',
@@ -257,8 +268,8 @@ import { GET } from '@/components/RequestTag';
     },
     tag_list: {
       description: '标签',
-      typeDescription: 'label 名称，color 颜色(HEX)',
-      type: 'string<{ label: string, color: string }[]>',
+      typeDescription: 'label 名称',
+      type: 'string<{ label: string }[]>',
       required: true,
     },
     separator: {

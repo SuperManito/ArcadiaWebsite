@@ -1,0 +1,60 @@
+---
+title: 获取所有标签
+---
+import { GET } from '@/components/RequestTag';
+
+## 变量项
+
+<GET>/env/tagsItem</GET>
+
+### 请求
+
+<TypeTable
+  type={{
+    group_id: {
+      description: 'envsGroup 表 id 字段关联记录',
+      typeDescription: '为 0 时表示普通变量，否则用于指定复合变量(组)',
+      type: 'string<number>',
+      default: 0,
+    },
+  }}
+/>
+
+### 响应
+
+返回数组对象
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    label: {
+      description: '标签名称',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+
+## 变量组
+
+<GET>/env/tags</GET>
+
+### 请求
+
+无
+
+### 响应
+
+返回数组对象
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    label: {
+      description: '标签名称',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

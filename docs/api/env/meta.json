@@ -4,6 +4,7 @@
   "pages": [
     "schema",
     "page",
+    "tags",
     "create",
     "save",
     "delete",

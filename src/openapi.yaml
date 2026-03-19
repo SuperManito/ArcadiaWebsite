@@ -50,13 +50,170 @@ components:
       in: header
       name: api-token
       description: 32位令牌，在控制面板《个人设置 - 令牌管理》页面获取
+  parameters:
+    EnvCategoryParam:
+      name: category
+      in: query
+      description: 变量类型，分别对应普通变量、复合变量(组)、复合变量的成员(值)
+      required: true
+      schema:
+        $ref: '#/components/schemas/EnvCategory'
+    EnvCompositeIdParam:
+      name: compositeId
+      in: query
+      description: 变量类型为 “composite_value 复合变量的成员(值)” 时需要指定此参数为复合变量(组)的唯一标识 id
+      schema:
+        type: string
+    EnvPageEnableParam:
+      name: enable
+      in: query
+      description: 变量状态过滤，1 启用 | 0 禁用，多个用英文逗号分隔
+      schema:
+        type: string
+        enum:
+          - '0'
+          - '1'
+    EnvPageTagsParam:
+      name: tags
+      in: query
+      description: 标签过滤，多个名称用英文逗号分隔
+      schema:
+        type: string
+    EnvPageSearchParam:
+      name: search
+      in: query
+      description: 搜索内容过滤，涉及变量名称、用户标签
+      schema:
+        type: string
+    EnvPageOrderByParam:
+      name: orderBy
+      in: query
+      description: 指定排序字段，默认 sort
+      schema:
+        $ref: '#/components/schemas/EnvOrderBy'
+    EnvPageOrderParam:
+      name: order
+      in: query
+      description: 指定排序方式 0 升序 | 1 降序，默认降序
+      schema:
+        $ref: '#/components/schemas/SortDirection'
+    EnvPagePageParam:
+      name: page
+      in: query
+      description: 指定页数，默认1
+      schema:
+        type: string
+    EnvPageSizeParam:
+      name: size
+      in: query
+      description: 指定分页大小数量，默认20
+      schema:
+        type: string
+    CronPageTypeParam:
+      name: type
+      in: query
+      description: 任务类型过滤，当前固定分为 user 和 system
+      schema:
+        $ref: '#/components/schemas/CronTaskType'
+    CronPageActiveParam:
+      name: active
+      in: query
+      description: 启用/禁用状态过滤，1 启用 | 0 禁用，多个用英文逗号分隔
+      schema:
+        type: string
+        enum:
+          - '0'
+          - '1'
+    CronPageTagsParam:
+      name: tags
+      in: query
+      description: 任务标签过滤（仅限系统任务，关于标签的值详见 “tagsList” 接口），多个名称用英文逗号分隔
+      schema:
+        type: string
+    CronPageSearchParam:
+      name: search
+      in: query
+      description: 搜索内容过滤，过滤字段：name、shell
+      schema:
+        type: string
+    CronPageOrderByParam:
+      name: orderBy
+      in: query
+      description: 指定排序字段，默认 sort
+      schema:
+        $ref: '#/components/schemas/CronOrderBy'
+    CronPageOrderParam:
+      name: order
+      in: query
+      description: '指定排序方式 0 升序 | 1 降序，默认降序'
+      schema:
+        $ref: '#/components/schemas/SortDirection'
+    CronPagePageParam:
+      name: page
+      in: query
+      description: 指定页数，默认1
+      schema:
+        type: string
+    CronPageSizeParam:
+      name: size
+      in: query
+      description: 指定分页大小数量，默认20
+      schema:
+        type: string
+    FilePathParam:
+      name: path
+      in: query
+      description: 绝对路径
+      required: true
+      schema:
+        type: string
+    ExecRunIdParam:
+      name: id
+      in: query
+      description: runId，由其它接口返回
+      required: true
+      schema:
+        type: string
   schemas:
-    EnvData:
+    EnvTagList:
+      type: string
+      description: '标签列表，JSON 序列化后的字符串 "{ label: string }[]"'
+      x-typescript-type: 'String<Array<{ label: string }>>'
+    BinaryStatus:
+      type: integer
+      enum:
+        - 0
+        - 1
+      description: 状态（1 启用、0 禁用）
+    EnvCategory:
+      type: string
+      enum:
+        - ordinary
+        - composite
+        - composite_value
+      description: 变量类型
+    EnvOrderBy:
+      type: string
+      enum:
+        - sort
+        - update_time
+      description: 指定排序字段
+    SortDirection:
+      type: string
+      enum:
+        - '0'
+        - '1'
+      description: 指定排序方式（0 升序、1 降序）
+    EnvRecordBase:
       type: object
+      description: 环境变量记录基础字段（所有字段均为可选，供 Create/Update 请求复用）
       properties:
         id:
           type: integer
           description: 唯一标识
+        group_id:
+          type: integer
+          description: envsGroup 表 id 字段关联记录，为0时表示普通变量
         type:
           type: string
           description: 变量名称
@@ -64,17 +221,7 @@ components:
           type: string
           description: 描述
         tag_list:
-          type: string
-          description: 标签，label名称 | color颜色(HEX)
-        enable:
-          type: integer
-          enum:
-            - 0
-            - 1
-          description: 状态（1 启用、0 禁用）
-        group_id:
-          type: integer
-          description: envs_group 表 id 字段关联记录，为0时表示普通变量
+          $ref: '#/components/schemas/EnvTagList'
         remark:
           type: string
           description: 备注
@@ -84,8 +231,38 @@ components:
         sort:
           type: integer
           description: 在分页中的位置序号（正整数），默认按照先后顺序递增
-    EnvGroupData:
+        enable:
+          $ref: '#/components/schemas/BinaryStatus'
+    EnvData:
+      description: 环境变量完整记录（响应数据）
+      allOf:
+        - $ref: '#/components/schemas/EnvRecordBase'
+        - required:
+            - id
+            - group_id
+            - type
+            - description
+            - tag_list
+            - remark
+            - value
+            - sort
+            - enable
+    EnvCreateData:
+      description: 创建环境变量请求体（group_id、type 必填）
+      allOf:
+        - $ref: '#/components/schemas/EnvRecordBase'
+        - required:
+            - group_id
+            - type
+    EnvUpdateData:
+      description: 更新环境变量请求体（id 必填）
+      allOf:
+        - $ref: '#/components/schemas/EnvRecordBase'
+        - required:
+            - id
+    EnvGroupRecordBase:
       type: object
+      description: 环境变量组基础字段（所有字段均为可选，供 Create/Update 请求复用）
       properties:
         id:
           type: integer
@@ -97,8 +274,7 @@ components:
           type: string
           description: 描述
         tag_list:
-          type: string
-          description: 标签，label名称 | color颜色(HEX)
+          $ref: '#/components/schemas/EnvTagList'
         separator:
           type: string
           description: 分割字符
@@ -106,20 +282,158 @@ components:
           type: integer
           description: 在分页中的位置序号（正整数），默认按照先后顺序递增
         enable:
-          type: integer
-          enum:
-            - 0
-            - 1
-          description: 状态（1 启用、0 禁用）
-        envs:
-          oneOf:
-            - type: array
-              items:
-                $ref: '#/components/schemas/EnvData'
-            - type: integer
-              description: 成员数量
-    CronData:
+          $ref: '#/components/schemas/BinaryStatus'
+    EnvGroupData:
+      description: 环境变量组完整记录（响应数据）
+      allOf:
+        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - type: object
+          properties:
+            envs:
+              oneOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/EnvData'
+                - type: integer
+                  description: 成员数量
+          required:
+            - id
+            - type
+            - description
+            - tag_list
+            - separator
+            - sort
+            - enable
+            - envs
+    EnvGroupCreateData:
+      description: 创建环境变量组请求体（type 必填）
+      allOf:
+        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - required:
+            - type
+    EnvGroupUpdateData:
+      description: 更新环境变量组请求体（id 必填）
+      allOf:
+        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - required:
+            - id
+    PageResponseBase:
       type: object
+      description: 分页响应公共结构
+      properties:
+        page:
+          type: integer
+          description: 当前页码
+        size:
+          type: integer
+          description: 每页数据量
+        total:
+          type: integer
+          description: 数据总量
+      required:
+        - page
+        - size
+        - total
+    EnvPageResponse:
+      description: 环境变量分页响应
+      allOf:
+        - $ref: '#/components/schemas/PageResponseBase'
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/EnvData'
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/EnvGroupData'
+          required:
+            - data
+    EnvQueryResult:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/EnvCategory'
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/EnvData'
+              - $ref: '#/components/schemas/EnvGroupData'
+      required:
+        - category
+        - data
+    EnvIdOrIds:
+      oneOf:
+        - type: integer
+          description: 唯一标识
+        - type: array
+          items:
+            type: integer
+            description: 唯一标识
+    EnvChangeStatusRequest:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EnvIdOrIds'
+        status:
+          $ref: '#/components/schemas/BinaryStatus'
+        isComposite:
+          type: boolean
+          description: 是否为复合变量(组)，否则为普通变量和复合变量的成员(值)，默认否
+      required:
+        - id
+        - status
+    EnvOrderRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 唯一标识
+        isComposite:
+          type: boolean
+          description: 是否为复合变量(组)，否则为普通变量和复合变量的成员(值)，默认否
+        order:
+          type: integer
+          description: 目的修改位置
+        moveToEnd:
+          type: boolean
+          description: 是否移动到最后
+      required:
+        - id
+    EnvTagItem:
+      type: object
+      properties:
+        label:
+          type: string
+          description: 标签名称
+      required:
+        - label
+    EnvBatchCreateResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: 批量创建时成功创建的数量
+      required:
+        - count
+    CronTaskType:
+      type: string
+      enum:
+        - user
+        - system
+      description: 任务类型，当前固定分为 user 和 system
+    CronOrderBy:
+      type: string
+      enum:
+        - sort
+        - last_runtime
+        - last_run_use
+      description: 指定排序字段
+    CronRecordBase:
+      type: object
+      description: 定时任务记录基础字段（所有字段均为可选，供 Create/Update 请求复用）
       properties:
         id:
           type: integer
@@ -128,11 +442,7 @@ components:
           type: string
           description: 任务名称
         type:
-          type: string
-          description: 任务类型，当前固定分为 user 和 system
-          enum:
-            - user
-            - system
+          $ref: '#/components/schemas/CronTaskType'
         cron:
           type: string
           description: 定时规则（5位或6位的定时表达式）
@@ -140,22 +450,23 @@ components:
           type: string
           description: 执行的命令
         active:
-          type: integer
-          description: 状态（1 启用、0 禁用）
-          enum:
-            - 0
-            - 1
+          $ref: '#/components/schemas/BinaryStatus'
         config:
           type: string
           description: 高级配置（值为 JSON 序列化后的字符串）
+          x-typescript-type: CronTaskConfig
         tags:
           type: string
           description: 任务标签
         last_runtime:
-          type: string
+          type:
+            - string
+            - 'null'
           description: 最后一次运行的时间
         last_run_use:
-          type: number
+          type:
+            - number
+            - 'null'
           description: 最后一次运行的时长（单位秒，精确到小数点后3位）
         sort:
           type: integer
@@ -172,6 +483,301 @@ components:
         is_running:
           type: boolean
           description: 当前运行状态（任务是否正在运行）
+    CronData:
+      description: 定时任务完整记录（响应数据）
+      allOf:
+        - $ref: '#/components/schemas/CronRecordBase'
+        - required:
+            - id
+            - name
+            - type
+            - cron
+            - shell
+            - active
+            - config
+            - tags
+            - last_runtime
+            - last_run_use
+            - sort
+            - create_time
+            - remark
+            - bind
+            - is_running
+    CronCreateRequest:
+      description: 创建定时任务请求体（name、cron、shell 必填）
+      allOf:
+        - $ref: '#/components/schemas/CronRecordBase'
+        - required:
+            - name
+            - cron
+            - shell
+    CronUpdateRequest:
+      description: 更新定时任务请求体（id 必填）
+      allOf:
+        - $ref: '#/components/schemas/CronRecordBase'
+        - required:
+            - id
+    CronPageResponse:
+      description: 定时任务分页响应
+      allOf:
+        - $ref: '#/components/schemas/PageResponseBase'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CronData'
+          required:
+            - data
+    CronTaskConfig:
+      type: object
+      description: 高级配置对象
+      properties:
+        before_task_shell:
+          type: string
+          description: 任务运行前的执行命令
+        after_task_shell:
+          type: string
+          description: 任务运行后的执行命令
+        log_directory:
+          type: string
+          description: 日志目录路径（纯前端功能关联数据）
+        source_file:
+          type: string
+          description: 源码文件路径（纯前端功能关联数据）
+        allow_concurrency:
+          type: boolean
+          description: 是否允许并发
+    CronIdOrIds:
+      oneOf:
+        - type: integer
+          description: 唯一标识
+        - type: array
+          items:
+            type: integer
+            description: 唯一标识
+    CronOrderRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 唯一标识
+        order:
+          type: integer
+          description: 目的修改位置
+        moveToEnd:
+          type: boolean
+          description: 是否移动到最后
+      required:
+        - id
+    CronTagItem:
+      type: object
+      properties:
+        bind:
+          type: string
+          description: 标签名称
+        count:
+          type: integer
+          description: 累计使用该标签的任务数量
+      required:
+        - bind
+        - count
+    FileType:
+      type: string
+      enum:
+        - folder
+        - file
+      description: 文件类型
+    FilePathList:
+      type: array
+      items:
+        type: string
+        description: 绝对路径
+    FilePathOrPaths:
+      oneOf:
+        - type: string
+          description: 绝对路径
+        - $ref: '#/components/schemas/FilePathList'
+    FileListNode:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 绝对路径
+        name:
+          type: string
+          description: 文件或目录名称
+        type:
+          $ref: '#/components/schemas/FileType'
+        updated_at:
+          type: string
+          description: 最后修改时间
+        created_at:
+          type: string
+          description: 创建时间
+      required:
+        - path
+        - name
+        - type
+        - updated_at
+        - created_at
+    FileListResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 绝对路径
+        title:
+          type: string
+          description: 目标路径所属目录的名称
+        type:
+          $ref: '#/components/schemas/FileType'
+        updated_at:
+          type: string
+          description: 最后修改时间
+        created_at:
+          type: string
+          description: 创建时间
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileListNode'
+      required:
+        - path
+        - title
+        - type
+        - updated_at
+        - created_at
+        - children
+    FileInfoResponse:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/FileType'
+        name:
+          type: string
+          description: 名称
+        parent_path:
+          type: string
+          description: 存储位置路径
+        mode:
+          type: string
+          description: 权限（3位数字）
+        size:
+          type: integer
+          description: 大小（单位字节）
+        display_size:
+          type: string
+          description: 格式化大小（带单位）
+        modified_time:
+          type: string
+          description: 内容最后一次被修改的时间
+        accessed_time:
+          type: string
+          description: 最后一次被访问的时间
+        created_time:
+          type: string
+          description: 创建时间
+        changed_time:
+          type: string
+          description: 属性（如权限或链接）最后一次被更改的时间
+      required:
+        - type
+        - name
+        - parent_path
+        - mode
+        - size
+        - display_size
+        - modified_time
+        - accessed_time
+        - created_time
+        - changed_time
+    FileCreateRequest:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 存储路径
+        name:
+          type: string
+          description: 名称
+        type:
+          $ref: '#/components/schemas/FileType'
+      required:
+        - path
+        - name
+        - type
+    FileMoveRequest:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 绝对路径（原）
+        newPath:
+          type: string
+          description: 绝对路径（新）
+      required:
+        - path
+        - newPath
+    FileRenameRequest:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 绝对路径
+        name:
+          type: string
+          description: 新的名称
+      required:
+        - path
+        - name
+    FileDeleteRequest:
+      type: object
+      properties:
+        path:
+          $ref: '#/components/schemas/FilePathOrPaths'
+      required:
+        - path
+    ExecCommandRequest:
+      type: object
+      properties:
+        cmd:
+          type: string
+          description: 要执行的 Shell 命令
+      required:
+        - cmd
+    ExecRunRequest:
+      type: object
+      properties:
+        path:
+          type: string
+          description: 代码文件绝对路径
+        options:
+          type: array
+          description: 命令行选项
+          items:
+            $ref: '#/components/schemas/RunConfigOptions'
+        envs:
+          type: array
+          description: 环境变量配置
+          items:
+            $ref: '#/components/schemas/RunConfigEnvs'
+      required:
+        - path
+    ExecStatusResponse:
+      type: object
+      properties:
+        running:
+          type: boolean
+          description: 是否正在运行
+        startedAt:
+          oneOf:
+            - type: string
+              description: 启动时间
+            - type: 'null'
+          description: 启动时间（仅 `running` 为 `true` 时存在）
+      required:
+        - running
     RunConfigOptions:
       type: object
       description: 命令行选项
@@ -200,80 +806,24 @@ paths:
   /file/v1/list:
     get:
       summary: 获取文件列表
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
       parameters:
-        - name: path
-          in: query
-          description: 绝对路径
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  path:
-                    type: string
-                    description: 绝对路径
-                  title:
-                    type: string
-                    description: 目标路径所属目录的名称
-                  type:
-                    type: string
-                    enum:
-                      - folder
-                      - file
-                    description: 文件类型
-                  updated_at:
-                    type: string
-                    description: 最后修改时间
-                  created_at:
-                    type: string
-                    description: 创建时间
-                  children:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        path:
-                          type: string
-                          description: 绝对路径
-                        name:
-                          type: string
-                          description: 文件或目录名称
-                        type:
-                          type: string
-                          enum:
-                            - folder
-                            - file
-                          description: 文件类型
-                        updated_at:
-                          type: string
-                          description: 最后修改时间
-                        created_at:
-                          type: string
-                          description: 创建时间
+                $ref: '#/components/schemas/FileListResponse'
   /file/v1/content:
     get:
       summary: 获取文件内容
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
       parameters:
-        - name: path
-          in: query
-          description: 绝对路径
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
           description: 响应
@@ -283,11 +833,8 @@ paths:
                 type: string
     post:
       summary: 保存文件内容
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
-      parameters: []
       requestBody:
         content:
           application/json:
@@ -313,27 +860,13 @@ paths:
   /file/v1/delete:
     post:
       summary: 删除
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  oneOf:
-                    - type: string
-                      description: 绝对路径
-                    - type: array
-                      items:
-                        type: string
-                        description: 绝对路径
-              required:
-                - path
+              $ref: '#/components/schemas/FileDeleteRequest'
       responses:
         '200':
           description: 响应
@@ -344,88 +877,27 @@ paths:
   /file/v1/info:
     get:
       summary: 查询属性
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
       parameters:
-        - name: path
-          in: query
-          description: 绝对路径
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    enum:
-                      - folder
-                      - file
-                    description: 文件类型
-                  name:
-                    type: string
-                    description: 名称
-                  parent_path:
-                    type: string
-                    description: 存储位置路径
-                  mode:
-                    type: string
-                    description: 权限（3位数字）
-                  size:
-                    type: integer
-                    description: 大小（单位字节）
-                  display_size:
-                    type: string
-                    description: 格式化大小（带单位）
-                  modified_time:
-                    type: string
-                    description: 内容最后一次被修改的时间
-                  accessed_time:
-                    type: string
-                    description: 最后一次被访问的时间
-                  created_time:
-                    type: string
-                    description: 创建时间
-                  changed_time:
-                    type: string
-                    description: 属性（如权限或链接）最后一次被更改的时间
+                $ref: '#/components/schemas/FileInfoResponse'
   /file/v1/create:
     post:
       summary: 创建
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  type: string
-                  description: 存储路径
-                name:
-                  type: string
-                  description: 名称
-                type:
-                  type: string
-                  enum:
-                    - folder
-                    - file
-                  description: 文件类型
-              required:
-                - path
-                - name
-                - type
+              $ref: '#/components/schemas/FileCreateRequest'
       responses:
         '200':
           description: 响应
@@ -436,26 +908,13 @@ paths:
   /file/v1/move:
     post:
       summary: 移动
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  type: string
-                  description: 绝对路径（原）
-                newPath:
-                  type: string
-                  description: 绝对路径（新）
-              required:
-                - path
-                - newPath
+              $ref: '#/components/schemas/FileMoveRequest'
       responses:
         '200':
           description: 响应
@@ -466,26 +925,13 @@ paths:
   /file/v1/rename:
     post:
       summary: 重命名
-      deprecated: false
-      description: ''
       tags:
         - File 文件系统
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  type: string
-                  description: 绝对路径
-                name:
-                  type: string
-                  description: 新的名称
-              required:
-                - path
-                - name
+              $ref: '#/components/schemas/FileRenameRequest'
       responses:
         '200':
           description: 响应
@@ -496,17 +942,11 @@ paths:
   /file/v1/download:
     get:
       summary: 下载
-      deprecated: false
       description: 下载目录时会压缩成 `zip` 文件
       tags:
         - File 文件系统
       parameters:
-        - name: path
-          in: query
-          description: 绝对路径
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
           description: 响应
@@ -517,17 +957,11 @@ paths:
   /file/v1/upload:
     post:
       summary: 上传
-      deprecated: false
       description: 接口特殊，使用 `query` 即 `URLParams` 传参，暂不支持上传目录
       tags:
         - File 文件系统
       parameters:
-        - name: path
-          in: query
-          description: 绝对路径
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
           description: 响应
@@ -539,101 +973,28 @@ paths:
   /env/v1/page:
     get:
       summary: 分页查询
-      deprecated: false
-      description: ''
       tags:
         - Env 环境变量
       parameters:
-        - name: category
-          in: query
-          description: 变量类型，分别对应普通变量、复合变量(组)、复合变量的值
-          required: true
-          schema:
-            type: string
-            enum:
-              - ordinary
-              - composite
-              - composite_value
-        - name: compositeId
-          in: query
-          description: 查看复合变量的值时需要指定此参数为复合变量(组)的唯一标识
-          required: false
-          schema:
-            type: string
-        - name: enable
-          in: query
-          description: 变量状态过滤，1 启用 | 0 禁用
-          required: false
-          schema:
-            type: string
-            enum:
-              - '0'
-              - '1'
-        - name: search
-          in: query
-          description: 搜索内容过滤，涉及变量名称、用户标签
-          required: false
-          schema:
-            type: string
-        - name: orderBy
-          in: query
-          description: 指定排序字段，默认 sort
-          required: false
-          schema:
-            type: string
-            enum:
-              - sort
-              - update_time
-        - name: order
-          in: query
-          description: 指定排序方式 0 升序 | 1 降序，默认降序
-          required: false
-          schema:
-            type: string
-            enum:
-              - '0'
-              - '1'
-        - name: page
-          in: query
-          description: 指定页数，默认1
-          required: false
-          schema:
-            type: string
-        - name: size
-          in: query
-          description: 指定分页大小数量，默认20
-          required: false
-          schema:
-            type: string
+        - $ref: '#/components/parameters/EnvCategoryParam'
+        - $ref: '#/components/parameters/EnvCompositeIdParam'
+        - $ref: '#/components/parameters/EnvPageEnableParam'
+        - $ref: '#/components/parameters/EnvPageTagsParam'
+        - $ref: '#/components/parameters/EnvPageSearchParam'
+        - $ref: '#/components/parameters/EnvPageOrderByParam'
+        - $ref: '#/components/parameters/EnvPageOrderParam'
+        - $ref: '#/components/parameters/EnvPagePageParam'
+        - $ref: '#/components/parameters/EnvPageSizeParam'
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    oneOf:
-                      - type: array
-                        items:
-                          $ref: '#/components/schemas/EnvData'
-                      - type: array
-                        items:
-                          $ref: '#/components/schemas/EnvGroupData'
-                  page:
-                    type: integer
-                    description: 当前页码
-                  size:
-                    type: integer
-                    description: 每页数据量
-                  total:
-                    type: integer
-                    description: 数据总量
+                $ref: '#/components/schemas/EnvPageResponse'
   /env/v1/query:
     get:
       summary: 全局查询
-      deprecated: false
       description: 至少需要提供 `name`、`description` 的其中一个参数
       tags:
         - Env 环境变量
@@ -641,13 +1002,11 @@ paths:
         - name: name
           in: query
           description: 名称关键字
-          required: false
           schema:
             type: string
         - name: description
           in: query
           description: 描述关键字
-          required: false
           schema:
             type: string
       responses:
@@ -658,24 +1017,10 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    category:
-                      type: string
-                      enum:
-                        - ordinary
-                        - composite
-                        - composite_value
-                    data:
-                      type: array
-                      items:
-                        oneOf:
-                          - $ref: '#/components/schemas/EnvData'
-                          - $ref: '#/components/schemas/EnvGroupData'
+                  $ref: '#/components/schemas/EnvQueryResult'
   /env/v1/queryMember:
     get:
-      summary: 查询复合变量（组）的成员
-      deprecated: false
+      summary: 查询复合变量(组)的成员
       description: 查询会区分大小写，另外如果查询条件包含特殊字符 % 等情况可能会存在不符合预期的结果。至少需要提供 `value`、`remark` 的其中一个参数
       tags:
         - Env 环境变量
@@ -689,13 +1034,11 @@ paths:
         - name: value
           in: query
           description: 值关键字
-          required: false
           schema:
             type: string
         - name: remark
           in: query
           description: 备注关键字
-          required: false
           schema:
             type: string
       responses:
@@ -710,21 +1053,16 @@ paths:
   /env/v1/queryById:
     get:
       summary: 精准查询
-      deprecated: false
-      description: '`ordinary` 和 `composite_value` 在这里实际上是等价的，因为普通变量和复合变量的值都存储在同一张数据表中，为了不给开发者造成困惑故保留此设计'
+      description: '`ordinary` 和 `composite_value` 在这里实际上是等价的，因为普通变量和复合变量的成员(值)都存储在同一张数据表中，为了不给开发者造成困惑故保留此设计'
       tags:
         - Env 环境变量
       parameters:
         - name: category
           in: query
-          description: 变量类型，分别对应普通变量、复合变量(组)、复合变量的值
+          description: 变量类型，分别对应普通变量、复合变量(组)、复合变量的成员(值)
           required: true
           schema:
-            type: string
-            enum:
-              - ordinary
-              - composite
-              - composite_value
+            $ref: '#/components/schemas/EnvCategory'
         - name: id
           in: query
           description: 目标变量的唯一标识（注意是 id 而不是 group_id）
@@ -740,14 +1078,28 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/EnvData'
                   - $ref: '#/components/schemas/EnvGroupData'
+  /env/v1/tags:
+    get:
+      summary: 获取所有标签
+      tags:
+        - Env 环境变量
+      parameters:
+        - $ref: '#/components/parameters/EnvCategoryParam'
+        - $ref: '#/components/parameters/EnvCompositeIdParam'
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnvTagItem'
   /env/v1/create:
     post:
       summary: 创建
-      deprecated: false
-      description: ''
       tags:
         - Env 环境变量
-      parameters: []
       requestBody:
         required: true
         content:
@@ -756,82 +1108,23 @@ paths:
               type: object
               properties:
                 category:
-                  type: string
-                  description: 变量类型
-                  enum:
-                    - ordinary
-                    - composite
-                    - composite_value
+                  $ref: '#/components/schemas/EnvCategory'
                 compositeId:
                   type: string
-                  description: 创建复合变量的值时需要指定此参数为复合变量(组)的唯一标识
+                  description: 变量类型为 “composite_value 复合变量的成员(值)” 时需要指定此参数为复合变量(组)的唯一标识 id
                 data:
                   oneOf:
-                    - type: object
-                      properties:
-                        type:
-                          type: string
-                          description: 变量名称
-                        description:
-                          type: string
-                          description: 描述
-                        tag_list:
-                          type: string
-                          description: 标签，label名称 | color颜色(HEX)
-                        group_id:
-                          type: integer
-                          description: envs_group 表 id 字段关联记录，为0时表示普通变量
-                        remark:
-                          type: string
-                          description: 备注
-                        value:
-                          type: string
-                          description: 值
-                        sort:
-                          type: integer
-                          description: 在分页中的位置序号（正整数），默认按照先后顺序递增
-                        enable:
-                          type: integer
-                          enum:
-                            - 0
-                            - 1
-                          description: 状态（1 启用、0 禁用）
-                      required:
-                        - type
+                    - $ref: '#/components/schemas/EnvCreateData'
                     - type: array
                       items:
-                        type: object
-                        properties:
-                          type:
-                            type: string
-                            description: 变量名称
-                          description:
-                            type: string
-                            description: 描述
-                          tag_list:
-                            type: string
-                            description: 标签，label名称 | color颜色(HEX)
-                          group_id:
-                            type: integer
-                            description: envs_group 表 id 字段关联记录，为0时表示普通变量
-                          remark:
-                            type: string
-                            description: 备注
-                          value:
-                            type: string
-                            description: 值
-                          sort:
-                            type: integer
-                            description: 在分页中的位置序号（正整数），默认按照先后顺序递增
-                          enable:
-                            type: integer
-                            enum:
-                              - 0
-                              - 1
-                            description: 状态（1 启用、0 禁用）
-                        required:
-                          - type
-
+                        $ref: '#/components/schemas/EnvCreateData'
+                    - $ref: '#/components/schemas/EnvGroupCreateData'
+                    - type: array
+                      items:
+                        $ref: '#/components/schemas/EnvGroupCreateData'
+              required:
+                - category
+                - data
       responses:
         '200':
           description: 响应
@@ -841,19 +1134,13 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/EnvData'
                   - $ref: '#/components/schemas/EnvGroupData'
-                  - type: object
-                    properties:
-                      count:
-                        type: integer
-                        description: 批量创建时成功创建的数量
+                  - $ref: '#/components/schemas/EnvBatchCreateResult'
   /env/v1/update:
     post:
       summary: 更新
-      deprecated: false
       description: 如果是批量更新则返回数组对象
       tags:
         - Env 环境变量
-      parameters: []
       requestBody:
         content:
           application/json:
@@ -861,84 +1148,20 @@ paths:
               type: object
               properties:
                 category:
-                  type: string
-                  description: 变量类型
-                  enum:
-                    - ordinary
-                    - composite
-                    - composite_value
+                  $ref: '#/components/schemas/EnvCategory'
                 data:
                   oneOf:
-                    - type: object
-                      properties:
-                        id:
-                          type: integer
-                          description: 唯一标识
-                        type:
-                          type: string
-                          description: 变量名称
-                        description:
-                          type: string
-                          description: 描述
-                        tag_list:
-                          type: string
-                          description: 标签，label名称 | color颜色(HEX)
-                        group_id:
-                          type: integer
-                          description: envs_group 表 id 字段关联记录，为0时表示普通变量
-                        remark:
-                          type: string
-                          description: 备注
-                        value:
-                          type: string
-                          description: 值
-                        sort:
-                          type: integer
-                          description: 在分页中的位置序号（正整数），默认按照先后顺序递增
-                        enable:
-                          type: integer
-                          enum:
-                            - 0
-                            - 1
-                          description: 状态（1 启用、0 禁用）
-                      required:
-                        - id
+                    - $ref: '#/components/schemas/EnvUpdateData'
                     - type: array
                       items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            description: 唯一标识
-                          type:
-                            type: string
-                            description: 变量名称
-                          description:
-                            type: string
-                            description: 描述
-                          tag_list:
-                            type: string
-                            description: 标签，label名称 | color颜色(HEX)
-                          group_id:
-                            type: integer
-                            description: envs_group 表 id 字段关联记录，为0时表示普通变量
-                          remark:
-                            type: string
-                            description: 备注
-                          value:
-                            type: string
-                            description: 值
-                          sort:
-                            type: integer
-                            description: 在分页中的位置序号（正整数），默认按照先后顺序递增
-                          enable:
-                            type: integer
-                            enum:
-                              - 0
-                              - 1
-                            description: 状态（1 启用、0 禁用）
-                        required:
-                          - id
+                        $ref: '#/components/schemas/EnvUpdateData'
+                    - $ref: '#/components/schemas/EnvGroupUpdateData'
+                    - type: array
+                      items:
+                        $ref: '#/components/schemas/EnvGroupUpdateData'
+              required:
+                - category
+                - data
       responses:
         '200':
           description: 响应
@@ -957,37 +1180,13 @@ paths:
   /env/v1/changeStatus:
     post:
       summary: 更改状态
-      deprecated: false
-      description: ''
       tags:
         - Env 环境变量
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  oneOf:
-                    - type: integer
-                      description: 唯一标识
-                    - type: array
-                      items:
-                        type: integer
-                        description: 唯一标识
-                status:
-                  type: integer
-                  enum:
-                    - 0
-                    - 1
-                  description: 状态（1 启用、0 禁用）
-                isComposite:
-                  type: boolean
-                  description: 是否为复合变量(组)，否则为普通变量和复合变量的值，默认否
-              required:
-                - id
-                - status
+              $ref: '#/components/schemas/EnvChangeStatusRequest'
       responses:
         '200':
           description: 响应
@@ -998,11 +1197,8 @@ paths:
   /env/v1/order:
     post:
       summary: 调整排序
-      deprecated: false
-      description: ''
       tags:
         - Env 环境变量
-      parameters: []
       requestBody:
         description: |
           至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。另外只有复合变量值的排序有实际意义，并且在前端设计中只有管理复合变量值的表格中加上了正向排序的功能。
@@ -1011,22 +1207,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 唯一标识
-                isComposite:
-                  type: boolean
-                  description: 是否为复合变量(组)，否则为普通变量和复合变量的值，默认否
-                order:
-                  type: integer
-                  description: 目的修改位置
-                moveToEnd:
-                  type: boolean
-                  description: 是否移动到最后
-              required:
-                - id
+              $ref: '#/components/schemas/EnvOrderRequest'
       responses:
         '200':
           description: 响应
@@ -1037,11 +1218,8 @@ paths:
   /env/v1/delete:
     post:
       summary: 删除
-      deprecated: false
-      description: ''
       tags:
         - Env 环境变量
-      parameters: []
       requestBody:
         content:
           application/json:
@@ -1049,16 +1227,10 @@ paths:
               type: object
               properties:
                 id:
-                  oneOf:
-                    - type: integer
-                      description: 唯一标识
-                    - type: array
-                      items:
-                        type: integer
-                        description: 唯一标识
+                  $ref: '#/components/schemas/EnvIdOrIds'
                 isComposite:
                   type: boolean
-                  description: 是否为复合变量(组)，否则为普通变量和复合变量的值，默认否
+                  description: 是否为复合变量(组)，否则为普通变量和复合变量的成员(值)，默认否
               required:
                 - id
       responses:
@@ -1072,97 +1244,27 @@ paths:
   /cron/v1/page:
     get:
       summary: 分页查询
-      deprecated: false
-      description: ''
       tags:
         - Cron 定时任务
       parameters:
-        - name: type
-          in: query
-          description: 任务类型过滤，当前固定分为 user 和 system
-          required: false
-          schema:
-            type: string
-            enum:
-              - user
-              - system
-        - name: active
-          in: query
-          description: 启用/禁用状态过滤（1 启用、0 禁用），默认不过滤
-          required: false
-          schema:
-            type: string
-            enum:
-              - '0'
-              - '1'
-        - name: tags
-          in: query
-          description: 任务标签过滤（仅限系统任务，具体通过下方 “获取标签列表” 获取，支持多个用英文逗号分隔）
-          required: false
-          schema:
-            type: string
-        - name: search
-          in: query
-          description: 搜索内容过滤，过滤字段：name、shell
-          required: false
-          schema:
-            type: string
-        - name: orderBy
-          in: query
-          description: 指定排序字段，默认 sort
-          required: false
-          schema:
-            type: string
-            enum:
-              - sort
-              - last_runtime
-              - last_run_use
-        - name: order
-          in: query
-          description: '指定排序方式 0 升序 | 1 降序，默认降序'
-          required: false
-          schema:
-            type: string
-            enum:
-              - '0'
-              - '1'
-        - name: page
-          in: query
-          description: 指定页数，默认1
-          required: false
-          schema:
-            type: string
-        - name: size
-          in: query
-          description: 指定分页大小数量，默认20
-          required: false
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CronPageTypeParam'
+        - $ref: '#/components/parameters/CronPageActiveParam'
+        - $ref: '#/components/parameters/CronPageTagsParam'
+        - $ref: '#/components/parameters/CronPageSearchParam'
+        - $ref: '#/components/parameters/CronPageOrderByParam'
+        - $ref: '#/components/parameters/CronPageOrderParam'
+        - $ref: '#/components/parameters/CronPagePageParam'
+        - $ref: '#/components/parameters/CronPageSizeParam'
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CronData'
-                  page:
-                    type: integer
-                    description: 当前页码
-                  size:
-                    type: integer
-                    description: 每页数据量
-                  total:
-                    type: integer
-                    description: 数据总量
+                $ref: '#/components/schemas/CronPageResponse'
   /cron/v1/query:
     get:
       summary: 查询
-      deprecated: false
       description: 查询定时任务
       tags:
         - Cron 定时任务
@@ -1183,53 +1285,14 @@ paths:
   /cron/v1/create:
     post:
       summary: 创建
-      deprecated: false
       description: 根据项目功能设计，开放接口目前只允许创建用户任务。
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 任务名称
-                cron:
-                  type: string
-                  description: 定时表达式
-                shell:
-                  type: string
-                  description: 执行的命令
-                active:
-                  type: integer
-                  description: 状态（1 启用、0 禁用）
-                  enum:
-                    - 0
-                    - 1
-                remark:
-                  type: string
-                  description: 任务备注
-                config:
-                  type: string<object>
-                  description: |
-                    高级配置（值为 JSON 序列化后的字符串）
-
-                    ```ts title="数据格式"
-                    interface CronTaskConfig {
-                      before_task_shell?: string // 任务运行前的执行命令
-                      after_task_shell?: string // 任务运行后的执行命令
-                      log_directory?: string // 日志目录路径（纯前端功能关联数据）
-                      source_file?: string // 源码文件路径（纯前端功能关联数据）
-                      allow_concurrency?: boolean // 是否允许并发
-                    }
-                    ```
-              required:
-                - name
-                - cron
-                - shell
+              $ref: '#/components/schemas/CronCreateRequest'
       responses:
         '200':
           description: 响应
@@ -1240,54 +1303,13 @@ paths:
   /cron/v1/update:
     post:
       summary: 更新
-      deprecated: false
-      description: ''
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 唯一标识
-                name:
-                  type: string
-                  description: 任务名称
-                cron:
-                  type: string
-                  description: 定时表达式
-                shell:
-                  type: string
-                  description: 执行的命令
-                active:
-                  type: integer
-                  description: 状态（1 启用、0 禁用）
-                  enum:
-                    - 0
-                    - 1
-                remark:
-                  type: string
-                  description: 任务备注
-                config:
-                  type: string<object>
-                  description: |
-                    高级配置（值为 JSON 序列化后的字符串）
-
-                    ```ts title="数据格式"
-                    interface CronTaskConfig {
-                      before_task_shell?: string // 任务运行前的执行命令
-                      after_task_shell?: string // 任务运行后的执行命令
-                      log_directory?: string // 日志目录路径（纯前端功能关联数据）
-                      source_file?: string // 源码文件路径（纯前端功能关联数据）
-                      allow_concurrency?: boolean // 是否允许并发
-                    }
-                    ```
-              required:
-                - id
+              $ref: '#/components/schemas/CronUpdateRequest'
       responses:
         '200':
           description: 响应
@@ -1298,11 +1320,8 @@ paths:
   /cron/v1/delete:
     post:
       summary: 删除
-      deprecated: false
-      description: ''
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         content:
           application/json:
@@ -1310,13 +1329,7 @@ paths:
               type: object
               properties:
                 id:
-                  oneOf:
-                    - type: integer
-                      description: 唯一标识
-                    - type: array
-                      items:
-                        type: integer
-                        description: 唯一标识
+                  $ref: '#/components/schemas/CronIdOrIds'
               required:
                 - id
       responses:
@@ -1329,29 +1342,14 @@ paths:
   /cron/v1/order:
     post:
       summary: 调整排序
-      deprecated: false
-      description: ''
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         description: 至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 唯一标识
-                order:
-                  type: integer
-                  description: 目的修改位置
-                moveToEnd:
-                  type: boolean
-                  description: 是否移动到最后
-              required:
-                - id
+              $ref: '#/components/schemas/CronOrderRequest'
       responses:
         '200':
           description: 响应
@@ -1362,38 +1360,23 @@ paths:
   /cron/v1/tagsList:
     get:
       summary: 获取标签列表
-      deprecated: false
       description: 目前用于系统定时任务类型过滤，使用分页接口的 `tags` 参数，具体取自 `bind` 记录值的中间字段。
       tags:
         - Cron 定时任务
-      parameters: []
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        bind:
-                          type: string
-                          description: 标签名称
-                        count:
-                          type: integer
-                          description: 累计使用该标签的任务数量
+                type: array
+                items:
+                  $ref: '#/components/schemas/CronTagItem'
   /cron/v1/runningTasks:
     get:
       summary: 查询运行中的任务
-      deprecated: false
-      description: ''
       tags:
         - Cron 定时任务
-      parameters: []
       responses:
         '200':
           description: 响应
@@ -1406,11 +1389,9 @@ paths:
   /cron/v1/run:
     post:
       summary: 运行任务
-      deprecated: false
       description: 主动运行和按照定时计划自动触发运行的过程大致相同，不过要注意区分后台管理面板设计的调试功能，该调试仅执行定时任务记录项所存储的 `shell` 字段命令，在运行完毕后不会更新定时任务的运行状态、最后运行时间等关键信息。
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         required: true
         content:
@@ -1419,13 +1400,7 @@ paths:
               type: object
               properties:
                 id:
-                  oneOf:
-                    - type: integer
-                      description: 唯一标识
-                    - type: array
-                      items:
-                        type: integer
-                        description: 唯一标识
+                  $ref: '#/components/schemas/CronIdOrIds'
               required:
                 - id
       responses:
@@ -1438,11 +1413,9 @@ paths:
   /cron/v1/terminate:
     post:
       summary: 终止任务
-      deprecated: false
       description: 无法有效判断操作结果，因为存在少数任务进程没有被终止的异常情况，`is_running` 字段的值在任务被终止后或正常运行完毕后才会更新。
       tags:
         - Cron 定时任务
-      parameters: []
       requestBody:
         required: true
         content:
@@ -1451,13 +1424,7 @@ paths:
               type: object
               properties:
                 id:
-                  oneOf:
-                    - type: integer
-                      description: 唯一标识
-                    - type: array
-                      items:
-                        type: integer
-                        description: 唯一标识
+                  $ref: '#/components/schemas/CronIdOrIds'
               required:
                 - id
       responses:
@@ -1471,51 +1438,30 @@ paths:
   /exec/v1/status:
     get:
       summary: 查询运行状态
-      deprecated: false
       description: 任务结束后记录自动清除，`running` 为 `false` 表示已结束或未找到，可轮询此接口实现队列管理。
       tags:
         - Exec 命令执行
       parameters:
-        - name: id
-          in: query
-          description: runId，由其它接口返回
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ExecRunIdParam'
       responses:
         '200':
           description: 响应
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  running:
-                    type: boolean
-                    description: 是否正在运行
-                  startedAt:
-                    type: string
-                    description: 启动时间（仅 `running` 为 `true` 时存在）
+                $ref: '#/components/schemas/ExecStatusResponse'
   /exec/v1/cmd:
     post:
       summary: 执行 Shell 命令
-      deprecated: false
       description: 立即返回事件id，无法查看实时日志
       tags:
         - Exec 命令执行
-      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                cmd:
-                  type: string
-                  description: 要执行的 Shell 命令
-              required:
-                - cmd
+              $ref: '#/components/schemas/ExecCommandRequest'
       responses:
         '200':
           description: 响应
@@ -1527,24 +1473,16 @@ paths:
   /exec/v1/cmdStream:
     post:
       summary: 执行 Shell 命令（Stream）
-      deprecated: false
       description: |
         通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后命令仍继续执行。
       tags:
         - Exec 命令执行
-      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                cmd:
-                  type: string
-                  description: 要执行的 Shell 命令
-              required:
-                - cmd
+              $ref: '#/components/schemas/ExecCommandRequest'
       responses:
         '200':
           description: SSE 文本流
@@ -1562,6 +1500,7 @@ paths:
                     stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
                     log: string // 日志内容，仅 `log` 和 `error` 事件存在
                   }
+                  ```
                 properties:
                   type:
                     type: "'start' | 'log' | 'exit' | 'error'"
@@ -1582,33 +1521,15 @@ paths:
   /exec/v1/run:
     post:
       summary: 运行代码文件
-      deprecated: false
       description: 立即返回事件id，无法查看实时日志
       tags:
         - Exec 命令执行
-      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  type: string
-                  description: 代码文件绝对路径
-                options:
-                  type: array
-                  description: 命令行选项
-                  items:
-                    $ref: '#/components/schemas/RunConfigOptions'
-                envs:
-                  type: array
-                  description: 环境变量配置
-                  items:
-                    $ref: '#/components/schemas/RunConfigEnvs'
-              required:
-                - path
+              $ref: '#/components/schemas/ExecRunRequest'
       responses:
         '200':
           description: 响应
@@ -1620,33 +1541,15 @@ paths:
   /exec/v1/runStream:
     post:
       summary: 运行代码文件（Stream）
-      deprecated: false
       description: 通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后任务仍继续运行。
       tags:
         - Exec 命令执行
-      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                path:
-                  type: string
-                  description: 代码文件绝对路径
-                options:
-                  type: array
-                  description: 命令行选项
-                  items:
-                    $ref: '#/components/schemas/RunConfigOptions'
-                envs:
-                  type: array
-                  description: 环境变量配置
-                  items:
-                    $ref: '#/components/schemas/RunConfigEnvs'
-              required:
-                - path
+              $ref: '#/components/schemas/ExecRunRequest'
       responses:
         '200':
           description: SSE 文本流
@@ -1664,19 +1567,17 @@ paths:
                     stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
                     log: string // 日志内容，仅 `log` 和 `error` 事件存在
                   }
+                  ```
             application/json:
               schema:
                 type: object
                 description: 请求失败或出错时返回全局通用 JSON 格式
-                  }
   /exec/v1/stopRun:
     post:
       summary: 终止运行代码文件
-      deprecated: false
       description: 仅适用于代码文件，不适用于自定义 Shell 命令。
       tags:
         - Exec 命令执行
-      parameters: []
       requestBody:
         required: true
         content:
