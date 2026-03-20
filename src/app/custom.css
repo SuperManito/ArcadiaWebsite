@@ -21,7 +21,13 @@
   }
 }
 
-.type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *) {
+.type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *),
+.shiki:not(.not-fumadocs-codeblock *) .line {
   --padding-left: 0;
   --padding-right: 0;
+}
+
+.github-info > p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
