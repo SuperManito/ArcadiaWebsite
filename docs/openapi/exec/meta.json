@@ -2,11 +2,11 @@
   "title": "Exec 命令执行",
   "icon": "Command",
   "pages": [
-    "cmd-post",
-    "cmdStream-post",
-    "run-post",
-    "runStream-post",
-    "stopRun-post",
-    "status-get"
+    "v1-cmd-post",
+    "v1-cmd-stream-post",
+    "v1-file-post",
+    "v1-file-stream-post",
+    "v1-file-stop-post",
+    "v1-status-get"
   ]
 }

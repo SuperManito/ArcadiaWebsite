@@ -2,15 +2,15 @@
   "title": "File 文件系统",
   "icon": "FolderOpen",
   "pages": [
-    "list-get",
-    "content-get",
-    "content-post",
-    "delete-post",
-    "info-get",
-    "create-post",
-    "move-post",
-    "rename-post",
-    "download-get",
-    "upload-post"
+    "v1-list-get",
+    "v1-content-get",
+    "v1-content-post",
+    "v1-delete-post",
+    "v1-info-get",
+    "v1-create-post",
+    "v1-move-post",
+    "v1-rename-post",
+    "v1-download-get",
+    "v1-upload-post"
   ]
 }

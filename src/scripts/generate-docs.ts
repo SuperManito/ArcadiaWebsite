@@ -15,7 +15,7 @@ void generateFiles({
       const { path, method } = output.item
       const arr = path.split('/')
       const dirName = arr[1]
-      const fileName = arr[arr.length - 1]
+      const fileName = arr.slice(2).join('-').replace(/\//g, '-')
       const rel = `${dirName}/${fileName}-${method}`
       // 删除旧文件以清理缓存
       try {

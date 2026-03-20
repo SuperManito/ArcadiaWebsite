@@ -19,7 +19,8 @@ import { POST } from '@/components/RequestTag';
       type: 'number',
     },
     permissions: {
-      description: '访问权限，默认为空（即不限制访问权限），仅支持 env | cron | file 三种类型，用逗号拼接',
+      description: '访问权限，多个权限键用逗号拼接，不传则使用默认安全权限集，具体请查看权限说明文档',
+      typeDescriptionLink: '/docs/api/token/permission',
       type: 'string',
     },
   }}

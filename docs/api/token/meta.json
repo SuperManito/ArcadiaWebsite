@@ -2,6 +2,7 @@
   "title": "Token 令牌管理",
   "icon": "Key",
   "pages": [
+    "permission",
     "list",
     "create",
     "update",
