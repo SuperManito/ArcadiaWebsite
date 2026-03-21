@@ -60,7 +60,7 @@ export function TypeTable({
       {...props}
     >
       <div className="flex font-medium items-center px-3 py-1 not-prose text-fd-muted-foreground">
-        <p className="w-1/4">参数</p>
+        <p className="w-2/5">参数</p>
         <p className="@max-xl:hidden">类型</p>
       </div>
       {Object.entries(type).map(([key, value]) => (
@@ -120,7 +120,7 @@ function Item({
       <CollapsibleTrigger className="relative flex flex-row items-center w-full group text-start px-3 py-2 not-prose hover:bg-fd-accent">
         <code
           className={cn(
-            'text-fd-primary min-w-fit w-1/4 font-mono font-medium pe-2',
+            'text-fd-primary min-w-fit w-2/5 font-mono font-medium pe-2',
             deprecated && 'line-through text-fd-primary/50',
           )}
         >

@@ -21,8 +21,7 @@
   }
 }
 
-.type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *),
-.shiki:not(.not-fumadocs-codeblock *) .line {
+.type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *) {
   --padding-left: 0;
   --padding-right: 0;
 }

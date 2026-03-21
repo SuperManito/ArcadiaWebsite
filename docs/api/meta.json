@@ -12,6 +12,7 @@
     "exec",
     "token",
     "log",
+    "config",
     "captcha/index"
   ]
 }

@@ -1,0 +1,165 @@
+---
+title: CLI 配置
+---
+import { GET, POST } from '@/components/RequestTag';
+
+## 获取 CLI 配置
+
+<GET>/config/cli</GET>
+
+### 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    REMOVE_LOG_DAYS_AGO: {
+      description: '日志保留天数，运行删除日志任务时保留最近 N 天的日志',
+      type: 'string<number>',
+      required: true,
+    },
+    ENABLE_UPDATE_EXTRA: {
+      description: '是否在每次执行更新命令时额外运行自定义更新脚本（update_extra.sh）',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_UPDATE_EXTRA_SYNC_FILE: {
+      description: '是否自动从远程 URL 同步自定义更新脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    UPDATE_EXTRA_SYNC_FILE_URL: {
+      description: '自定义更新脚本的远程同步地址',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_INIT_EXTRA: {
+      description: '是否在每次启动容器时额外运行自定义初始化脚本（init_extra.sh）',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_TASK_BEFORE_EXTRA: {
+      description: '是否在每次运行任务脚本前额外运行自定义前置脚本（task_before_extra.sh）',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_TASK_AFTER_EXTRA: {
+      description: '是否在每次运行任务脚本后额外运行自定义后置脚本（task_after_extra.sh）',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_AUTO_DELETE_REMOTE_FILE: {
+      description: '通过 arcadia run <url> 执行远程脚本后是否自动删除下载到本地的脚本文件',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_CUSTOM_NOTIFY: {
+      description: '是否使用 config 目录下用户自定义的 sendNotify.js 替代内置推送通知模块',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
+    RUN_DELAY_MAX_SECONDS: {
+      description: '随机延迟最大秒数，对应 --delay 运行选项，0 表示不延迟',
+      type: 'string<number>',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "REMOVE_LOG_DAYS_AGO": "7",
+  "ENABLE_UPDATE_EXTRA": "",
+  "ENABLE_UPDATE_EXTRA_SYNC_FILE": "",
+  "UPDATE_EXTRA_SYNC_FILE_URL": "",
+  "ENABLE_INIT_EXTRA": "",
+  "ENABLE_TASK_BEFORE_EXTRA": "",
+  "ENABLE_TASK_AFTER_EXTRA": "",
+  "ENABLE_AUTO_DELETE_REMOTE_FILE": "",
+  "ENABLE_CUSTOM_NOTIFY": "",
+  "RUN_DELAY_MAX_SECONDS": "300"
+}
+```
+
+---
+
+## 更新 CLI 配置
+
+<POST>/config/cli</POST>
+
+支持部分字段更新，仅传入需要修改的字段即可。保存成功后自动重新生成 `.arcadia_cli_config.sh` 配置批量声明脚本。
+
+### 请求
+
+<TypeTable
+  type={{
+    REMOVE_LOG_DAYS_AGO: {
+      description: '日志保留天数（正整数字符串）',
+      type: 'string<number>',
+    },
+    ENABLE_UPDATE_EXTRA: {
+      description: '是否启用自定义更新脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    ENABLE_UPDATE_EXTRA_SYNC_FILE: {
+      description: '是否启用自定义更新脚本远程同步',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    UPDATE_EXTRA_SYNC_FILE_URL: {
+      description: '自定义更新脚本的远程同步地址',
+      type: 'string',
+    },
+    ENABLE_INIT_EXTRA: {
+      description: '是否启用自定义初始化脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    ENABLE_TASK_BEFORE_EXTRA: {
+      description: '是否启用任务运行前自定义脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    ENABLE_TASK_AFTER_EXTRA: {
+      description: '是否启用任务运行后自定义脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    ENABLE_AUTO_DELETE_REMOTE_FILE: {
+      description: '是否自动删除远程执行后的本地脚本文件',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    ENABLE_CUSTOM_NOTIFY: {
+      description: '是否启用自定义推送通知模块',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+    },
+    RUN_DELAY_MAX_SECONDS: {
+      description: '随机延迟最大秒数（非负整数字符串）',
+      type: 'string<number>',
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "REMOVE_LOG_DAYS_AGO": "14",
+  "ENABLE_UPDATE_EXTRA": "true"
+}
+```
+
+### 响应
+
+无数据，仅返回操作状态。
+
+<Callout type="info">
+  CLI 配置统一存储于数据库 `config` 表（`module = 'cli'`）中，键名为去除 `CLI_CONFIG_` 前缀的字段名。每次保存后自动生成位于用户配置文件目录下的 `.arcadia_cli_config.sh` 脚本，该脚本会在底层 Shell 命令执行时自动加载。
+</Callout>
