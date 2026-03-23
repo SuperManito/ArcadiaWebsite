@@ -1,6 +1,6 @@
-import { ImageResponse } from '@takumi-rs/image-response'
-import { generate as DefaultImage } from 'fumadocs-ui/og/takumi'
+import { generate as DefaultImage } from 'fumadocs-ui/og'
 import { notFound } from 'next/navigation'
+import { ImageResponse } from 'next/og'
 import { getPageImage, source } from '@/lib/source'
 
 export const revalidate = false
@@ -11,12 +11,20 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...
   if (!page)
     notFound()
 
+  const url = new URL(_req.url)
+  const baseUrl = `${url.protocol}//${url.host}`
+
   return new ImageResponse(
-    <DefaultImage title={page.data.title} description={page.data.description} site="My App" />,
+    <DefaultImage
+      title={page.data.title}
+      primaryColor="#536dfe"
+      primaryTextColor="#000"
+      description={page.data.description}
+      icon={<img src={`${baseUrl}/images/logo/arcadia-dark-sub.png`} alt="Logo" height={48} />}
+    />,
     {
       width: 1200,
       height: 630,
-      format: 'webp',
     },
   )
 }
