@@ -3,16 +3,11 @@ import { notFound } from 'next/navigation'
 import { ImageResponse } from 'next/og'
 import { getPageImage, source } from '@/lib/source'
 
-export const revalidate = false
-
 export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...slug]'>) {
   const { slug } = await params
   const page = source.getPage(slug.slice(0, -1))
   if (!page)
     notFound()
-
-  const url = new URL(_req.url)
-  const baseUrl = `${url.protocol}//${url.host}`
 
   return new ImageResponse(
     <DefaultImage
@@ -20,7 +15,7 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...
       primaryColor="#536dfe"
       primaryTextColor="#000"
       description={page.data.description}
-      icon={<img src={`${baseUrl}/images/logo/arcadia-dark-sub.png`} alt="Logo" height={48} />}
+      icon={<img src="https://arcadia.cool/images/logo/arcadia-dark-sub.png" alt="Arcadia Logo" height={48} />}
     />,
     {
       width: 1200,
