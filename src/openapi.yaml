@@ -204,7 +204,7 @@ components:
         - '0'
         - '1'
       description: 指定排序方式（0 升序、1 降序）
-    EnvRecordBase:
+    EnvsRecordBase:
       type: object
       description: 环境变量记录基础字段（所有字段均为可选，供 Create/Update 请求复用）
       properties:
@@ -233,10 +233,10 @@ components:
           description: 在分页中的位置序号（正整数），默认按照先后顺序递增
         enable:
           $ref: '#/components/schemas/BinaryStatus'
-    EnvData:
+    EnvsData:
       description: 环境变量完整记录（响应数据）
       allOf:
-        - $ref: '#/components/schemas/EnvRecordBase'
+        - $ref: '#/components/schemas/EnvsRecordBase'
         - required:
             - id
             - group_id
@@ -247,20 +247,20 @@ components:
             - value
             - sort
             - enable
-    EnvCreateData:
+    EnvsCreateData:
       description: 创建环境变量请求体（group_id、type 必填）
       allOf:
-        - $ref: '#/components/schemas/EnvRecordBase'
+        - $ref: '#/components/schemas/EnvsRecordBase'
         - required:
             - group_id
             - type
-    EnvUpdateData:
+    EnvsUpdateData:
       description: 更新环境变量请求体（id 必填）
       allOf:
-        - $ref: '#/components/schemas/EnvRecordBase'
+        - $ref: '#/components/schemas/EnvsRecordBase'
         - required:
             - id
-    EnvGroupRecordBase:
+    EnvsGroupRecordBase:
       type: object
       description: 环境变量组基础字段（所有字段均为可选，供 Create/Update 请求复用）
       properties:
@@ -283,17 +283,17 @@ components:
           description: 在分页中的位置序号（正整数），默认按照先后顺序递增
         enable:
           $ref: '#/components/schemas/BinaryStatus'
-    EnvGroupData:
+    EnvsGroupData:
       description: 环境变量组完整记录（响应数据）
       allOf:
-        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - $ref: '#/components/schemas/EnvsGroupRecordBase'
         - type: object
           properties:
             envs:
               oneOf:
                 - type: array
                   items:
-                    $ref: '#/components/schemas/EnvData'
+                    $ref: '#/components/schemas/EnvsData'
                 - type: integer
                   description: 成员数量
           required:
@@ -305,16 +305,16 @@ components:
             - sort
             - enable
             - envs
-    EnvGroupCreateData:
+    EnvsGroupCreateData:
       description: 创建环境变量组请求体（type 必填）
       allOf:
-        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - $ref: '#/components/schemas/EnvsGroupRecordBase'
         - required:
             - type
-    EnvGroupUpdateData:
+    EnvsGroupUpdateData:
       description: 更新环境变量组请求体（id 必填）
       allOf:
-        - $ref: '#/components/schemas/EnvGroupRecordBase'
+        - $ref: '#/components/schemas/EnvsGroupRecordBase'
         - required:
             - id
     PageResponseBase:
@@ -344,10 +344,10 @@ components:
               oneOf:
                 - type: array
                   items:
-                    $ref: '#/components/schemas/EnvData'
+                    $ref: '#/components/schemas/EnvsData'
                 - type: array
                   items:
-                    $ref: '#/components/schemas/EnvGroupData'
+                    $ref: '#/components/schemas/EnvsGroupData'
           required:
             - data
     EnvQueryResult:
@@ -359,8 +359,8 @@ components:
           type: array
           items:
             oneOf:
-              - $ref: '#/components/schemas/EnvData'
-              - $ref: '#/components/schemas/EnvGroupData'
+              - $ref: '#/components/schemas/EnvsData'
+              - $ref: '#/components/schemas/EnvsGroupData'
       required:
         - category
         - data
@@ -1062,7 +1062,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EnvData'
+                  $ref: '#/components/schemas/EnvsData'
   /env/v1/queryById:
     get:
       summary: 精准查询
@@ -1089,8 +1089,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/EnvData'
-                  - $ref: '#/components/schemas/EnvGroupData'
+                  - $ref: '#/components/schemas/EnvsData'
+                  - $ref: '#/components/schemas/EnvsGroupData'
   /env/v1/tags:
     get:
       summary: 获取所有标签
@@ -1127,14 +1127,14 @@ paths:
                   description: 变量类型为 “composite_value 复合变量的成员(值)” 时需要指定此参数为复合变量(组)的唯一标识 id
                 data:
                   oneOf:
-                    - $ref: '#/components/schemas/EnvCreateData'
+                    - $ref: '#/components/schemas/EnvsCreateData'
                     - type: array
                       items:
-                        $ref: '#/components/schemas/EnvCreateData'
-                    - $ref: '#/components/schemas/EnvGroupCreateData'
+                        $ref: '#/components/schemas/EnvsCreateData'
+                    - $ref: '#/components/schemas/EnvsGroupCreateData'
                     - type: array
                       items:
-                        $ref: '#/components/schemas/EnvGroupCreateData'
+                        $ref: '#/components/schemas/EnvsGroupCreateData'
               required:
                 - category
                 - data
@@ -1145,8 +1145,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/EnvData'
-                  - $ref: '#/components/schemas/EnvGroupData'
+                  - $ref: '#/components/schemas/EnvsData'
+                  - $ref: '#/components/schemas/EnvsGroupData'
                   - $ref: '#/components/schemas/EnvBatchCreateResult'
   /env/v1/update:
     post:
@@ -1164,14 +1164,14 @@ paths:
                   $ref: '#/components/schemas/EnvCategory'
                 data:
                   oneOf:
-                    - $ref: '#/components/schemas/EnvUpdateData'
+                    - $ref: '#/components/schemas/EnvsUpdateData'
                     - type: array
                       items:
-                        $ref: '#/components/schemas/EnvUpdateData'
-                    - $ref: '#/components/schemas/EnvGroupUpdateData'
+                        $ref: '#/components/schemas/EnvsUpdateData'
+                    - $ref: '#/components/schemas/EnvsGroupUpdateData'
                     - type: array
                       items:
-                        $ref: '#/components/schemas/EnvGroupUpdateData'
+                        $ref: '#/components/schemas/EnvsGroupUpdateData'
               required:
                 - category
                 - data
@@ -1184,12 +1184,12 @@ paths:
                 oneOf:
                   - type: array
                     items:
-                      $ref: '#/components/schemas/EnvData'
+                      $ref: '#/components/schemas/EnvsData'
                   - type: array
                     items:
-                      $ref: '#/components/schemas/EnvGroupData'
-                  - $ref: '#/components/schemas/EnvData'
-                  - $ref: '#/components/schemas/EnvGroupData'
+                      $ref: '#/components/schemas/EnvsGroupData'
+                  - $ref: '#/components/schemas/EnvsData'
+                  - $ref: '#/components/schemas/EnvsGroupData'
   /env/v1/changeStatus:
     post:
       summary: 更改状态

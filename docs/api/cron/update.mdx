@@ -45,13 +45,13 @@ import { PUT } from '@/components/RequestTag';
     },
     config: {
       description: '高级配置',
-      type: 'string<object>',
+      type: 'string<CronTasksConfig>',
       typeDescription: '值为 JSON 序列化后的字符串',
     },
   }}
 />
 
-- `config` 高级配置字段说明
+- CronTasksConfig
 
 <TypeTable
   type={{
@@ -77,6 +77,7 @@ import { PUT } from '@/components/RequestTag';
     },
   }}
 />
+
 支持批量操作（改成数组）
 
 ## 响应

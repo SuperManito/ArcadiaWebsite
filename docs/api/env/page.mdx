@@ -61,7 +61,7 @@ import { GET } from '@/components/RequestTag';
   type={{
     data: {
       description: '数据项',
-      type: 'object[]',
+      type: 'EnvsData[]',
       required: true,
     },
     page: {
@@ -82,7 +82,7 @@ import { GET } from '@/components/RequestTag';
   }}
 />
 
-数据项（主要为数据库 `envs` 表字段）
+- EnvsData
 
 <TypeTable
   noRequiredMark={true}
@@ -225,7 +225,7 @@ import { GET } from '@/components/RequestTag';
   type={{
     data: {
       description: '数据项',
-      type: 'object[]',
+      type: 'EnvsGroupData[]',
       required: true,
     },
     page: {
