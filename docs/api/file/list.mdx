@@ -14,6 +14,13 @@ import { GET } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
+    showCount: {
+      description: '是否返回目录子项数量',
+      typeDescription: '1 是，0 否',
+      default: '0',
+      type: "string<'1' | '0'>",
+      required: false,
+    },
   }}
 />
 
@@ -54,8 +61,51 @@ import { GET } from '@/components/RequestTag';
     },
     children: {
       description: '成员，即下级内容（注：成员名称字段均为 `name`）',
-      type: 'object[]',
+      type: 'FileListChildren[]',
       required: true,
+    },
+    count: {
+      description: '目录子项数量（仅在 showCount 为 1 时存在）',
+      type: 'number',
+      required: false,
+    },
+  }}
+/>
+
+- FileListChildren
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+    name: {
+      description: '文件或目录名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '文件类型',
+      type: "string<'folder' | 'file'>",
+      required: true,
+    },
+    updated_at: {
+      description: '最后修改时间',
+      type: 'string',
+      required: true,
+    },
+    created_at: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    count: {
+      description: '目录子项数量（仅在 showCount 为 1 且该条目 type 为 folder 时存在）',
+      type: 'number',
+      required: false,
     },
   }}
 />

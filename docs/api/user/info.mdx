@@ -21,13 +21,13 @@ import { GET } from '@/components/RequestTag';
     },
     lastLoginInfo: {
       description: '最近一次的登录信息',
-      type: '{ loginIp: string, loginAddress: string, loginTime: string }',
+      type: 'LastLoginInfo',
       required: true,
     },
   }}
 />
 
-- lastLoginInfo
+- LastLoginInfo
 
 <TypeTable
   noRequiredMark={true}

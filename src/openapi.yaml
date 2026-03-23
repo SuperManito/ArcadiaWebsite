@@ -67,7 +67,7 @@ components:
     EnvPageEnableParam:
       name: enable
       in: query
-      description: 变量状态过滤，1 启用 | 0 禁用，多个用英文逗号分隔
+      description: 变量状态过滤，`1` 启用、`0` 禁用，多个用英文逗号分隔
       schema:
         type: string
         enum:
@@ -118,7 +118,7 @@ components:
     CronPageActiveParam:
       name: active
       in: query
-      description: 启用/禁用状态过滤，1 启用 | 0 禁用，多个用英文逗号分隔
+      description: 启用/禁用状态过滤，`1` 启用、`0` 禁用，多个用英文逗号分隔
       schema:
         type: string
         enum:
@@ -184,7 +184,7 @@ components:
       enum:
         - 0
         - 1
-      description: 状态（1 启用、0 禁用）
+      description: 状态，`1` 启用、`0` 禁用
     EnvCategory:
       type: string
       enum:
@@ -598,7 +598,7 @@ components:
         - type: string
           description: 绝对路径
         - $ref: '#/components/schemas/FilePathList'
-    FileListNode:
+    FileListChildren:
       type: object
       properties:
         path:
@@ -615,6 +615,9 @@ components:
         created_at:
           type: string
           description: 创建时间
+        count:
+          type: integer
+          description: 目录子项数量（仅在 `showCount` 为 `1` 且该条目 `type` 为 `folder` 时存在）
       required:
         - path
         - name
@@ -641,7 +644,10 @@ components:
         children:
           type: array
           items:
-            $ref: '#/components/schemas/FileListNode'
+            $ref: '#/components/schemas/FileListChildren'
+        count:
+          type: integer
+          description: 目录子项数量（仅在 `showCount` 为 `1` 时存在）
       required:
         - path
         - title
@@ -810,6 +816,13 @@ paths:
         - File 文件系统
       parameters:
         - $ref: '#/components/parameters/FilePathParam'
+        - name: showCount
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ['1', '0']
+          description: 是否返回目录子项数量，`1` 返回、`0` 不返回，默认 `0`
       responses:
         '200':
           description: 响应
