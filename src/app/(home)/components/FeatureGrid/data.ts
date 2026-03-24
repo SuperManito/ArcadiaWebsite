@@ -37,7 +37,7 @@ export const features: FeatureItem[] = [
   },
   {
     title: 'Web 终端',
-    description: '内置全功能 Web 终端，支持多窗口同时开启、快捷键操作与主题自由切换，无需 SSH 客户端，即可在浏览器中流畅执行任意命令行任务。',
+    description: '内置基于 Ghostty 驱动的实时终端，支持多窗口、快捷键操作，并且适配了移动端，可随时随地在浏览器中流畅执行任意命令行任务。',
     icon: 'mdi:console',
   },
   {

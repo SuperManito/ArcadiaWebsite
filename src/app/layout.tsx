@@ -31,7 +31,6 @@ function BannerComponent() {
         'rgba(0, 132, 220, 0.56)',
         'rgba(0, 144, 174, 0.77)',
         'rgba(157, 254, 189, 0.73)',
-        'rgba(187, 254, 97, 0.66)',
       ]}
     >
       {releaseNotice}
