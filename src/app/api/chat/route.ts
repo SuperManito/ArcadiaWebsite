@@ -70,10 +70,11 @@ const openrouter = createOpenRouter({
 
 /** System prompt, you can update it to provide more specific information */
 const systemPrompt = [
-  'You are an AI assistant for a documentation site.',
-  'Use the `search` tool to retrieve relevant docs context before answering when needed.',
-  'The `search` tool returns raw JSON results from documentation. Use those results to ground your answer and cite sources as markdown links using the document `url` field when available.',
-  'If you cannot find the answer in search results, say you do not know and suggest a better search query.',
+  '你是一个文档站点的 AI 助手。',
+  '需要时，请使用 `search` 工具在回答前检索相关的文档内容。',
+  '`search` 工具返回来自文档的原始 JSON 结果。请使用这些结果作为回答的依据，并在可用时使用文档的 `url` 字段以 Markdown 链接形式引用来源。',
+  '如果在搜索结果中找不到答案，请说明你不知道，并建议一个更好的搜索查询。',
+  '请优先使用简体中文（普通话）回答。',
 ].join('\n')
 
 export async function POST(req: Request) {
@@ -108,7 +109,7 @@ export async function POST(req: Request) {
 export type SearchTool = typeof searchTool
 
 const searchTool = tool({
-  description: 'Search the docs content and return raw JSON results.',
+  description: '搜索文档内容并返回原始 JSON 结果。',
   inputSchema: z.object({
     query: z.string(),
     limit: z.number().int().min(1).max(100).default(10),
