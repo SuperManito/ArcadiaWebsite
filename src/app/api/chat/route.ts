@@ -38,10 +38,15 @@ async function createSearchServer() {
       if (!('getText' in page.data))
         return null
 
+      const normalizedSegments = (page.slugs ?? [])
+        .filter(s => !/^\(.+\)$/.test(s))
+        .filter(Boolean)
+      const normalizedUrl = `/${normalizedSegments.join('/')}`
+
       return {
         title: page.data.title,
         description: page.data.description,
-        url: page.url,
+        url: encodeURI(normalizedUrl),
         content: await page.data.getText('raw'),
       } as CustomDocument
     }),
