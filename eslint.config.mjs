@@ -19,6 +19,7 @@ export default antfu(
       'unicorn/consistent-function-scoping': 'off', // 将箭头函数移动到外部作用域
       'markdown/heading-increment': 'off', // 检查 Markdown 文件中的标题级别递增
       'next/no-img-element': 'off', // 禁止使用 <img> 元素，建议使用 next/image 组件
+      'node/prefer-global/process': 'off',
     },
   },
 )

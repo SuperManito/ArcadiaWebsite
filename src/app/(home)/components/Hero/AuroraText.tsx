@@ -7,7 +7,7 @@ interface AuroraTextProps {
   speed?: number
 }
 
-const AuroraText = memo(({ children, className = '', colors = ['#0084dc', '#0090ae', '#9dfebd', '#bbfe61', '#0090ae', '#0084dc'], speed = 1 }: AuroraTextProps) => {
+const AuroraText = memo(({ children, className = '', colors = ['#0084dc', '#0090ae', '#9dfebd', '#bbfe61', '#9dfebd', '#0090ae', '#0084dc'], speed = 1 }: AuroraTextProps) => {
   const gradientStyle = {
     backgroundImage: `linear-gradient(to right, ${colors.join(', ')}, ${colors[0]})`,
     WebkitBackgroundClip: 'text',

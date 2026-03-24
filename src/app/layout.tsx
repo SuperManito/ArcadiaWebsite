@@ -3,6 +3,7 @@ import { Banner } from 'fumadocs-ui/components/banner'
 import { Inter } from 'next/font/google'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Provider } from '@/components/provider'
+import { releaseNotice } from '@/lib/layout.shared'
 
 import './global.css'
 
@@ -27,14 +28,13 @@ function BannerComponent() {
       id="release-notice"
       variant="rainbow"
       rainbowColors={[
-        'rgba(0, 149, 255, 0.56)',
-        'rgba(231, 77, 255, 0.77)',
-        'rgba(255, 0, 0, 0.73)',
-        'rgba(131, 255, 166, 0.66)',
-        'rgba(0, 149, 255, 0.56)',
+        'rgba(0, 132, 220, 0.56)',
+        'rgba(0, 144, 174, 0.77)',
+        'rgba(157, 254, 189, 0.73)',
+        'rgba(187, 254, 97, 0.66)',
       ]}
     >
-      🎉 Arcadia 1.0.0-beta.8（现已发布）
+      {releaseNotice}
     </Banner>
   )
 }
