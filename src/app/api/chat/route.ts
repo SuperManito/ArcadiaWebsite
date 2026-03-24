@@ -37,22 +37,22 @@ async function createSearchServer() {
     source.getPages().map(async (page) => {
       if (!('getText' in page.data))
         return null
-
-      const normalizedSegments = (page.slugs ?? [])
-        .filter(s => !/^\(.+\)$/.test(s))
-        .filter(Boolean)
-      const normalizedUrl = `/${normalizedSegments.join('/')}`
-
-      return {
-        title: page.data.title,
-        description: page.data.description,
-        url: encodeURI(normalizedUrl),
-        content: await page.data.getText('raw'),
-      } as CustomDocument
+      try {
+        return {
+          title: page.data.title,
+          description: page.data.description,
+          url: page.url,
+          content: await page.data.getText('processed'),
+        } as CustomDocument
+      }
+      catch {
+        return null
+      }
     }),
   )
 
-  for (const doc of docs) {
+  const validDocs = docs.filter(Boolean)
+  for (const doc of validDocs) {
     if (doc)
       search.add(doc)
   }
@@ -116,11 +116,14 @@ export type SearchTool = typeof searchTool
 const searchTool = tool({
   description: '搜索文档内容并返回原始 JSON 结果。',
   inputSchema: z.object({
-    query: z.string(),
+    query: z.string().min(1, 'Query cannot be empty'),
     limit: z.number().int().min(1).max(100).default(10),
   }),
   async execute({ query, limit }) {
+    if (!query || query.trim().length === 0) {
+      throw new Error('Search query is required and cannot be empty')
+    }
     const search = await searchServer
-    return await search.searchAsync(query, { limit, merge: true, enrich: true })
+    return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })
   },
 })
