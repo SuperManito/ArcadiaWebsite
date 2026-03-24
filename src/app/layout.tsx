@@ -42,10 +42,12 @@ function BannerComponent() {
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className="flex flex-col min-h-screen">
         <BannerComponent />
         <Provider>{children}</Provider>
-        <GoogleAnalytics />
       </body>
     </html>
   )

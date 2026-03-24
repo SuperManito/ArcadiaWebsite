@@ -62,7 +62,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
                   <BookOpen className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
                   <p className="font-medium">入门指引</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    了解如何完整部署并使用 Arcadia 平台。
+                    了解如何完整部署并使用 Arcadia 平台
                   </p>
                 </NavbarMenuLink>
 
@@ -70,7 +70,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
                   <Terminal className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
                   <p className="font-medium">Arcadia CLI</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    控制台终端命令行详细指引文档。
+                    命令行
                   </p>
                 </NavbarMenuLink>
 
@@ -78,7 +78,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
                   <Plug className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
                   <p className="font-medium">Arcadia API</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    基于 tRPC 的系统服务内部接口规范。
+                    应用程序接口
                   </p>
                 </NavbarMenuLink>
 
@@ -86,7 +86,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
                   <Shapes className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
                   <p className="font-medium">Arcadia OpenAPI</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    符合标准 OpenAPI 规范的高交互性通用开放服务接口文档与集成游乐场。
+                    开放应用程序接口
                   </p>
                 </NavbarMenuLink>
               </NavbarMenuContent>

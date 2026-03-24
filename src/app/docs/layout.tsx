@@ -24,19 +24,19 @@ const DocsTabs = [
   },
   {
     title: 'Arcadia CLI',
-    description: '命令行文档',
+    description: '命令行',
     url: '/docs/cli',
     icon: <TabIcon icon={<Terminal />} className="text-[#0ea5e9] dark:text-[#7dd3fc] max-md:bg-[#0ea5e9]/10 dark:max-md:bg-[#7dd3fc]/10" />,
   },
   {
     title: 'Arcadia API',
-    description: '应用程序接口文档',
+    description: '应用程序接口',
     url: '/docs/api',
     icon: <TabIcon icon={<Plug />} className="text-[#d97706] dark:text-[#fbbf24] max-md:bg-[#d97706]/10 dark:max-md:bg-[#fbbf24]/10" />,
   },
   {
     title: 'Arcadia OpenAPI',
-    description: '开放应用程序接口文档',
+    description: '开放应用程序接口',
     url: '/docs/openapi',
     icon: <TabIcon icon={<Shapes />} className="text-[#8b5cf6] dark:text-[#c4b5fd] max-md:bg-[#8b5cf6]/10 dark:max-md:bg-[#c4b5fd]/10" />,
   },

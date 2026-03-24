@@ -1,8 +1,8 @@
 <p align="center">
     <a href="https://arcadia.cool">
         <picture>
-            <source media="(prefers-color-scheme: dark)" srcset="brand/img/arcadia-dark-sub.png" width="320">
-            <img src="brand/img/arcadia-light-sub.png" alt="Arcadia" width="320">
+            <source media="(prefers-color-scheme: dark)" srcset="brand/arcadia-dark-sub.png" width="320">
+            <img src="brand/arcadia-light-sub.png" alt="Arcadia" width="320">
         </picture>
     </a>
 </p>
@@ -21,7 +21,7 @@
 
 # 文档
 
-文档引擎使用 [Fumadocs](https://fumadocs.dev) + [Next.js](https://nextjs.org) 进行构建
+文档使用 [Fumadocs](https://fumadocs.dev) + [Next.js](https://nextjs.org) 进行构建
 
 ### 安装
 
