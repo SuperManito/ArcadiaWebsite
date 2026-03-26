@@ -1,6 +1,6 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 
-export const releaseNotice = '📢 Release 1.0.0-beta.9（2026-03-25）现已发布'
+export const releaseNotice = '📢 Release 1.0.0-beta.9（2026-03-26）现已发布'
 
 // fill this with your actual GitHub info, for example:
 export const gitConfig = {

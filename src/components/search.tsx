@@ -13,7 +13,6 @@ import {
   SearchDialogInput,
   SearchDialogList,
   SearchDialogOverlay,
-
 } from 'fumadocs-ui/components/dialog/search'
 // import { useI18n } from 'fumadocs-ui/contexts/i18n'
 

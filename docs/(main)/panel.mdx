@@ -7,14 +7,20 @@ icon: AppWindow
 
 用于登录的初始用户名和密码分别为 `useradmin` `passwd`，登录后请按照引导提示尽快修改认证信息。
 
-<Callout type="info" title="浏览器限制">
+## 浏览器限制
+
 由于使用了较新的技术，一些旧版本的浏览器可能存在兼容性问题。建议使用 Chromium 内核的64位浏览器如 Chrome、Edge 等，并且不建议使用 FireFox 等其它内核的浏览器。
 
-在 <Icon>simple-icons:apple</Icon> Apple 设备上使用时，`iOS / iPadOS` 最低需要 `16.4` （不支持2023年4月以前的版本使用），`macOS` 受到的影响较小
-</Callout>
+在 <Icon size="1.1em">simple-icons:apple</Icon> Apple 设备上使用时，`iOS / iPadOS` 最低需要 `16.4` （不支持2023年4月以前的版本使用），`macOS` 受到的影响较小
 
-<Accordions type="single">
-  <Accordion title="更改面板服务端口">
+## 在移动端使用
+
+我们对移动端进行了深度适配，推荐以独立应用模式使用。以 <Icon size="1.1em">simple-icons:apple</Icon> iOS 为例，打开 <Icon size="1em">logos:safari</Icon> Safari 浏览器，访问控制面板登录页面并点击分享按钮，选择“添加到主屏幕”，之后在桌面打开即可像原生应用一样快速访问控制面板。
+
+## 常见问题
+
+<Accordions type="multiple">
+  <Accordion title="更改面板服务端口" id="更改面板服务端口">
     <Callout title="用途">
       在不重新部署的情况下更改面板映射端口
     </Callout>
@@ -42,7 +48,7 @@ icon: AppWindow
       ```
   </Accordion>
 
-  <Accordion title="反向代理">
+  <Accordion title="反向代理" id="反向代理">
     如果你需要通过域名使用建议使用反向代理，这里以 `nginx` 为例
 
     ```nginx
@@ -70,11 +76,11 @@ icon: AppWindow
     ```
   </Accordion>
 
-  <Accordion title="忘记了用户名或密码？">
+  <Accordion title="忘记了用户名或密码？" id="忘记了用户名或密码">
     详见 CLI 文档教程 [查看信息](/docs/cli/server/service#查看信息)
   </Accordion>
 
-  <Accordion title="面板支持用户本地部署">
+  <Accordion title="面板支持用户本地部署" id="面板支持用户本地部署">
     最新编译后的前端代码在仓库 `public` 目录下，你可以自行本地部署 WEB 服务
 
     通过修改 `app.config.js` 文件中的 VITE_GLOB_API_URL 和 VITE_GLOB_WS_URL 来指定后端服务地址：

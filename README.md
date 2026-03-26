@@ -46,6 +46,6 @@ pnpm build
 从 `openapi.yaml` 生成对应的 MDX 文档页面，输出至 `docs/openapi/`
 
 ```bash
-pnpm build:openapi
+pnpm generate:openapi
 ```
 > 注意文件目录结构变化，该命令不会自动删除已经生成的文档文件

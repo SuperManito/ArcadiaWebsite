@@ -1,4 +1,4 @@
-import { Icon as IconifyIcon } from '@iconify/react'
+import { InlineIcon as IconifyIcon } from '@iconify/react'
 import React from 'react'
 
 interface IconProps {
@@ -17,8 +17,8 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     return null
   }
 
-  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '1.125em'
-  const verticalAlign = style?.verticalAlign ? style?.verticalAlign : '-0.15em'
+  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '1em'
+  const verticalAlign = style?.verticalAlign ? style?.verticalAlign : '-0.125em'
 
   const svgStyle: React.CSSProperties = {
     verticalAlign,
@@ -28,6 +28,7 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     height: '1em',
     ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : {}),
     ...(height != null ? { height: typeof height === 'number' ? `${height}px` : height } : {}),
+    ...(color != null ? { color } : {}),
     ...(style ?? {}),
   }
 
@@ -35,7 +36,6 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     <span style={{ fontSize }}>
       <IconifyIcon
         icon={iconName}
-        color={color}
         style={svgStyle}
       >
       </IconifyIcon>

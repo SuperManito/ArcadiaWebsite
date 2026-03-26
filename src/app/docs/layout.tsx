@@ -23,7 +23,7 @@ const DocsTabs = [
     title: '入门指南',
     description: '使用文档',
     url: '/docs',
-    icon: <TabIcon icon={<BookOpen />} className="text-[#14b8a6] dark:text-[#5eead4] max-md:bg-[#14b8a6]/10 dark:max-md:bg-[#5eead4]/10" />,
+    icon: <TabIcon icon={<BookOpen />} className="text-[#14b8a6] dark:text-[#5eeab0] max-md:bg-[#14b8a6]/10 dark:max-md:bg-[#5eeab0]/10" />,
   },
   {
     title: 'Arcadia CLI',

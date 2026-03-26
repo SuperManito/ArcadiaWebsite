@@ -54,8 +54,8 @@ icon: Warehouse
   }}
 />
 
-<Tabs items={['cronSettings', 'authSettings']}>
-  <Tab value="cronSettings">
+<Tabs items={['cronSettings', 'authSettings']} updateAnchor>
+  <Tab id="cronSettings" value="cronSettings">
     <TypeTable
       type={{
         updateTaskList: {
@@ -144,7 +144,7 @@ icon: Warehouse
 
   </Tab>
 
-  <Tab value="authSettings">
+  <Tab id="authSettings" value="authSettings">
 
     <TypeTable
       type={{
@@ -170,8 +170,8 @@ icon: Warehouse
       }}
     />
 
-    <Tabs items={['SSH 配置', 'HTTP 认证']}>
-      <Tab value="SSH 配置">
+    <Tabs items={['SSH 配置', 'HTTP 认证']} updateAnchor>
+      <Tab id="sshConfig" value="SSH 配置">
         <TypeTable
           type={{
             alias: {
@@ -195,7 +195,7 @@ icon: Warehouse
         SSH 配置需要用户自行上传私钥
       </Tab>
 
-      <Tab value="HTTP 认证">
+      <Tab id="httpAuth" value="HTTP 认证">
         <TypeTable
           type={{
             username: {

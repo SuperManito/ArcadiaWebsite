@@ -25,9 +25,9 @@ import { InstallCommand } from '@/components/InstallCommand';
   4. 不可以更改参数中 `:` 右边的内容，否则会导致后端服务无法正常访问
 </Callout>
 
-<Accordions type="single">
-  <Accordion title="如何安装 Docker ？">
-    <Tabs defaultValue="Linux">
+<Accordions type="multiple">
+  <Accordion title="如何安装 Docker ？" id="安装 Docker">
+    <Tabs defaultValue="Linux" updateAnchor>
       <TabsList>
         <TabsTrigger value="Linux">
           <Icon style={{ verticalAlign: '-0.2rem' }}>simple-icons:linux</Icon>
@@ -42,7 +42,7 @@ import { InstallCommand } from '@/components/InstallCommand';
           macOS
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="Linux">
+      <TabsContent id="docker-linux" value="Linux">
         ```bash
         bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
         ```
@@ -51,19 +51,19 @@ import { InstallCommand } from '@/components/InstallCommand';
 
         该一键脚本由本项目作者开发，如果你觉得脚本好用麻烦送颗星⭐
       </TabsContent>
-      <TabsContent value="Windows">
+      <TabsContent id="docker-windows" value="Windows">
         建议使用 [**Docker Desktop**](https://docs.docker.com/desktop/windows/install)
       </TabsContent>
-      <TabsContent value="macOS">
+      <TabsContent id="docker-macos" value="macOS">
         建议使用 [**Docker Desktop**](https://docs.docker.com/desktop/mac/install)，支持 Apple Silicon 芯片
       </TabsContent>
     </Tabs>
   </Accordion>
-  <Accordion title="挂载目录的作用是什么？">
-    容器挂载目录的作用是将宿主机的文件系统目录或文件挂载到容器内。这样，容器内的程序可以像访问本地文件一样访问挂载的文件或目录，同时宿主机上的应用也可以直接访问这些文件或目录。这种机制提供了一种在容器和宿主机之间共享文件的方式，使得数据持久化成为可能，因为即使容器被删除，挂载的数据仍然存在于宿主机上，便于用户迁移数据。
+  <Accordion title="挂载目录的作用是什么？" id="挂载目录的作用">
+    容器挂载目录的作用是将宿主机的文件系统目录或文件挂载到容器内部。挂载后，容器内的程序可以像访问本地文件一样访问这些文件或目录，同时宿主机上的应用也可直接对其进行操作。这种机制实现了容器与宿主机之间的文件共享，使得数据持久化成为可能——即使容器被删除，挂载的数据仍保留在宿主机上，便于后续迁移或复用。
   </Accordion>
-  <Accordion title="关于 Arcadia 平台的占用空间">
-    目前底层镜像基于 `GNU/Linux Debian` 构建，这导致 Arcadia 平台镜像的占用空间大小达到了 **1.1GB**，在不更换底层构建镜像的前提下已经最大化压缩了镜像大小，考虑到实际使用环境的生态多样性因此这是取舍利弊后的决策选择，实际上在使用期间会安装很多依赖内容，届时镜像大小的差异与容器总体占用空间的差异相比就显得不再那么重要了，你应该预留出 `2GB` 的空间以供使用。
+  <Accordion title="关于 Arcadia 平台的占用空间" id="关于 Arcadia 平台的占用空间">
+    当前底层镜像基于 `GNU/Linux Debian` 构建，因此 Arcadia 平台镜像的占用空间达到了 1.1GB。在不更换底层构建镜像的前提下，已对镜像大小进行了最大程度的压缩。考虑到实际使用环境的生态多样性，这是权衡利弊后的决策选择。实际使用过程中会安装较多依赖内容，届时镜像大小的差异与容器总体占用空间的差异相比，影响已相对有限，建议预留 2GB 的空间以供使用。
   </Accordion>
 </Accordions>
 </Step>
@@ -88,8 +88,8 @@ docker logs -f arcadia
 
 无法访问？我们提供了一份排除故障指南，希望对你有所帮助。
 
-<Accordions type="single">
-  <Accordion title="排除控制面板故障">
+<Accordions type="multiple">
+  <Accordion title="排除控制面板故障" id="排除控制面板故障">
     下面是解决步骤顺序和思路
 
     - 检查容器运行状态，是否正常运行并初始化成功
@@ -134,7 +134,7 @@ docker logs -f arcadia
       3. 在宿主机通过 `curl` 命令能获取到网页元素证明容器正常
       4. 在客户端通过 `curl` 命令不能获取到网页元素证明可能有防火墙介入
   </Accordion>
-  <Accordion title="Arcadia 平台文件目录结构">
+  <Accordion title="Arcadia 平台文件目录结构" id="Arcadia 平台文件目录结构">
     <Files>
       <Folder name="arcadia" defaultOpen>
         <Folder name="config ㅤㅤㅤㅤ 配置文件目录（用户）" />
