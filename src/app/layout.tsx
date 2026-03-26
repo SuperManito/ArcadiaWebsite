@@ -16,6 +16,15 @@ export const metadata: Metadata = {
     name: 'SuperManito',
     url: 'https://github.com/SuperManito',
   },
+  openGraph: {
+    title: 'Arcadia',
+    description: '一站式代码自动化运维平台',
+    url: 'https://arcadia.cool',
+    siteName: 'Arcadia',
+    images: [
+      { url: '/og-home.png', width: 1200, height: 630, alt: 'Arcadia 首页' },
+    ],
+  },
 }
 
 const inter = Inter({
