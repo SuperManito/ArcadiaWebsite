@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { findSiblings } from 'fumadocs-core/page-tree'
 import { Card, Cards } from 'fumadocs-ui/components/card'
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/docs/page'
+import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/notebook/page'
 import { createRelativeLink } from 'fumadocs-ui/mdx'
 import { notFound } from 'next/navigation'
 import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions'

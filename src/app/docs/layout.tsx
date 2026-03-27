@@ -1,5 +1,5 @@
 import { buttonVariants } from 'fumadocs-ui/components/ui/button'
-import { DocsLayout } from 'fumadocs-ui/layouts/docs'
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook'
 import { BookOpen, MessageCircleIcon, Plug, Shapes, Terminal } from 'lucide-react'
 import { AISearch, AISearchPanel, AISearchTrigger } from '@/components/ai/search'
 import { cn } from '@/lib/cn'
@@ -46,12 +46,14 @@ const DocsTabs = [
 ]
 
 export default function Layout({ children }: LayoutProps<'/docs'>) {
+  const { nav, ...base } = baseOptions()
   return (
     <TabThemeProvider>
       <DocsLayout
+        {...base}
+        nav={{ ...nav, mode: 'top' }}
         tree={source.getPageTree()}
-        {...baseOptions()}
-        sidebar={{ tabs: DocsTabs }}
+        sidebar={{ tabs: DocsTabs, collapsible: false }}
       >
         {children}
 
