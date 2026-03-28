@@ -35,13 +35,15 @@ export default function DonateModal() {
           buttonVariants({
             color: 'outline',
             size: 'icon-xs',
-            className: 'p-2 gap-1 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
+            className: 'py-2 px-3 gap-1 [&_svg]:text-fd-muted-foreground cursor-pointer',
           }),
         )}
         onClick={showModal}
       >
-        <HeartHandshake />
-        点击捐赠
+        <div className="flex items-center justify-center gap-1">
+          <HeartHandshake size={24} />
+          点击捐赠
+        </div>
       </button>
       <Modal centered width={340} styles={{ body: { justifyContent: 'center', display: 'flex', height: '340px' } }} closable={false} open={isModalOpen} cancelText="" onOk={handleOk} onCancel={handleCancel} footer={[]}>
         <Space orientation="vertical">

@@ -15,6 +15,19 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   if (!page)
     notFound()
 
+  if (page.data.type === 'openapi') {
+    const { APIPage } = await import('@/components/APIPage')
+    return (
+      <DocsPage full>
+        <h1 className="text-[1.75em] font-semibold">{page.data.title}</h1>
+
+        <DocsBody>
+          <APIPage {...page.data.getAPIPageProps()} />
+        </DocsBody>
+      </DocsPage>
+    )
+  }
+
   const MDX = page.data.body
   const markdownUrl = `/llms.mdx/docs/${[...page.slugs, 'index.mdx'].join('/')}`
 

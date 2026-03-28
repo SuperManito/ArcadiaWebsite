@@ -7,17 +7,17 @@ import {
   NavbarMenuTrigger,
 } from 'fumadocs-ui/layouts/home/navbar'
 import { BookOpen, Plug, Shapes, Terminal } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { gitConfig, Logo, socialLinks } from '@/lib/layout.shared'
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <HomeLayout
       nav={{
-        title: (
-          <>
-            {Logo}
-          </>
-        ),
+        title: Logo,
+      }}
+      themeSwitch={{
+        component: <ThemeToggle />,
       }}
       githubUrl={gitConfig.url}
       links={[

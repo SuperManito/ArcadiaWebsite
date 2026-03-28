@@ -14,12 +14,12 @@ function usePrimaryColor() {
   const pathname = usePathname()
   const isDark = resolvedTheme === 'dark'
   if (pathname.startsWith('/docs/cli'))
-    return isDark ? '#34d399' : '#10b981'
+    return isDark ? '#7dd3fc' : '#0ea5e9'
   if (pathname.startsWith('/docs/api'))
-    return isDark ? '#fb923c' : '#f97316'
+    return isDark ? '#fbbf24' : '#d97706'
   if (pathname.startsWith('/docs/openapi'))
-    return isDark ? '#a78bfa' : '#8b5cf6'
-  return isDark ? '#60a5fa' : '#3b82f6'
+    return isDark ? '#c4b5fd' : '#8b5cf6'
+  return isDark ? '#5eeab0' : '#14b8a6'
 }
 
 function useInstallSharedState() {
@@ -381,14 +381,40 @@ export function InstallCommand() {
       children: <ComposeInstall s={s} />,
     },
   ]
+  const { resolvedTheme } = useTheme()
   return (
     <ConfigProvider
-      theme={{ algorithm, token: {
-        colorPrimary: primaryColor,
-        colorLink: primaryColor,
-      } }}
+      theme={{
+        algorithm,
+        token: {
+          colorPrimary: primaryColor,
+          colorLink: primaryColor,
+          colorBorderSecondary: resolvedTheme === 'dark' ? '#6663' : '#cccccc80',
+          borderRadius: 8,
+        },
+        components: {
+          Segmented: {
+            trackBg: resolvedTheme === 'dark' ? '#000' : '#e5e5e5',
+          },
+        },
+      }}
     >
-      <Tabs defaultActiveKey="cli" items={items} />
+
+      <style>
+        {`
+        .ant-tabs-nav-list,
+        .ant-tabs-tab {
+          width: 100%;
+          justify-content: center;
+        }
+      `}
+      </style>
+      <Tabs
+        centered
+        animated={{ inkBar: true, tabPane: true }}
+        defaultActiveKey="cli"
+        items={items}
+      />
     </ConfigProvider>
   )
 }

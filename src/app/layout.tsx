@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { Banner } from 'fumadocs-ui/components/banner'
+import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { Inter } from 'next/font/google'
+import Banner from '@/components/Banner'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Provider } from '@/components/provider'
 import { releaseNotice } from '@/lib/layout.shared'
@@ -31,22 +32,6 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
-function BannerComponent() {
-  return (
-    <Banner
-      id="release-notice"
-      variant="rainbow"
-      rainbowColors={[
-        'rgba(0, 132, 220, 0.56)',
-        'rgba(0, 144, 174, 0.77)',
-        'rgba(157, 254, 189, 0.73)',
-      ]}
-    >
-      {releaseNotice}
-    </Banner>
-  )
-}
-
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
@@ -54,8 +39,12 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         <GoogleAnalytics />
       </head>
       <body className="flex flex-col min-h-screen">
-        <BannerComponent />
-        <Provider>{children}</Provider>
+        <Banner>{releaseNotice}</Banner>
+        <Provider>
+          <AntdRegistry>
+            {children}
+          </AntdRegistry>
+        </Provider>
       </body>
     </html>
   )
