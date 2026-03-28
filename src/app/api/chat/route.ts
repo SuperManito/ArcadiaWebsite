@@ -83,32 +83,35 @@ const systemPrompt = [
 ].join('\n')
 
 export async function POST(req: Request) {
-  const reqJson = await req.json()
-
-  const result = streamText({
-    model: openrouter.chat(process.env.OPENROUTER_MODEL ?? 'openrouter/free'),
-    stopWhen: stepCountIs(5),
-    tools: {
-      // eslint-disable-next-line ts/no-use-before-define
-      search: searchTool,
-    },
-    messages: [
-      { role: 'system', content: systemPrompt },
-      ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
-        convertDataPart(part) {
-          if (part.type === 'data-client') {
-            return {
-              type: 'text',
-              text: `[Client Context: ${JSON.stringify(part.data)}]`,
+  try {
+    const reqJson = await req.json()
+    const result = streamText({
+      model: openrouter.chat(process.env.OPENROUTER_MODEL ?? 'openrouter/free'),
+      stopWhen: stepCountIs(5),
+      tools: {
+        // eslint-disable-next-line ts/no-use-before-define
+        search: searchTool,
+      },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
+          convertDataPart(part) {
+            if (part.type === 'data-client') {
+              return {
+                type: 'text',
+                text: `[Client Context: ${JSON.stringify(part.data)}]`,
+              }
             }
-          }
-        },
-      })),
-    ],
-    toolChoice: 'auto',
-  })
-
-  return result.toUIMessageStreamResponse()
+          },
+        })),
+      ],
+      toolChoice: 'auto',
+    })
+    return result.toUIMessageStreamResponse()
+  }
+  catch (error) {
+    console.error('Error in chat route:', error)
+  }
 }
 
 export type SearchTool = typeof searchTool
