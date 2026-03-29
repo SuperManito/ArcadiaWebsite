@@ -31,21 +31,14 @@ export function getPageImage(page: InferPageType<typeof source>) {
 }
 
 export async function getLLMText(page: InferPageType<typeof source>) {
-  try {
-    if (page.data.type === 'openapi') {
+  if (page.data.type === 'openapi') {
     // e.g. return the stringified OpenAPI schema
-      return JSON.stringify(page.data.getSchema().bundled, null, 2)
-    }
+    return JSON.stringify(page.data.getSchema().bundled, null, 2)
+  }
 
-    const processed = await page.data.getText('processed')
+  const processed = await page.data.getText('processed')
 
-    return `# ${page.data.title}
+  return `# ${page.data.title}
 
 ${processed}`
-  }
-  catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('Error getting LLM text:', e)
-    return `${e}`
-  }
 }
