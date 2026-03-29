@@ -123,10 +123,15 @@ const searchTool = tool({
     limit: z.number().int().min(1).max(100).default(10),
   }),
   async execute({ query, limit }) {
-    if (!query || query.trim().length === 0) {
-      throw new Error('Search query is required and cannot be empty')
+    try {
+      if (!query || query.trim().length === 0) {
+        throw new Error('Search query is required and cannot be empty')
+      }
+      const search = await searchServer
+      return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })
     }
-    const search = await searchServer
-    return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })
+    catch (error) {
+      console.error('Error in chat route:', error)
+    }
   },
 })
