@@ -82,36 +82,112 @@ const systemPrompt = [
   '请优先使用简体中文（普通话）回答。',
 ].join('\n')
 
+// 定义模型优先级列表（依次尝试）
+const MODEL_PRIORITY = [
+  process.env.OPENROUTER_MODEL ?? 'openrouter/free', // 首选模型（环境变量或默认免费模型）
+  'openrouter/free', // 备选免费模型（当首选模型失败时使用）
+]
+
+// 判断错误是否可重试（触发模型切换）
+function isRetryableError(error: unknown): boolean {
+  // OpenRouter API 返回的错误通常具有 status 属性
+  if (error && typeof error === 'object' && 'status' in error) {
+    const status = (error as { status?: number }).status
+    // 429 = 配额用尽/频率限制，503 = 服务暂时不可用
+    if (status === 429 || status === 503) {
+      return true
+    }
+    // 检查 OpenRouter 返回的错误码
+    const body = (error as { body?: unknown }).body
+    if (body && typeof body === 'object') {
+      const errorBody = body as { error?: { code?: string } }
+      if (errorBody.error?.code === 'rate-limited'
+        || errorBody.error?.code === 'service_unavailable') {
+        return true
+      }
+    }
+  }
+  // 网络层面错误（连接超时、断开等）
+  if (error && typeof error === 'object') {
+    const networkError = error as { code?: string }
+    if (networkError.code === 'ECONNABORTED'
+      || networkError.code === 'ETIMEDOUT'
+      || networkError.code === 'ENOTFOUND') {
+      return true
+    }
+  }
+
+  return false
+}
+
 export async function POST(req: Request) {
-  try {
-    const reqJson = await req.json()
-    const result = streamText({
-      model: openrouter.chat(process.env.OPENROUTER_MODEL ?? 'openrouter/free'),
-      stopWhen: stepCountIs(5),
-      tools: {
-        // eslint-disable-next-line ts/no-use-before-define
-        search: searchTool,
-      },
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
-          convertDataPart(part) {
-            if (part.type === 'data-client') {
-              return {
-                type: 'text',
-                text: `[Client Context: ${JSON.stringify(part.data)}]`,
+  let lastError: Error | null = null
+  // 遍历模型优先级列表
+  for (const [index, modelId] of MODEL_PRIORITY.entries()) {
+    // 确保 modelId 不为空
+    if (!modelId) {
+      continue
+    }
+    try {
+      const reqJson = await req.json()
+      const result = streamText({
+        model: openrouter.chat(modelId),
+        stopWhen: stepCountIs(5),
+        tools: {
+          // eslint-disable-next-line ts/no-use-before-define
+          search: searchTool,
+        },
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
+            convertDataPart(part) {
+              if (part.type === 'data-client') {
+                return {
+                  type: 'text',
+                  text: `[Client Context: ${JSON.stringify(part.data)}]`,
+                }
               }
-            }
-          },
-        })),
-      ],
-      toolChoice: 'auto',
-    })
-    return result.toUIMessageStreamResponse()
+            },
+          })),
+        ],
+        toolChoice: 'auto',
+      })
+      // console.log(`✅ 模型 ${modelId} 调用成功`)
+      return result.toUIMessageStreamResponse()
+    }
+    catch (error) {
+      // console.error(`❌ 模型 ${modelId} 调用失败:`, error)
+      lastError = error as Error
+      // 如果错误可重试（配额用尽/服务不可用），继续尝试下一个模型
+      if (isRetryableError(error)) {
+        // 如果是最后一个模型，就不继续了
+        if (index === MODEL_PRIORITY.length - 1) {
+          break
+        }
+        continue
+      }
+      else {
+        break
+      }
+    }
   }
-  catch (error) {
-    console.error('Error in chat route:', error)
-  }
+
+  // 所有模型都尝试失败后，返回错误响应
+  return new Response(
+    JSON.stringify({
+      error: '所有可用模型调用失败',
+      message: '请检查网络连接或配置',
+      attemptedModels: MODEL_PRIORITY.filter(Boolean),
+      lastError: lastError?.message,
+    }),
+    {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store', // 避免缓存错误响应
+      },
+    },
+  )
 }
 
 export type SearchTool = typeof searchTool
@@ -123,15 +199,10 @@ const searchTool = tool({
     limit: z.number().int().min(1).max(100).default(10),
   }),
   async execute({ query, limit }) {
-    try {
-      if (!query || query.trim().length === 0) {
-        throw new Error('Search query is required and cannot be empty')
-      }
-      const search = await searchServer
-      return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })
+    if (!query || query.trim().length === 0) {
+      throw new Error('Search query is required and cannot be empty')
     }
-    catch (error) {
-      console.error('Error in chat route:', error)
-    }
+    const search = await searchServer
+    return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })
   },
 })
