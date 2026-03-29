@@ -1,25 +1,15 @@
 import type { InferPageType } from 'fumadocs-core/source'
-import { loader, multiple } from 'fumadocs-core/source'
+import { loader } from 'fumadocs-core/source'
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons'
 import { docs } from 'fumadocs-mdx:collections/server'
-import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server'
-
-import { openapi } from '@/lib/openapi'
+import { openapiPlugin } from 'fumadocs-openapi/server'
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
-export const source = loader(
-  multiple({
-    docs: docs.toFumadocsSource(),
-    // eslint-disable-next-line antfu/no-top-level-await
-    openapi: await openapiSource(openapi, {
-      baseDir: 'openapi',
-    }),
-  }),
-  {
-    baseUrl: '/docs',
-    plugins: [lucideIconsPlugin(), openapiPlugin()],
-  },
-)
+export const source = loader({
+  baseUrl: '/docs',
+  source: docs.toFumadocsSource(),
+  plugins: [lucideIconsPlugin(), openapiPlugin()],
+})
 
 export function getPageImage(page: InferPageType<typeof source>) {
   const segments = [...page.slugs, 'image.webp']
@@ -31,11 +21,6 @@ export function getPageImage(page: InferPageType<typeof source>) {
 }
 
 export async function getLLMText(page: InferPageType<typeof source>) {
-  if (page.data.type === 'openapi') {
-    // e.g. return the stringified OpenAPI schema
-    return JSON.stringify(page.data.getSchema().bundled, null, 2)
-  }
-
   const processed = await page.data.getText('processed')
 
   return `# ${page.data.title}
