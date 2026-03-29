@@ -83,12 +83,12 @@ arcadia run <name/path/url> [--options]
     目录名中的主要组成部分是代码文件名称，用户导入代码文件的日志目录名称为`<仓库名/raw>_文件名去后缀`，中间用下划线分割
   </Accordion>
   <Accordion title="支持直接运行的代码文件类型" id="支持直接运行的代码文件类型">
-    目前支持的代码文件类型有 `js` `mjs` `cjs` `py` `ts` `go` `lua` `rb` `rs` `pl` `c` `sh`，项目已默认预装了 `JavaScript`、`Python`、`Perl` 的运行环境，后续会适配更多语言类型
+    目前支持的代码文件类型有 `js` `mjs` `cjs` `py` `.ts` `.cts` `.mts` `go` `lua` `rb` `rs` `pl` `c` `sh`，项目已默认预装了 `JavaScript`、`Python`、`Perl` 的运行环境
 
     当运行本地代码文件时，文件名的后缀格式（代码文件类型）可以省略，届时将启用模糊查找，优先级为 `JavaScript` > `Python` > `TypeScript` > `Go` > `Lua` > `Ruby` > `Rust` > `Perl` > `C` > `Shell`，当存在同名代码文件时仍适用此规则
   </Accordion>
   <Accordion title="关于运行代码文件所需的依赖" id="关于运行代码文件所需的依赖">
-    这部分内容与项目命令无关，用于解决代码文件运行时缺少第三方依赖库报错的问题，具体详见 [运行环境](/docs/environment) 文档
+    这部分内容与项目命令无关，用于解决代码文件运行时缺少第三方依赖库报错的问题，具体详见 [运行环境](/docs/environment#解决依赖) 文档
   </Accordion>
 </Accordions>
 

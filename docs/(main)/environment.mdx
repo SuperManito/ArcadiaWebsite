@@ -3,7 +3,6 @@ title: 运行环境
 icon: Box
 ---
 import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/components/Icon';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 本部分文档用于指导代码文件运行环境配置，如果你对相关技术不是很熟悉那么请认真阅读以下内容
 
@@ -365,34 +364,25 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
     适用文件类型 `.rs`
 
-    <Steps>
-      <Step>
+    ### 在 `Cargo.toml` 文件中添加依赖： [step]
 
-        ### 在 `Cargo.toml` 文件中添加依赖：
+    ```toml
+    [dependencies]
+    <xxx> = "<version>"
+    ```
 
-        ```toml
-        [dependencies]
-        <xxx> = "<version>"
-        ```
+    ### 运行以下命令安装依赖： [step]
 
-      </Step>
+    ```bash
+    cargo build
+    ```
 
-      <Step>
+    或者仅安装依赖而不构建项目：
 
-        ### 运行以下命令安装依赖：
+    ```bash
+    cargo check
+    ```
 
-        ```bash
-        cargo build
-        ```
-
-        或者仅安装依赖而不构建项目：
-
-        ```bash
-        cargo check
-        ```
-
-      </Step>
-    </Steps>
   </TabsContent>
 
   <TabsContent id="perl-dep" value="perl-dep">

@@ -44,16 +44,16 @@ description: 添加代码仓库配置
 | `--enable` | 是否启用该配置，不提供默认为 `true` | `true` 或 `false` |
 | `--isPrivate` | 是否为私有仓库，不提供默认为 `false` | `true` 或 `false` |
 | `--authMethod` | 私有仓库认证方式 | `ssh` 或 `http` |
-| `--sshAlias` | 私有仓库 SSH 访问凭据配置 - 配置别名 | 详见 [_authsettings_](/docs/sync/repo/config/#authsettings) |
-| `--sshHostName` | 私有仓库 SSH 访问凭据配置 - 主机地址 | 详见 [_authsettings_](/docs/sync/repo/config/#authsettings) |
-| `--sshPrivateKeyPath` | 私有仓库 SSH 访问凭据配置 - 私钥文件路径 | 详见 [_authsettings_](/docs/sync/repo/config/#authsettings) |
-| `--httpUsername` | 私有仓库 HTTP 访问凭据配置 - 用户名 | 详见 [_authsettings_](/docs/sync/repo/config/#authsettings) |
-| `--httpPassword` | 私有仓库 HTTP 访问凭据配置 - 密码或令牌 | 详见 [_authsettings_](/docs/sync/repo/config/#authsettings) |
+| `--sshAlias` | 私有仓库 SSH 访问凭据配置 - 配置别名 | 详见 [_authsettings_](/docs/sync/repo#authsettings) |
+| `--sshHostName` | 私有仓库 SSH 访问凭据配置 - 主机地址 | 详见 [_authsettings_](/docs/sync/repo#authsettings) |
+| `--sshPrivateKeyPath` | 私有仓库 SSH 访问凭据配置 - 私钥文件路径 | 详见 [_authsettings_](/docs/sync/repo#authsettings) |
+| `--httpUsername` | 私有仓库 HTTP 访问凭据配置 - 用户名 | 详见 [_authsettings_](/docs/sync/repo#authsettings) |
+| `--httpPassword` | 私有仓库 HTTP 访问凭据配置 - 密码或令牌 | 详见 [_authsettings_](/docs/sync/repo#authsettings) |
 | `--updateTaskList` | 是否为该配置涉及到的代码文件启用定时任务，不提供默认为 `false` | `true` 或 `false` |
-| `--scriptsPath` | 定时文件路径 | 详见 [_cronsettings_](/docs/sync/repo/config/#cronsettings) |
-| `--scriptsType` | 定时文件格式 | 详见 [_cronsettings_](/docs/sync/repo/config/#cronsettings)，多个用 `\|` 进行分割，例如 `js\|py\|ts` |
-| `--whiteList` | 定时文件匹配白名单 | 详见 [_cronsettings_](/docs/sync/repo/config/#cronsettings) |
-| `--blackList` | 定时文件匹配黑名单 | 详见 [_cronsettings_](/docs/sync/repo/config/#cronsettings) |
+| `--scriptsPath` | 定时文件路径 | 详见 [_cronsettings_](/docs/sync/repo#cronsettings) |
+| `--scriptsType` | 定时文件格式 | 详见 [_cronsettings_](/docs/sync/repo#cronsettings)，多个用 `\|` 进行分割，例如 `js\|py\|ts` |
+| `--whiteList` | 定时文件匹配白名单 | 详见 [_cronsettings_](/docs/sync/repo#cronsettings) |
+| `--blackList` | 定时文件匹配黑名单 | 详见 [_cronsettings_](/docs/sync/repo#cronsettings) |
 | `--autoDisable` | 是否自动禁用新增定时任务，不提供默认为 `false` | `true` 或 `false` |
 | `--addNotify` | 是否为新增定时任务推送通知提醒，不提供默认为 `true` | `true` 或 `false` |
 | `--delNotify` | 是否为过期定时任务推送通知提醒，不提供默认为 `true` | `true` 或 `false` |

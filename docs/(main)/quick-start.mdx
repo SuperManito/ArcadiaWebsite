@@ -4,17 +4,13 @@ description: 安装 Arcadia 平台
 icon: Rocket
 ---
 import { File, Folder, Files } from 'fumadocs-ui/components/files';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { GithubInfo } from 'fumadocs-ui/components/github-info';
 import { InstallCommand } from '@/components/InstallCommand';
 
 本项目依托容器技术需要安装相关容器服务才可以部署，由于运行环境复杂程度较高目前没有计划适配更多部署方式  
 关于部署 Arcadia 平台所需要的最低配置：`2GB` 磁盘空闲、`256MB` 内存，不支持 ARMv6 / ARMv7
 
-<Steps>
-
-<Step>
-## 启动容器
+## 启动容器 [step]
 
 <InstallCommand />
 
@@ -66,10 +62,8 @@ import { InstallCommand } from '@/components/InstallCommand';
     当前底层镜像基于 `GNU/Linux Debian` 构建，因此 Arcadia 平台镜像的占用空间达到了 1.1GB。在不更换底层构建镜像的前提下，已对镜像大小进行了最大程度的压缩。考虑到实际使用环境的生态多样性，这是权衡利弊后的决策选择。实际使用过程中会安装较多依赖内容，届时镜像大小的差异与容器总体占用空间的差异相比，影响已相对有限，建议预留 2GB 的空间以供使用。
   </Accordion>
 </Accordions>
-</Step>
 
-<Step>
-## 等待初始化
+## 等待初始化 [step]
 
 ```bash title="检查启动状态和初始化进度"
 docker logs -f arcadia
@@ -79,10 +73,8 @@ docker logs -f arcadia
 如果报错导致容器没有启动成功那么请先自查原因，绝大多数问题都是由网络环境导致，你可以在 [社区](/docs/about#社区) 内寻求帮助
 
 目前容器会在启动时自动更新 Arcadia 源代码（注：非强制等待，有超时机制），为了确保你能够使用最新的版本如果查看到日志显示更新失败请 [手动更新](/docs/update#更新源码)
-</Step>
 
-<Step>
-## 开始使用
+## 开始使用 [step]
 
 访问 [http://localhost:5678](http://localhost:5678) 进入控制面板，初始用户名和密码分别是 `useradmin` `passwd`，首次登录后会引导你修改此认证信息。
 
@@ -154,6 +146,3 @@ docker logs -f arcadia
     </Files>
   </Accordion>
 </Accordions>
-</Step>
-
-</Steps>

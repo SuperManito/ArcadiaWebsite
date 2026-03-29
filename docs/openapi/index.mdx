@@ -2,6 +2,21 @@
 title: 概述
 ---
 import OpenAPICard from '@/components/OpenAPICard'
+import { Download } from 'lucide-react';
+
+<Cards>
+  <Card
+    icon={<Download />}
+    title="OpenAPI 规范文件"
+    href="https://github.com/SuperManito/ArcadiaWebsite/blob/main/src/openapi.yaml"
+  >
+    可下载并导入到 Postman / Apifox 等 API 工具中使用
+  </Card>
+</Cards>
+
+官方外部文档
+
+<OpenAPICard />
 
 ## 接口基准地址
 
@@ -51,7 +66,7 @@ import OpenAPICard from '@/components/OpenAPICard'
 
 基准地址 `http://localhost:5678/api/open/extra`
 
-后端使用 [<Icon size={18}>logos-nodejs-icon</Icon> Node.js](https://nodejs.org) 编写，所以如果你想使用这个功能则需要会写一些 JavaScript 代码
+后端使用 [<Icon size={18}>logos-nodejs-icon</Icon> Node.js](https://nodejs.org) 搭建，所以如果你想使用这个功能则需要会写一些 JavaScript 代码
 
 <Callout title="编写规范">
   将代码存放在 **config** 目录下的 `extra_server.js` 脚本中（自行创建），[重启服务](/docs/cli/server/service#开启重启服务)后生效，注意届时检查日志进行确认  
@@ -99,7 +114,3 @@ module.exports = Main
 ## 接口类别
 
 <DocsCategory />
-
-## 其它文档
-
-<OpenAPICard />
