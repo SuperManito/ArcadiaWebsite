@@ -1,0 +1,20 @@
+---
+title: 日志裁剪
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/daemon/log/trim</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+手动裁剪指定守护任务的日志文件，按照任务配置的 `log_max_lines` 保留最新的日志行数。如果任务未配置 `log_name` 或 `log_max_lines` 为 0，接口将返回错误。

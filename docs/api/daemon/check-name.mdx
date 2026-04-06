@@ -1,0 +1,39 @@
+---
+title: 名称检查
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/daemon/check</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '要检查的任务名称',
+      type: 'string',
+      required: true,
+    },
+    excludeId: {
+      description: '排除的任务 ID（编辑时排除自身）',
+      type: 'number',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  type={{
+    available: {
+      description: '名称是否可用',
+      type: 'boolean',
+    },
+    reason: {
+      description: '不可用的原因说明',
+      type: 'string',
+    },
+  }}
+/>
+
+检查名称是否与已有守护任务或 PM2 系统进程（如 arcadia_server、tgbot）冲突。

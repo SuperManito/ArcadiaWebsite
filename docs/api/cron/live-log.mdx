@@ -1,0 +1,38 @@
+---
+title: 获取实时日志
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/cron/liveLog</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    running: {
+      description: '任务当前是否正在运行',
+      type: 'boolean',
+      required: true,
+    },
+    runId: {
+      description: '事件 ID',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+关于如何获取实时日志详见 [此处](/docs/api/websocket/log)

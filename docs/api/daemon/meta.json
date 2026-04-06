@@ -1,0 +1,14 @@
+{
+  "title": "Daemon 守护任务",
+  "icon": "ServerCrash",
+  "pages": [
+    "schema",
+    "list",
+    "create",
+    "delete",
+    "update",
+    "check-name",
+    "log",
+    "trim-log"
+  ]
+}

@@ -13,6 +13,7 @@
     "token",
     "log",
     "config",
+    "daemon",
     "captcha/index",
     "websocket"
   ]

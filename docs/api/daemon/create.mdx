@@ -1,0 +1,98 @@
+---
+title: 创建 / 更新
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/daemon/save</POST>
+
+## 请求
+
+不传 `id` 时创建新任务，传 `id` 时更新已有任务。
+
+<TypeTable
+  type={{
+    id: {
+      description: '任务 ID，传入时执行更新，不传时执行创建',
+      type: 'number',
+    },
+    name: {
+      description: '任务名称，全局唯一，创建时必填',
+      type: 'string',
+    },
+    file_path: {
+      description: '要执行的脚本文件路径，创建时必填',
+      type: 'string',
+    },
+    description: {
+      description: '任务描述',
+      type: 'string',
+    },
+    boot_start: {
+      description: '系统启动时是否自动拉起',
+      type: 'number<0 | 1>',
+      default: '1',
+    },
+    max_restarts: {
+      description: '最大重启次数，-1 表示无限制',
+      type: 'number',
+      default: '-1',
+    },
+    restart_delay: {
+      description: '崩溃重启延迟毫秒数',
+      type: 'number',
+      default: '0',
+    },
+    restart_cron: {
+      description: '定期重启的 cron 表达式，为空则不启用',
+      type: 'string',
+    },
+    autorestart: {
+      description: '崩溃时是否自动重启',
+      type: 'number<0 | 1>',
+      default: '1',
+    },
+    max_memory_restart: {
+      description: '内存超限重启阈值（MB），0 表示不启用',
+      type: 'number',
+      default: '0',
+    },
+    stop_exit_codes: {
+      description: '遇到该退出码时停止自动重启，-1 表示不启用',
+      type: 'number',
+      default: '-1',
+    },
+    exp_backoff_restart_delay: {
+      description: '指数退避重启初始延迟（毫秒），0 表示不启用',
+      type: 'number',
+      default: '0',
+    },
+    envs: {
+      description: '附加环境变量，JSON 数组格式 { key: string, value: string }[]',
+      type: 'string',
+    },
+    options: {
+      description: '额外的 `arcadia rund` 命令选项，JSON 数组格式 { key: string, value: string }[]',
+      type: 'string',
+    },
+    log_dir: {
+      description: '日志目录路径，为空使用项目默认目录',
+      type: 'string',
+    },
+    log_name: {
+      description: '日志文件名（不含扩展名）',
+      type: 'string',
+    },
+    log_max_lines: {
+      description: '日志最大行数，0 表示不限制',
+      type: 'number',
+      default: '0',
+    },
+    active: {
+      description: '是否启用',
+      type: 'number<0 | 1>',
+      default: '1',
+    },
+  }}
+/>
+
+创建时会自动检查名称是否与已有守护任务或 PM2 系统进程冲突。

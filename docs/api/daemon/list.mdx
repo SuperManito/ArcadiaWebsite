@@ -1,0 +1,116 @@
+---
+title: 查询列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/daemon</GET>
+
+## 请求
+
+无参数
+
+## 响应
+
+返回所有守护任务的数组，每个元素包含数据库字段以及 PM2 运行时状态信息。
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+    },
+    name: {
+      description: '任务名称',
+      type: 'string',
+    },
+    file_path: {
+      description: '脚本文件路径',
+      type: 'string',
+    },
+    description: {
+      description: '任务描述',
+      type: 'string',
+    },
+    boot_start: {
+      description: '系统启动时自动拉起',
+      type: 'number<0 | 1>',
+    },
+    max_restarts: {
+      description: '最大重启次数（-1 表示无限制）',
+      type: 'number',
+    },
+    restart_delay: {
+      description: '崩溃重启延迟毫秒数',
+      type: 'number',
+    },
+    restart_cron: {
+      description: '定期重启 cron 表达式',
+      type: 'string',
+    },
+    autorestart: {
+      description: '崩溃自动重启，1 启用，0 禁用',
+      type: 'number<0 | 1>',
+    },
+    max_memory_restart: {
+      description: '内存超限重启阈值（MB），0 表示不启用',
+      type: 'number',
+    },
+    stop_exit_codes: {
+      description: '遇到该退出码时停止重启，-1 表示不启用',
+      type: 'number',
+    },
+    exp_backoff_restart_delay: {
+      description: '指数退避重启初始延迟（毫秒），0 表示不启用',
+      type: 'number',
+    },
+    envs: {
+      description: '附加环境变量 JSON 数组',
+      type: 'string',
+    },
+    options: {
+      description: '额外的 rund 命令选项 JSON 数组，格式 { key: string, value: string }[]',
+      type: 'string',
+    },
+    log_dir: {
+      description: '日志目录路径',
+      type: 'string',
+    },
+    log_name: {
+      description: '日志文件名',
+      type: 'string',
+    },
+    log_max_lines: {
+      description: '日志最大行数限制（0 表示不限制）',
+      type: 'number',
+    },
+    active: {
+      description: '启用状态',
+      type: 'number<0 | 1>',
+    },
+    log_path: {
+      description: '日志文件完整路径（由 log_dir + log_name 拼接）',
+      type: 'string',
+    },
+    pm2_status: {
+      description: 'PM2 进程状态',
+      typeDescription: 'online | stopped | stopping | launching | errored | not-started',
+      type: 'string',
+    },
+    pid: {
+      description: '进程 PID',
+      type: 'number',
+    },
+    pm_uptime: {
+      description: '进程启动时间戳（毫秒）',
+      type: 'number',
+    },
+    restart_time: {
+      description: 'PM2 累计重启次数',
+      type: 'number',
+    },
+    memory: {
+      description: '内存使用量（格式化字符串，如 12.34 MB）',
+      type: 'string',
+    },
+  }}
+/>

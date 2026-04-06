@@ -1,0 +1,44 @@
+---
+title: 日志查看
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/daemon/log</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    startLine: {
+      description: '起始行号（用于增量加载），从 0 开始',
+      type: 'number',
+      default: '0',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  type={{
+    content: {
+      description: '日志内容文本',
+      type: 'string',
+    },
+    nextStartLine: {
+      description: '下次增量加载的起始行号',
+      type: 'number',
+    },
+    totalLines: {
+      description: '日志总行数',
+      type: 'number',
+    },
+  }}
+/>
+
+日志路径由任务的 `log_dir` 和 `log_name` 字段拼接而成。支持通过 `startLine` 参数实现增量加载，避免大日志文件的全量传输。

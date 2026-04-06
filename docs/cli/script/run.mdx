@@ -9,7 +9,7 @@ import { CHECK, CLOSE } from '@/components/Icon';
 需要特别说明的是，代码文件是各编程语言程序文件的统称，并非所有代码文件都属于脚本类型。
 
 ```sh title="$ arcadia run"
-❖ Arcadia CLI - 执行代码文件
+❖ Arcadia CLI - 运行代码文件
 
   使用方法：
 
@@ -21,7 +21,6 @@ import { CHECK, CLOSE } from '@/components/Icon';
     -s, --silent                静默运行 - 不推送任何通知消息
     -w, --wait                  推迟执行 - 等待指定时间后再运行任务，选项后需跟时间值
     -D, --delay                 延迟执行 - 随机倒数一定秒数后再执行代码文件
-    -d, --daemon                守护进程 - 将代码文件设置为守护进程保持在后台运行，期间中断或结束会自动重新运行
     -a, --agent                 网络代理 - 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，配置方法详见文档
     -T, --timeout               运行超时 - 设置运行任务超时机制，选项后需跟 timeout 指令的参数作为选项值
     -N, --no-log                不记录日志 - 不存储代码运行日志到本地
@@ -35,7 +34,7 @@ import { CHECK, CLOSE } from '@/components/Icon';
     -S, --split-env             拆分运行 - 将复合变量的值拆分后为每个值声明变量并单独运行代码文件，选项后需跟需要拆分的变量名称、分隔符
 
     -E, --exec-args             执行参数 - 将该选项后面的内容作为参数传递给代码执行器
-    --                          传递选项，将该选项后面的所有内容都作为选项参数传递给代码文件
+    --                          传递选项 - 将该选项后面的所有内容都作为选项参数传递给代码文件
 
     --deno，--use-deno          使用 Deno 运行时
     --bun，--use-bun            使用 Bun 运行时
@@ -105,7 +104,6 @@ arcadia run <name/path/url> [--options]
 | `-s`, `--silent`               | 静默运行 | 否 | 静默运行任务不推送任何通知消息 |
 | `-w`, `--wait`                 | 推迟执行 | 是 | 等待指定时间后再运行代码文件，选项后需跟 _等待时间单位_ 作为参数值，具体参照 [sleep](https://www.runoob.com/linux/linux-comm-sleep.html) 命令的用法 |
 | `-D`, `--delay`                | 延迟执行 | 否 | 随机倒数一定秒数后再运行代码文件，该秒数上限可以在配置文件中定义 |
-| `-d`, `--daemon`               | 守护进程 | 否 | 通过 [PM2](https://pm2.keymetrics.io) 将代码文件设置为守护进程保持在后台运行，期间中断或结束会自动重新运行 |
 | `-a`, `--agent`                | 网络代理 | 否 | 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，使用方法详见下方说明  |
 | `-T`, `--timeout`              | 运行超时 | 是 | 设置运行任务超时机制，选项后需跟 [timeout](https://www.coonote.com/linux/linux-cmd-timeout.html) 指令的参数作为选项值 |
 | `-N`, `--no-log`               | 不记录日志 | 否 | 不存储代码运行日志到本地 |
@@ -184,23 +182,6 @@ arcadia run <name/path/url> [--options]
     ```
 
   </Accordion>
-
-  <Accordion title="什么是守护进程？" id="什么是守护进程">
-    守护进程是可以周期运行的特殊进程，在这里指的是将代码文件设置为后台进程循环运行，当代码文件运行结束或中断时会自动重新运行，适用于需要长期连续运行的代码文件。  
-    针对同一个代码文件只可存在一个守护进程，这就意味着当即将被运行的代码文件存在多个任务时不允许设置守护进程。
-
-    管理守护进程的方法
-
-    ```bash title="查看有哪些守护进程正在运行"
-    pm2 list
-    ```
-
-    默认存在二个项目内置的服务 `arcadia_server` `tgbot`，请不要删除它们其中的任何一个
-
-    ```bash title="停止运行"
-    pm2 delete <任务名>
-    ```
-  </Accordion>
 </Accordions>
 
 ## 终止运行
@@ -212,3 +193,80 @@ arcadia stop <name/path>
 
 `<name>` 文件名(仅scripts目录)
 `<path>` 相对路径或绝对路径
+
+---
+
+## 守护进程
+
+<Callout type="info" title="什么是守护进程？">
+  守护进程是可以周期运行的特殊进程，在这里指的是将代码文件设置为后台进程循环运行，当代码文件运行结束或中断时会自动重新运行，适用于需要长期连续运行的代码文件。  
+  针对同一个代码文件只可存在一个守护进程，这就意味着当即将被运行的代码文件存在多个任务时不允许设置守护进程。
+</Callout>
+
+<Callout type="idea" title="使用提示">
+  该命令目前仅用于任务启动，请优先通过控制面板进行持久化管理，否则手动在终端命令行启动的任务将无法在控制面板中显示。
+</Callout>
+
+守护进程模式使用独立的 `rund` 子命令，通过 PM2 将代码文件保持在后台持续运行，进程退出或崩溃后会自动重新拉起。
+
+```sh title="$ arcadia run"
+❖ Arcadia CLI - 运行代码文件（守护进程）
+
+  使用方法：
+
+    arcadia rund <name/path> [--options]
+
+  专属命令选项：
+
+    --name                          指定任务名称
+    --max-restarts                  指定最大重启次数
+    --restart-delay                 指定重启延迟毫秒数
+    --log-file                      指定日志文件路径
+    --restart-cron                  指定重启计划任务
+    --no-autorestart                禁用进程崩溃后的自动重启
+    --max-memory-restart            内存超出指定值时自动重启（例如 200M）
+    --stop-exit-codes               指定不触发自动重启的退出码
+    --exp-backoff-restart-delay     启用指数退避重启，指定初始延迟毫秒数
+
+  通用命令选项：
+
+    -s, --silent                静默运行 - 不推送任何通知消息
+    -a, --agent                 网络代理 - 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，配置方法详见文档
+    -r, --recombine-env         变量重组 - 按照指定顺序重新组合复合变量的值，选项后需跟变量名称、分隔符、重组表达式
+                                           表达式语法：多个值用 "," 隔开，值区间用 "-" 连接，可以用 "%" 表示值的总数
+
+    -E, --exec-args             执行参数 - 将该选项后面的内容作为参数传递给代码执行器
+    --                          传递选项，将该选项后面的所有内容都作为选项参数传递给代码文件
+
+    --deno，--use-deno          使用 Deno 运行时
+    --bun，--use-bun            使用 Bun 运行时
+    --node，--use-node          使用 Node.js 运行时
+    --tsx，--use-tsx            使用 tsx 执行
+    --ts-node，--use-ts-node    使用 ts-node 执行
+
+  命令帮助：
+
+    <name> 文件名(仅scripts目录)  <path> 相对路径或绝对路径  [--options] 命令选项
+```
+
+支持部分通用命令选项，同时提供下列守护进程专属命令选项
+
+| 选项 | 选项值 | 描述 |
+| :-: | :-: | ----- |
+| `--name` | 是 | 指定 PM2 进程名称，默认使用代码文件名 |
+| `--max-restarts` | 是 | 最大自动重启次数（非负整数），默认无限制 |
+| `--restart-delay` | 是 | 崩溃后重启延迟毫秒数（非负整数），默认 `0` |
+| `--log-file` | 是 | 日志文件完整路径，未指定时使用项目默认日志目录 |
+| `--restart-cron` | 是 | 定时重启 Cron 表达式，为空则不启用 |
+| `--no-autorestart` | 否 | 禁用崩溃自动重启，进程退出后不再重新拉起 |
+| `--max-memory-restart` | 是 | 内存超限自动重启阈值（如 `200M`），默认不启用 |
+| `--stop-exit-codes` | 是 | 遇到指定退出码时停止重启（非负整数，如 `0`） |
+| `--exp-backoff-restart-delay` | 是 | 启用指数退避重启策略，指定初始延迟毫秒数（非负整数） |
+
+### 管理方法 [!toc]
+
+- 查看有哪些守护进程正在运行 `pm2 list`  
+- 停止运行 `pm2 stop <任务名>`  
+- 删除任务 `pm2 delete <任务名>`
+
+默认存在二个项目内置的服务 `arcadia_server` `tgbot`，请不要删除它们其中的任何一个

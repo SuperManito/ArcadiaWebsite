@@ -12,6 +12,7 @@
     "running-tasks",
     "run",
     "terminate",
+    "live-log",
     "dashboard"
   ]
 }

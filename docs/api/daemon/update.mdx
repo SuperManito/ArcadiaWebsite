@@ -1,0 +1,33 @@
+---
+title: 执行操作
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/daemon/action</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '任务唯一标识',
+      type: 'number',
+      required: true,
+    },
+    action: {
+      description: '要执行的操作',
+      typeDescription: 'start | stop | restart | flush',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+### action 说明
+
+| 值 | 说明 |
+|---|---|
+| `start` | 启动守护任务。通过 `arcadia rund` 重新拉起进程，启动前会自动裁剪日志（如配置了 `log_max_lines`） |
+| `stop` | 停止守护任务对应的 PM2 进程 |
+| `restart` | 重启守护任务。先删除旧 PM2 进程，再以最新数据库配置重新启动，确保配置变更立即生效 |
+| `flush` | 清空 PM2 为该任务缓存的日志内容 |
