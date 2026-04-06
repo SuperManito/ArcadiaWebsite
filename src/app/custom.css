@@ -30,3 +30,29 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+.github-info {
+  text-decoration: none !important;
+}
+
+[data-card] {
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-card]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-fd-primary);
+}
+
+[data-card] > div:first-child {
+  transition: all 0.3s ease;
+}
+
+[data-card]:hover > div:first-child {
+  transform: scale(1.1);
+  background-color: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
+}

@@ -52,10 +52,9 @@ export default function EcosystemSection() {
                 {languageIcons.map((item, idx) => (
                   <div
                     key={idx}
-                    title={item.name}
-                    className="group flex flex-col items-center justify-center w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md border border-white/50 dark:border-white/5 shadow-sm hover:shadow-xl hover:bg-white/80 dark:hover:bg-neutral-800/80 hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                    className="group flex flex-col items-center justify-center w-8 h-8 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl backdrop-blur-md bg-transparent transition-all duration-300"
                   >
-                    <div className="transform transition-transform text-xl sm:text-2xl md:text-3xl text-neutral-700 dark:text-neutral-200 group-hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]">
+                    <div className="transform transition-transform text-xl sm:text-2xl md:text-3xl text-neutral-700 dark:text-neutral-200">
                       <Icon icon={item.icon} color={item.color} />
                     </div>
                   </div>

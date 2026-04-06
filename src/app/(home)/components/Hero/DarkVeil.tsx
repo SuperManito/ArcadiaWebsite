@@ -177,7 +177,6 @@ void main(){
       className="w-full h-full block"
       style={{
         background: 'transparent',
-        mixBlendMode: 'screen',
       }}
     />
   )
