@@ -1,7 +1,7 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { BookOpen, Plug, Shapes, Terminal } from 'lucide-react'
 
-export const releaseNotice = '📢 Release 1.0.0-beta.9（2026-03-26）现已推出'
+export const releaseNotice = '📢 Release 1.0.0-beta.10（2026-04-08）现已推出'
 
 // fill this with your actual GitHub info, for example:
 export const gitConfig = {

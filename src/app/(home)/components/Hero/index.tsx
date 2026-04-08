@@ -67,13 +67,13 @@ export default function HeroSection() {
         <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-10 sm:mb-20 h-16">
           <Link
             to="/docs/quick-start"
-            className="flex items-center justify-center px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-3xl bg-blue-600 text-white font-semibold text-sm sm:text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-500/30 flex-1 max-w-35 sm:flex-none sm:w-auto"
+            className="flex items-center justify-center px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-4xl bg-blue-600 text-white font-semibold text-sm sm:text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-500/30 flex-1 max-w-35 sm:flex-none sm:w-auto"
           >
             开始使用
           </Link>
           <Link
             href={gitConfig.url}
-            className="px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-3xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold text-sm sm:text-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-2 flex-1 max-w-35 sm:flex-none sm:w-auto text-center"
+            className="px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-4xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold text-sm sm:text-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-2 flex-1 max-w-35 sm:flex-none sm:w-auto text-center"
           >
             <Icon icon="mdi:github" />
             GitHub

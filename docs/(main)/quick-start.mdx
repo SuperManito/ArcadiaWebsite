@@ -63,17 +63,6 @@ import { InstallCommand } from '@/components/InstallCommand';
   </Accordion>
 </Accordions>
 
-## 等待初始化 [step]
-
-```bash title="检查启动状态和初始化进度"
-docker logs -f arcadia
-```
-
-请查看容器启动后的初始化进度并**等待其运行完毕**，当输出**容器启动成功**字样后即可通过 `Ctrl + C` 退出查看  
-如果报错导致容器没有启动成功那么请先自查原因，绝大多数问题都是由网络环境导致，你可以在 [社区](/docs/about#社区) 内寻求帮助
-
-目前容器会在启动时自动更新 Arcadia 源代码（注：非强制等待，有超时机制），为了确保你能够使用最新的版本如果查看到日志显示更新失败请 [手动更新](/docs/update#更新源码)
-
 ## 开始使用 [step]
 
 访问 [http://localhost:5678](http://localhost:5678) 进入控制面板，初始用户名和密码分别是 `useradmin` `passwd`，首次登录后会引导你修改此认证信息。
@@ -84,16 +73,21 @@ docker logs -f arcadia
   <Accordion title="排除控制面板故障" id="排除控制面板故障">
     下面是解决步骤顺序和思路
 
-    - 检查容器运行状态，是否正常运行并初始化成功
+    - 检查容器运行状态，是否启动正常并初始化成功
 
       查看容器状态（宿主机）
       ```bash
       docker ps -a
       ```
-      查看容器日志（宿主机）
+      查看容器初始化日志（宿主机）
       ```bash
-      docker logs arcadia
+      docker logs -f arcadia
       ```
+
+      当输出 `Arcadia service is ready` 字样后即可通过 `Ctrl + C` 退出查看  
+      如果报错导致容器没有启动成功那么请先自查原因，绝大多数问题都是由网络环境导致，你可以在 [社区](/docs/about#社区) 内寻求帮助
+
+      目前容器会在启动时自动更新 Arcadia 源代码（注：非强制等待，有超时机制），为了确保你能够使用最新的版本如果查看到日志显示更新失败请 [手动更新](/docs/update#更新源码)
 
     - 检查面板服务状态，查看有无报错并进行验证
 
