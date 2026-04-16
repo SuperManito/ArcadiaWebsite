@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "ESNext",
+    "target": "esnext",
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "baseUrl": ".",
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["src/*"],
-      "fumadocs-mdx:collections/*": [".source/*"]
+      "@/*": ["./src/*"],
+      "fumadocs-mdx:collections/*": ["./.source/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
