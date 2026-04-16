@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { getGithubLastEdit } from 'fumadocs-core/content/github'
 import { findSiblings } from 'fumadocs-core/page-tree'
 import { Card, Cards } from 'fumadocs-ui/components/card'
 import {
@@ -8,7 +7,6 @@ import {
   DocsPage,
   DocsTitle,
   EditOnGitHub,
-  PageLastUpdate,
 } from 'fumadocs-ui/layouts/notebook/page'
 import { createRelativeLink } from 'fumadocs-ui/mdx'
 import { notFound } from 'next/navigation'
@@ -25,11 +23,11 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     notFound()
 
   const MDX = page.data.body
-  const lastModifiedTime = await getGithubLastEdit({
-    owner: gitConfig.user,
-    repo: gitConfig.docRepo,
-    path: `docs/${page.path}`,
-  })
+  // const lastModifiedTime = await getGithubLastEdit({
+  //   owner: gitConfig.user,
+  //   repo: gitConfig.docRepo,
+  //   path: `docs/${page.path}`,
+  // })
   const markdownUrl = `/llms.mdx/docs/${[...page.slugs, 'index.mdx'].join('/')}`
 
   return (
@@ -59,11 +57,11 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         </ClientFade>
       </DocsBody>
       <div className="flex flex-row flex-wrap items-center justify-between gap-4 border-t pt-6 text-sm">
-        {lastModifiedTime && (
+        {/* {lastModifiedTime && (
           <PageLastUpdate
             date={lastModifiedTime}
           />
-        )}
+        )} */}
         <EditOnGitHub
           href={`${gitConfig.docUrl}/edit/${gitConfig.docBranch}/docs/${page.path}`}
         />
