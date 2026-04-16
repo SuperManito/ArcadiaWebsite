@@ -3,7 +3,7 @@
 import type { InputRef, TabsProps } from 'antd'
 import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Input, InputNumber, Popover, Row, Segmented, Select, Space, Switch, Tabs, theme } from 'antd'
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock'
-import { useTheme } from 'next-themes'
+import { useTheme } from 'fumadocs-ui/provider/base'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { DockerIcon, Icon, PodmanIcon } from '@/components/Icon'

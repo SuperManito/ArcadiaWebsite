@@ -16,7 +16,7 @@ function TeamProfileCard({ name, children, username, ...props }: TeamProfileCard
       {...props}
       href={url}
       className={cn(
-        'flex flex-col rounded-xl border bg-fd-card no-underline p-4 text-fd-card-foreground transition-colors @max-lg:col-span-full',
+        'flex flex-col rounded-xl border bg-fd-card not-prose no-underline p-4 text-fd-card-foreground transition-colors @max-lg:col-span-full',
         url && 'hover:bg-fd-accent/80',
         props.className,
       )}

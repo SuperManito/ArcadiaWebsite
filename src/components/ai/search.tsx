@@ -1,12 +1,12 @@
 'use client'
 import type { UseChatHelpers } from '@ai-sdk/react'
-import type { Tool, UIToolInvocation } from 'ai'
+import type { ReasoningUIPart, Tool, UIToolInvocation } from 'ai'
 import type { ComponentProps, ReactNode, SyntheticEvent } from 'react'
 import type { ChatUIMessage, SearchTool } from '../../app/api/chat/route'
 import { useChat } from '@ai-sdk/react'
 import { Presence } from '@radix-ui/react-presence'
 import { DefaultChatTransport } from 'ai'
-import { Loader2, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from 'lucide-react'
+import { ChevronDown, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from 'lucide-react'
 import {
   createContext,
   use,
@@ -141,7 +141,7 @@ export function AISearchInput(props: ComponentProps<'form'>) {
     <form {...props} className={cn('flex items-start pe-2', props.className)} onSubmit={onStart}>
       <Input
         value={input}
-        placeholder={isLoading ? 'AI 正在回答…' : '请输入问题'}
+        placeholder={isLoading ? 'AI 正在回答…' : '提问'}
         autoFocus
         className="p-3"
         disabled={status === 'streaming' || status === 'submitted'}
@@ -168,7 +168,7 @@ export function AISearchInput(props: ComponentProps<'form'>) {
               )}
               onClick={stop}
             >
-              <Loader2 className="size-4 animate-spin text-fd-muted-foreground" />
+              <LoadingIcon className="size-4 text-fd-muted-foreground" />
               中止回答
             </button>
           )
@@ -259,13 +259,110 @@ const roleName: Record<string, string> = {
   assistant: 'Arcadia',
 }
 
-function Message({ message, ...props }: { message: ChatUIMessage } & ComponentProps<'div'>) {
+function LoadingIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={cn('shrink-0', className)}>
+      <g stroke="currentColor">
+        <circle cx="12" cy="12" r="9.5" fill="none" strokeLinecap="round" strokeWidth="3">
+          <animate attributeName="stroke-dasharray" calcMode="spline" dur="1.5s" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" keyTimes="0;0.475;0.95;1" repeatCount="indefinite" values="0 150;42 150;42 150;42 150" />
+          <animate attributeName="stroke-dashoffset" calcMode="spline" dur="1.5s" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" keyTimes="0;0.475;0.95;1" repeatCount="indefinite" values="0;-16;-59;-59" />
+        </circle>
+        <animateTransform attributeName="transform" dur="2s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12" />
+      </g>
+    </svg>
+  )
+}
+
+function SearchBlock({ call }: { call: UIToolInvocation<SearchTool> }) {
+  const hasError = call.state === 'output-error' || call.state === 'output-denied'
+  const isSearching = !hasError && !call.output
+  const query = (call.input as { query?: string } | undefined)?.query
+
+  return (
+    <div className="mb-3 text-xs border rounded-lg overflow-hidden">
+      <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-fd-muted-foreground">
+        {isSearching
+          ? <LoadingIcon className="size-3" />
+          : <SearchIcon className={cn('size-3 shrink-0', hasError && 'text-red-500')} />}
+        <span className={cn('font-medium shrink-0', hasError && 'text-red-500')}>
+          {hasError
+            ? (call.errorText ?? '搜索失败')
+            : isSearching
+              ? '搜索中…'
+              : `${call.output?.length ?? 0} 条搜索结果`}
+        </span>
+        {query && !hasError && (
+          <span className="text-fd-muted-foreground/60 truncate min-w-0">
+            「
+            {query}
+            」
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function PendingBlock() {
+  return (
+    <div>
+      <p className="mb-1 text-sm font-medium text-fd-primary">Arcadia</p>
+      <div className="text-xs border rounded-lg overflow-hidden">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-fd-muted-foreground">
+          <LoadingIcon className="size-3" />
+          <span className="font-medium">正在处理中，请稍后…</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ThinkingBlock({ text, isThinking }: { text: string, isThinking: boolean }) {
+  const [expanded, setExpanded] = useState(true)
+
+  useEffect(() => {
+    if (!isThinking) {
+      const timer = setTimeout(() => setExpanded(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [isThinking])
+
+  return (
+    <div className="mb-2 text-xs border rounded-lg overflow-hidden">
+      <button
+        type="button"
+        className="w-full flex items-center gap-1.5 px-2.5 py-1.5 text-fd-muted-foreground hover:bg-fd-muted/40 transition-colors text-left"
+        onClick={() => setExpanded(e => !e)}
+      >
+        {(!isThinking || !!text.trim()) && <ChevronDown className={cn('size-3 shrink-0 transition-transform duration-200', !expanded && '-rotate-90')} />}
+        <span className="font-medium">{isThinking ? '正在思考…' : '已深度思考'}</span>
+      </button>
+      {expanded && (
+        <div className="px-2.5 py-2 border-t text-fd-muted-foreground/70 leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto fd-scroll-container">
+          {text.trim() || '…'}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function Message({ message, isActive = false, ...props }: { message: ChatUIMessage, isActive?: boolean } & ComponentProps<'div'>) {
   let markdown = ''
+  let reasoningText = ''
+  let isThinking = false
   const searchCalls: UIToolInvocation<SearchTool>[] = []
 
   for (const part of message.parts ?? []) {
     if (part.type === 'text') {
       markdown += part.text
+      continue
+    }
+
+    if (part.type === 'reasoning') {
+      const rp = part as ReasoningUIPart
+      reasoningText += rp.text
+      if (rp.state === 'streaming' && isActive)
+        isThinking = true
       continue
     }
 
@@ -281,35 +378,33 @@ function Message({ message, ...props }: { message: ChatUIMessage } & ComponentPr
 
   return (
     <div onClick={e => e.stopPropagation()} {...props}>
-      <p
+      <div
         className={cn(
-          'mb-1 text-sm font-medium text-fd-muted-foreground',
-          message.role === 'assistant' && 'text-fd-primary',
+          'mb-1 flex items-center gap-1.5',
+          message.role === 'assistant' ? 'text-fd-primary' : 'text-fd-muted-foreground',
         )}
       >
-        {roleName[message.role] ?? 'unknown'}
-      </p>
-      <div className="prose text-sm">
-        <Markdown text={markdown} />
+        <span className="text-sm font-medium">{roleName[message.role] ?? 'unknown'}</span>
+        {isActive && message.role === 'assistant' && (
+          <LoadingIcon className="size-3 opacity-60" />
+        )}
       </div>
 
-      {searchCalls.map((call) => {
-        return (
-          <div
-            key={call.toolCallId}
-            className="flex flex-row gap-2 items-center mt-3 rounded-lg border bg-fd-secondary text-fd-muted-foreground text-xs p-2"
-          >
-            <SearchIcon className="size-4" />
-            {call.state === 'output-error' || call.state === 'output-denied'
-              ? (
-                  <p className="text-fd-error">{call.errorText ?? '搜索失败'}</p>
-                )
-              : (
-                  <p>{!call.output ? '搜索中…' : `${call.output.length} 条搜索结果`}</p>
-                )}
-          </div>
-        )
-      })}
+      {message.role === 'assistant' && reasoningText && (
+        <ThinkingBlock text={reasoningText} isThinking={isThinking} />
+      )}
+
+      {searchCalls
+        .filter(c => !(Array.isArray(c.output) && c.output.length === 0))
+        .map(call => (
+          <SearchBlock key={call.toolCallId} call={call} />
+        ))}
+
+      {markdown && (
+        <div className="prose text-sm">
+          <Markdown text={markdown} />
+        </div>
+      )}
     </div>
   )
 }
@@ -415,6 +510,7 @@ export function AISearchPanel() {
 export function AISearchPanelList({ className, style, ...props }: ComponentProps<'div'>) {
   const chat = useChatContext()
   const messages = chat.messages.filter(msg => msg.role !== 'system')
+  const isPending = chat.status === 'submitted'
 
   return (
     <List
@@ -426,7 +522,7 @@ export function AISearchPanelList({ className, style, ...props }: ComponentProps
       }}
       {...props}
     >
-      {messages.length === 0
+      {messages.length === 0 && !isPending
         ? (
             <div className="text-sm text-fd-muted-foreground/80 size-full flex flex-col items-center justify-center text-center gap-2">
               <MessageCircleIcon fill="currentColor" stroke="none" />
@@ -435,9 +531,25 @@ export function AISearchPanelList({ className, style, ...props }: ComponentProps
           )
         : (
             <div className="flex flex-col px-3 gap-4">
-              {messages.map(item => (
-                <Message key={item.id} message={item} />
+              {messages.map((item, index) => (
+                <Message
+                  key={item.id}
+                  message={item}
+                  isActive={
+                    chat.status === 'streaming'
+                    && index === messages.length - 1
+                    && item.role === 'assistant'
+                  }
+                />
               ))}
+              {isPending && <PendingBlock />}
+              {chat.error && (
+                <p className="text-xs text-red-500 wrap-break-word whitespace-pre-wrap">
+                  {chat.error.message.startsWith('Invalid input') || chat.error.message.includes('Type validation failed')
+                    ? '工具调用参数无效，请重试。'
+                    : chat.error.message || '请求失败，请重试。'}
+                </p>
+              )}
             </div>
           )}
     </List>
@@ -453,7 +565,7 @@ export function useHotKey() {
       e.preventDefault()
     }
 
-    if (e.key === '/' && (e.metaKey || e.ctrlKey) && !open) {
+    if (e.key.toLowerCase() === 'i' && (e.metaKey || e.ctrlKey) && !open) {
       setOpen(true)
       e.preventDefault()
     }

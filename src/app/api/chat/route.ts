@@ -1,10 +1,57 @@
-import type { UIMessage } from 'ai'
+import type { GatewayModelId, UIMessage } from 'ai'
 import type { DocumentData } from 'flexsearch'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { convertToModelMessages, stepCountIs, streamText, tool } from 'ai'
 import { Document } from 'flexsearch'
 import { z } from 'zod'
 import { source } from '@/lib/source'
+
+// 定义模型列表
+const MODEL_PRIORITY: GatewayModelId[] = [
+  'z-ai/glm-4.5-air:free',
+  'minimax/minimax-m2.5:free',
+  'google/gemma-4-26b-a4b-it:free',
+  'openrouter/free',
+]
+
+// 过滤搜索路径
+const EXCLUDE_PATHS = [
+  '/docs/changelog',
+  '/docs/api',
+  '/docs/openapi',
+]
+
+// 定义提示词
+const SYSTEM_PROMPT = [
+  'You are an AI assistant for a documentation site. This is a one-stop platform for automated code development and operations, project named Arcadia.',
+  'You must use the `search` tool to retrieve relevant document content before answering.',
+  'The `search` tool returns raw JSON results from documentation. Use those results to ground your answer and cite sources as markdown links using the document `url` field when available.',
+  'Your responses must strictly adhere to the documentation for the Arcadia platform. Do not use any knowledge from your training data, even if you believe it to be common sense or generally correct.',
+  'If the search results do not contain an answer to the user\'s question, respond that you do not know and suggest a better search query. Do not attempt to infer, guess, or supplement the answer using your own knowledge.',
+  'The Arcadia platform documentation includes introductory guides and CLI-specific documentation. You may need to infer the user\'s specific use case to provide an appropriate response.',
+  'Please prioritize answering in Simplified Chinese (Mandarin).',
+
+  'Additional constraints:',
+  '1. Do not extrapolate from search results. Every claim must have a direct, verbatim match in the search results.',
+  '2. If search results are relevant but lack the specific answer, still respond that you do not know. Do not fill missing details with general knowledge.',
+  '3. Never use phrases like "based on my understanding", "as an AI", "generally speaking". Answer only when search results support it.',
+  '4. Do not mention any domain names. Use only the `url` from search results. Never invent or guess a URL.',
+
+  'Domain-specific routing rules (these override general behavior):',
+
+  'Rule 1 - Dependency management:',
+  'When the user asks about "dependency management", "dependency installation", "installing dependencies", "依赖管理", "依赖安装", or any related variant:',
+  'You MUST search the "运行环境" (Runtime Environment) documentation page, specifically the sections titled "安装语言环境" (Installing Language Environment) and "解决依赖" (Resolving Dependencies).',
+  'Base your answer exclusively on content found in those two sections.',
+  'If those sections do not contain the answer, respond that you cannot find the information and suggest the user check the "运行环境" page directly.',
+
+  'Rule 2 - Script subscription / Code sync (term equivalence):',
+  'When users ask about "脚本订阅" (script subscription), "代码订阅" (code subscription), "同步订阅" (sync subscription), "script subscription", "code subscription", or any related variant:',
+  'These terms are equivalent to "代码同步" (Code Sync) functionality.',
+  'You MUST search the "代码同步" (Code Sync) documentation page, read it thoroughly, and answer based on your understanding of that document.',
+  'Base your answer exclusively on content found in that document.',
+  'If the document does not contain the answer, respond that you cannot find the information and suggest the user check the "代码同步" page directly.',
+].join('\n')
 
 interface CustomDocument extends DocumentData {
   url: string
@@ -37,6 +84,10 @@ async function createSearchServer() {
     source.getPages().map(async (page) => {
       if (!('getText' in page.data))
         return null
+      if (EXCLUDE_PATHS.some(path => page.url.includes(path))) {
+        return null
+      }
+
       try {
         return {
           title: page.data.title,
@@ -73,121 +124,40 @@ const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
 })
 
-/** System prompt, you can update it to provide more specific information */
-const systemPrompt = [
-  '你是一个文档站点的 AI 助手。',
-  '需要时，请使用 `search` 工具在回答前检索相关的文档内容。',
-  '`search` 工具返回来自文档的原始 JSON 结果。请使用这些结果作为回答的依据，并在可用时使用文档的 `url` 字段以 Markdown 链接形式引用来源。',
-  '如果在搜索结果中找不到答案，请说明你不知道，并建议一个更好的搜索查询。',
-  '请优先使用简体中文（普通话）回答。',
-].join('\n')
-
-// 定义模型优先级列表（依次尝试）
-const MODEL_PRIORITY = [
-  process.env.OPENROUTER_MODEL ?? 'openrouter/free', // 首选模型（环境变量或默认免费模型）
-  'openrouter/free', // 备选免费模型（当首选模型失败时使用）
-]
-
-// 判断错误是否可重试（触发模型切换）
-function isRetryableError(error: unknown): boolean {
-  // OpenRouter API 返回的错误通常具有 status 属性
-  if (error && typeof error === 'object' && 'status' in error) {
-    const status = (error as { status?: number }).status
-    // 429 = 配额用尽/频率限制，503 = 服务暂时不可用
-    if (status === 429 || status === 503) {
-      return true
-    }
-    // 检查 OpenRouter 返回的错误码
-    const body = (error as { body?: unknown }).body
-    if (body && typeof body === 'object') {
-      const errorBody = body as { error?: { code?: string } }
-      if (errorBody.error?.code === 'rate-limited'
-        || errorBody.error?.code === 'service_unavailable') {
-        return true
-      }
-    }
-  }
-  // 网络层面错误（连接超时、断开等）
-  if (error && typeof error === 'object') {
-    const networkError = error as { code?: string }
-    if (networkError.code === 'ECONNABORTED'
-      || networkError.code === 'ETIMEDOUT'
-      || networkError.code === 'ENOTFOUND') {
-      return true
-    }
-  }
-
-  return false
-}
-
 export async function POST(req: Request) {
-  let lastError: Error | null = null
-  // 遍历模型优先级列表
-  for (const [index, modelId] of MODEL_PRIORITY.entries()) {
-    // 确保 modelId 不为空
-    if (!modelId) {
-      continue
-    }
-    try {
-      const reqJson = await req.json()
-      const result = streamText({
-        model: openrouter.chat(modelId),
-        stopWhen: stepCountIs(5),
-        tools: {
-          // eslint-disable-next-line ts/no-use-before-define
-          search: searchTool,
-        },
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
-            convertDataPart(part) {
-              if (part.type === 'data-client') {
-                return {
-                  type: 'text',
-                  text: `[Client Context: ${JSON.stringify(part.data)}]`,
-                }
-              }
-            },
-          })),
-        ],
-        toolChoice: 'auto',
-      })
-      // console.log(`✅ 模型 ${modelId} 调用成功`)
-      return result.toUIMessageStreamResponse()
-    }
-    catch (error) {
-      // console.error(`❌ 模型 ${modelId} 调用失败:`, error)
-      lastError = error as Error
-      // 如果错误可重试（配额用尽/服务不可用），继续尝试下一个模型
-      if (isRetryableError(error)) {
-        // 如果是最后一个模型，就不继续了
-        if (index === MODEL_PRIORITY.length - 1) {
-          break
-        }
-        continue
-      }
-      else {
-        break
-      }
-    }
-  }
+  const reqJson = await req.json()
+  const [primaryModel, ...fallbackModels] = MODEL_PRIORITY
 
-  // 所有模型都尝试失败后，返回错误响应
-  return new Response(
-    JSON.stringify({
-      error: '所有可用模型调用失败',
-      message: '请检查网络连接或配置',
-      attemptedModels: MODEL_PRIORITY.filter(Boolean),
-      lastError: lastError?.message,
+  const result = streamText({
+    model: openrouter.chat(primaryModel, {
+      ...(fallbackModels.length > 0 && {
+        extraBody: {
+          models: fallbackModels,
+        },
+      }),
     }),
-    {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store', // 避免缓存错误响应
-      },
+    stopWhen: stepCountIs(5),
+    tools: {
+      // eslint-disable-next-line ts/no-use-before-define
+      search: searchTool,
     },
-  )
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
+        convertDataPart(part) {
+          if (part.type === 'data-client') {
+            return {
+              type: 'text',
+              text: `[Client Context: ${JSON.stringify(part.data)}]`,
+            }
+          }
+        },
+      })),
+    ],
+    toolChoice: 'auto',
+  })
+
+  return result.toUIMessageStreamResponse()
 }
 
 export type SearchTool = typeof searchTool
@@ -195,12 +165,12 @@ export type SearchTool = typeof searchTool
 const searchTool = tool({
   description: '搜索文档内容并返回原始 JSON 结果。',
   inputSchema: z.object({
-    query: z.string().min(1, 'Query cannot be empty'),
+    query: z.string().optional().default(''),
     limit: z.number().int().min(1).max(100).default(10),
   }),
   async execute({ query, limit }) {
     if (!query || query.trim().length === 0) {
-      throw new Error('Search query is required and cannot be empty')
+      throw new Error('请输入搜索关键词。')
     }
     const search = await searchServer
     return await search.searchAsync(query.trim(), { limit, merge: true, enrich: true })

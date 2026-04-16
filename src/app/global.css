@@ -18,36 +18,50 @@
   .theme-teal {
     --color-fd-primary: #14b8a6; /* teal-500 */
     --color-fd-primary-foreground: #ffffff;
+    --color-fd-primary-rgba: rgba(20, 184, 166, 0.1);
   }
   .dark .theme-teal {
     --color-fd-primary: #5eeab0; /* teal-300 */
     --color-fd-primary-foreground: #0a0a0a;
+    --color-fd-primary-rgba: rgba(94, 234, 176, 0.1);
   }
 
   .theme-sky {
     --color-fd-primary: #0ea5e9; /* sky-500 */
     --color-fd-primary-foreground: #ffffff;
+    --color-fd-primary-rgba: rgba(14, 165, 233, 0.1);
   }
   .dark .theme-sky {
     --color-fd-primary: #7dd3fc; /* sky-300 */
     --color-fd-primary-foreground: #0a0a0a;
+    --color-fd-primary-rgba: rgba(125, 211, 252, 0.1);
   }
 
   .theme-amber {
     --color-fd-primary: #d97706; /* amber-600 */
     --color-fd-primary-foreground: #ffffff;
+    --color-fd-primary-rgba: rgba(217, 119, 6, 0.1);
   }
   .dark .theme-amber {
     --color-fd-primary: #fbbf24; /* amber-400 */
     --color-fd-primary-foreground: #0a0a0a;
+    --color-fd-primary-rgba: rgba(251, 191, 36, 0.1);
   }
 
   .theme-purple {
     --color-fd-primary: #8b5cf6; /* violet-500 */
     --color-fd-primary-foreground: #ffffff;
+    --color-fd-primary-rgba: rgba(139, 92, 246, 0.1);
   }
   .dark .theme-purple {
     --color-fd-primary: #c4b5fd; /* violet-300 */
     --color-fd-primary-foreground: #0a0a0a;
+    --color-fd-primary-rgba: rgba(196, 181, 253, 0.1);
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

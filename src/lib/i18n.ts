@@ -98,7 +98,8 @@ export const i18nUI = defineI18nOpenAPI(defineI18nUI(i18n, {
     statusInternalServerError: '服务器内部错误',
     statusSuccessful: '请求成功',
     statusError: '请求失败',
-    statusNoDescription: '无描述信息',
+    statusClientError: '客户端错误',
+    statusBinaryBody: '二进制响应体',
 
     // OAuth 对话框
     obtainAccessToken: '获取 API 访问令牌。',
@@ -119,6 +120,7 @@ export const i18nUI = defineI18nOpenAPI(defineI18nUI(i18n, {
     usernameField: '用户名',
     passwordField: '密码',
     fetchingToken: '正在获取令牌...',
+    fetchTokenError: '获取令牌失败',
 
     // 服务器选择
     serverUrl: '服务器地址',

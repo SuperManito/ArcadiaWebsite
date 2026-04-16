@@ -67,7 +67,7 @@ import { InstallCommand } from '@/components/InstallCommand';
 
 访问 [http://localhost:5678](http://localhost:5678) 进入控制面板，初始用户名和密码分别是 `useradmin` `passwd`，首次登录后会引导你修改此认证信息。
 
-无法访问？我们提供了一份排除故障指南，希望对你有所帮助。
+无法访问？详见下方排除故障指南，希望对你有所帮助。
 
 <Accordions type="multiple">
   <Accordion title="排除控制面板故障" id="排除控制面板故障">
@@ -138,5 +138,16 @@ import { InstallCommand } from '@/components/InstallCommand';
         </Folder>
       </Folder>
     </Files>
+  </Accordion>
+  <Accordion title="关于如何运行代码文件（脚本）" id="关于如何运行代码文件（脚本）">
+    运行代码文件是 Arcadia 平台的核心功能之一，此部分内容与平台 [CLI](/docs/cli) 设计紧密相连，具体详见 [运行代码文件（脚本）](/docs/cli/script/run)
+  </Accordion>
+  <Accordion title="关于定时任务功能" id="关于定时任务功能">
+    定时任务功能是 Arcadia 平台的核心功能之一，定时任务会运行任务配置中的 Shell 命令，不强制关联代码文件。
+
+    其中系统类型的任务由[代码同步](/docs/sync)功能自动管理，你可以通过代码同步功能中的定时任务配置来实现自动导入定时任务。
+  </Accordion>
+  <Accordion title="关于如何订阅代码仓库与脚本" id="关于如何订阅代码仓库与脚本">
+    具体请详见[代码同步](/docs/sync)文档，代码同步功能是 Arcadia 平台用于导入代码（文件）的统称，目前支持 “代码仓库” 与 “代码文件” 两种类型并提供丰富的功能性配置。
   </Accordion>
 </Accordions>

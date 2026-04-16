@@ -1,8 +1,8 @@
 'use client'
-import { useTheme as useNextTheme } from 'next-themes'
+import { useTheme as useAppTheme } from 'fumadocs-ui/provider/base'
 
 export function useTheme() {
-  const { resolvedTheme, setTheme } = useNextTheme()
+  const { resolvedTheme, setTheme } = useAppTheme()
   return {
     isDark: resolvedTheme === 'dark',
     theme: resolvedTheme,

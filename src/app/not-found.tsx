@@ -25,8 +25,8 @@ export default function Layout() {
         <DocsBody className="max-w-full">
           <div className="flex flex-col items-center justify-center text-primary overflow-hidden fixed inset-0">
             <GlitchText className="text-center">404</GlitchText>
-            <p className="text-2xl font-semibold text-neutral-600 dark:text-neutral-400">
-              您好像迷路了，我们找不到您要访问的页面
+            <p className="text-2xl px-4 font-semibold text-center text-neutral-600 dark:text-neutral-400">
+              抱歉，找不到您要访问的页面
             </p>
             <Link
               href="/docs"
@@ -35,6 +35,7 @@ export default function Layout() {
                   variant: 'secondary',
                   className: 'text-fd-muted-foreground rounded-2xl',
                 }),
+                'no-underline',
               )}
             >
               返回首页

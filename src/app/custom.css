@@ -21,6 +21,14 @@
   }
 }
 
+table tr {
+  transition: background .3s cubic-bezier(.165, .84, .44, 1);
+}
+
+table tr:hover {
+  background-color: color-mix(in oklab, var(--color-fd-accent) 80%, transparent);
+}
+
 .type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *) {
   --padding-left: 0;
   --padding-right: 0;
@@ -42,9 +50,27 @@
 }
 
 [data-card]:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   border-color: var(--color-fd-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  [data-card] {
+    transition: none;
+    position: none;
+    overflow: none;
+  }
+  [data-card]:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: none;
+  }
 }
 
 [data-card] > div:first-child {

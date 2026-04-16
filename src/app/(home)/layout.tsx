@@ -15,6 +15,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
     <HomeLayout
       nav={{
         title: Logo,
+        transparentMode: 'always',
       }}
       themeSwitch={{
         component: <ThemeToggle />,

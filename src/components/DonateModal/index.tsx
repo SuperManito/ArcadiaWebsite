@@ -2,8 +2,8 @@
 
 import { ConfigProvider, Modal, Space, theme } from 'antd'
 import { buttonVariants } from 'fumadocs-ui/components/ui/button'
+import { useTheme } from 'fumadocs-ui/provider/base'
 import { HeartHandshake } from 'lucide-react'
-import { useTheme } from 'next-themes'
 import { useMemo, useState } from 'react'
 import { cn } from '@/lib/cn'
 import WechatPayImage from './WechatPayImage'

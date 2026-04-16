@@ -169,7 +169,7 @@ function Item({
           )}
           {parameters.length > 0 && (
             <>
-              <p className={cn(fieldVariants())}>Parameters</p>
+              <p className={cn(fieldVariants())}>参数</p>
               <div className="flex flex-col gap-2">
                 {parameters.map(param => (
                   <div key={param.name} className="inline-flex items-center flex-wrap gap-1">
@@ -186,7 +186,7 @@ function Item({
           )}
           {returns && (
             <>
-              <p className={cn(fieldVariants())}>Returns</p>
+              <p className={cn(fieldVariants())}>返回值</p>
               <div className="my-auto text-sm prose prose-no-margin">{returns}</div>
             </>
           )}

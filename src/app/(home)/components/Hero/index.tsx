@@ -53,7 +53,7 @@ export default function HeroSection() {
     >
       <div className="container relative z-10 mx-auto px-4 text-center">
         <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-5 mb-10 sm:mb-14">
-          <div className="text-5xl sm:text-7xl md:text-[5rem] font-bold tracking-tight pb-1">
+          <div className="text-[3rem] md:text-[4.5rem] font-bold tracking-tight pb-1 select-none">
             <AuroraText>Arcadia</AuroraText>
           </div>
           <div className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-neutral-800 dark:text-neutral-100 pb-2">
@@ -67,13 +67,19 @@ export default function HeroSection() {
         <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 mb-10 sm:mb-20 h-16">
           <Link
             to="/docs/quick-start"
-            className="flex items-center justify-center px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-4xl bg-blue-600 text-white font-semibold text-sm sm:text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-500/30 flex-1 max-w-35 sm:flex-none sm:w-auto"
+            className={cn(
+              'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30',
+              'px-2 py-1 h-12 md:h-full md:px-8 md:py-4 rounded-3xl md:rounded-4xl font-semibold text-sm sm:text-lg transition-colors flex items-center justify-center flex-1 max-w-28 md:max-w-35 sm:flex-none sm:w-auto',
+            )}
           >
             开始使用
           </Link>
           <Link
             href={gitConfig.url}
-            className="px-5 py-2.5 h-full sm:px-8 sm:py-4 rounded-4xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold text-sm sm:text-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors flex items-center justify-center gap-2 flex-1 max-w-35 sm:flex-none sm:w-auto text-center"
+            className={cn(
+              'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 gap-2 text-center',
+              'px-2 py-1 h-12 md:h-full md:px-8 md:py-4 rounded-3xl md:rounded-4xl font-semibold text-sm sm:text-lg transition-colors flex items-center justify-center flex-1 max-w-28 md:max-w-35 sm:flex-none sm:w-auto',
+            )}
           >
             <Icon icon="mdi:github" />
             GitHub
