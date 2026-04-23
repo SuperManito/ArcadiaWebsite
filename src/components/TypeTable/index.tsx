@@ -117,7 +117,7 @@ function Item({
         open ? 'shadow-sm bg-fd-background not-last:mb-2' : 'border-transparent',
       )}
     >
-      <CollapsibleTrigger className="relative flex flex-row items-center w-full group text-start px-3 py-2 not-prose hover:bg-fd-accent">
+      <CollapsibleTrigger className="relative flex flex-row items-center w-full group text-start px-3 py-2 not-prose hover:[background:color-mix(in_oklab,var(--color-fd-accent)_60%,transparent)] transition-colors">
         <code
           className={cn(
             'text-fd-primary min-w-fit w-2/5 font-mono font-medium pe-2',

@@ -96,6 +96,9 @@ export async function generateStaticParams() {
   return source.generateParams()
 }
 
+export const dynamic = 'force-static'
+export const dynamicParams = false
+
 export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): Promise<Metadata> {
   const params = await props.params
   const page = source.getPage(params.slug)
