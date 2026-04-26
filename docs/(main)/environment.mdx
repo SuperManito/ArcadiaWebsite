@@ -176,7 +176,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
       uv 是一个速度极快的 Python 包和项目管理器，Arcadia 平台已适配该工具，可通过控制面板《个人设置 - 命令行》进行启用
 
       ```bash title="安装命令"
-      pip install uv
+      pip install uv --break-system-packages
       ```
 
       安装后可以通过 `uv python install 3.<xx>` 命令安装特定版本的 Python 运行环境，之后你可以进入到指定项目的目录通过 `uv python pin 3.<xx>` 命令将该版本 Python 固定为当前项目的运行环境
@@ -192,7 +192,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
   <TabsContent id="go" value="go">
 
     ```bash title="安装命令"
-    apt-get update && apt-get install -y go
+    apt-get update && apt-get install -y golang
     ```
 
     [官方网站](https://golang.org)
