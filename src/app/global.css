@@ -65,3 +65,17 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
+@theme inline {
+  --animate-shiny-text: shiny-text 2s linear infinite;
+
+  /* single-direction sheen: move left->right then jump back */
+  @keyframes shiny-text {
+    0% {
+      background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+    100% {
+      background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+}

@@ -16,6 +16,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { AnimatedShinyText } from '@/components/ShinyText'
 import { cn } from '../../lib/cn'
 import { Markdown } from '../markdown'
 import { buttonVariants } from '../ui/button'
@@ -288,7 +289,7 @@ function SearchBlock({ call }: { call: UIToolInvocation<SearchTool> }) {
           {hasError
             ? (call.errorText ?? '搜索失败')
             : isSearching
-              ? '搜索中…'
+              ? <AnimatedShinyText>正在搜索</AnimatedShinyText>
               : `${call.output?.length ?? 0} 条搜索结果`}
         </span>
         {query && !hasError && (
@@ -310,7 +311,7 @@ function PendingBlock() {
       <div className="text-xs border rounded-lg overflow-hidden">
         <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-fd-muted-foreground">
           <LoadingIcon className="size-3" />
-          <span className="font-medium">正在处理中，请稍后…</span>
+          <span className="font-medium"><AnimatedShinyText>正在处理中，请稍后…</AnimatedShinyText></span>
         </div>
       </div>
     </div>
@@ -335,7 +336,9 @@ function ThinkingBlock({ text, isThinking }: { text: string, isThinking: boolean
         onClick={() => setExpanded(e => !e)}
       >
         {(!isThinking || !!text.trim()) && <ChevronDown className={cn('size-3 shrink-0 transition-transform duration-200', !expanded && '-rotate-90')} />}
-        <span className="font-medium">{isThinking ? '正在思考…' : '已深度思考'}</span>
+        <span className="font-medium">
+          {isThinking ? <AnimatedShinyText>正在思考</AnimatedShinyText> : '已思考'}
+        </span>
       </button>
       {expanded && (
         <div className="px-2.5 py-2 border-t text-fd-muted-foreground/70 leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto fd-scroll-container">
