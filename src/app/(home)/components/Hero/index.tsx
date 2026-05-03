@@ -1,11 +1,9 @@
 'use client'
 import { motion } from 'motion/react'
 import React from 'react'
-import { gitConfig } from '@/lib/layout.shared'
 import { useTheme } from '../../hooks/useTheme'
 import cn from '../../lib/utils'
 import FeatureGrid from '../FeatureGrid'
-import { Icon } from '../Icon'
 import Link from '../Link'
 import AuroraText from './AuroraText'
 import DarkVeil from './DarkVeil'
@@ -68,21 +66,18 @@ export default function HeroSection() {
           <Link
             to="/docs/quick-start"
             className={cn(
-              'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30',
-              'px-2 py-1 h-12 md:h-full md:px-8 md:py-4 rounded-3xl md:rounded-4xl font-semibold text-sm sm:text-lg transition-colors flex items-center justify-center flex-1 max-w-28 md:max-w-35 sm:flex-none sm:w-auto',
+              'bg-blue-600 text-white hover:bg-blue-700 rounded-lg px-5 py-3 text-sm font-semibold shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors',
             )}
           >
-            开始使用
+            快速开始
           </Link>
           <Link
-            href={gitConfig.url}
+            to="/docs"
             className={cn(
-              'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 gap-2 text-center',
-              'px-2 py-1 h-12 md:h-full md:px-8 md:py-4 rounded-3xl md:rounded-4xl font-semibold text-sm sm:text-lg transition-colors flex items-center justify-center flex-1 max-w-28 md:max-w-35 sm:flex-none sm:w-auto',
+              'rounded-lg px-5 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors',
             )}
           >
-            <Icon icon="mdi:github" />
-            GitHub
+            了解更多
           </Link>
         </div>
 
