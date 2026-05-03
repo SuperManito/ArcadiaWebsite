@@ -8,10 +8,11 @@ import { source } from '@/lib/source'
 
 // 定义模型列表
 const MODEL_PRIORITY: GatewayModelId[] = [
-  'z-ai/glm-4.5-air:free',
-  'minimax/minimax-m2.5:free',
-  'google/gemma-4-26b-a4b-it:free',
-  'openrouter/free',
+  'deepseek/deepseek-v4-flash',
+  // 'z-ai/glm-4.5-air:free',
+  // 'minimax/minimax-m2.5:free',
+  // 'google/gemma-4-26b-a4b-it:free',
+  // 'openrouter/free',
 ]
 
 // 过滤搜索路径
