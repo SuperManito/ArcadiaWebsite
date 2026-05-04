@@ -48,13 +48,13 @@ export function LLMCopyButton({
         buttonVariants({
           color: 'secondary',
           size: 'sm',
-          className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
+          className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground cursor-pointer transition-colors',
         }),
       )}
       onClick={onClick}
     >
       {checked ? <Check /> : <Copy />}
-      复制文档
+      复制页面
     </button>
   )
 }
@@ -150,21 +150,21 @@ export function ViewOptions({
           buttonVariants({
             color: 'secondary',
             size: 'sm',
-            className: 'gap-2',
+            className: 'gap-2 cursor-pointer transition-colors',
           }),
         )}
       >
         更多
         <ChevronDown className="size-3.5 text-fd-muted-foreground" />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col">
+      <PopoverContent className="flex flex-col p-1">
         {items.map(item => (
           <a
             key={item.href}
             href={item.href}
             rel="noreferrer noopener"
             target="_blank"
-            className="text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4"
+            className="text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4 transition-colors"
           >
             {item.icon}
             {item.title}

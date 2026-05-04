@@ -37,10 +37,10 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "flexsearch": "^0.8.212",
-    "fumadocs-core": "16.8.5",
+    "fumadocs-core": "16.8.7",
     "fumadocs-mdx": "14.3.2",
     "fumadocs-openapi": "^10.8.1",
-    "fumadocs-ui": "16.8.5",
+    "fumadocs-ui": "16.8.7",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "lucide-react": "^1.14.0",
     "motion": "^12.38.0",
@@ -55,7 +55,7 @@
     "shiki": "^4.0.2",
     "tailwind-merge": "^3.5.0",
     "unist-util-visit": "^5.1.0",
-    "zod": "^4.4.2"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^8.2.0",

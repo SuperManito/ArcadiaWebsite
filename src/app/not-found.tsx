@@ -14,7 +14,10 @@ export default function Layout() {
       {...base}
       nav={{ ...nav, mode: 'top' }}
       tree={source.getPageTree()}
-      sidebar={{ tabs: DocsTabs, collapsible: false }}
+      sidebar={{
+        tabs: DocsTabs,
+        collapsible: false,
+      }}
     >
       <DocsPage
         footer={{ enabled: false }}

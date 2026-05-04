@@ -298,12 +298,16 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
       <Icon size="1em">vscode-icons:file-type-perl</Icon>
       Perl
     </TabsTrigger>
+    <TabsTrigger value="linux-dep">
+      <Icon size="1em">simple-icons:linux</Icon>
+      Linux
+    </TabsTrigger>
   </TabsList>
 
   <TabsContent id="javascript-dep" value="js-dep">
 
     ```npm title="安装命令"
-    npm install -g <xxx>
+    npm install -g <package-name>
     ```
 
     适用文件类型 `.js` `.mjs` `.cjs` `.ts` `.cts` `.mts`
@@ -320,10 +324,10 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
   <TabsContent id="python-dep" value="python-dep">
 
     ```bash tab="pip" title="安装命令"
-    pip3 install <xxx> --break-system-packages
+    pip3 install <package-name> --break-system-packages
     ```
     ```bash tab="uv" title="安装命令"
-    uv pip install <xxx>
+    uv pip install <package-name>
     ```
 
     适用文件类型 `.py`
@@ -333,7 +337,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
   <TabsContent id="go-dep" value="go-dep">
 
     ```bash title="安装命令"
-    go get -u <xxx>
+    go get -u <package-name>
     ```
 
     适用文件类型 `.go`
@@ -343,7 +347,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
   <TabsContent id="lua-dep" value="lua-dep">
 
     ```bash title="安装命令"
-    luarocks install <xxx>
+    luarocks install <package-name>
     ```
 
     适用文件类型 `.lua`
@@ -353,7 +357,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
   <TabsContent id="ruby-dep" value="ruby-dep">
 
     ```bash title="安装命令"
-    gem install <xxx>
+    gem install <package-name>
     ```
 
     适用文件类型 `.rb`
@@ -368,7 +372,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
 
     ```toml
     [dependencies]
-    <xxx> = "<version>"
+    <package-name> = "<version>"
     ```
 
     ### 运行以下命令安装依赖： [step]
@@ -390,10 +394,22 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
     建议使用 `cpanm`，安装命令 `cpan App::cpanminus`
 
     ```bash title="安装命令"
-    cpanm <xxx>
+    cpanm <package-name>
     ```
 
     适用文件类型 `.pl` `.pm`
+
+  </TabsContent>
+
+  <TabsContent id="linux-dep" value="linux-dep">
+
+    ```bash title="安装命令"
+    apt-get update
+    apt-get install -y <package-name>
+    ```
+
+    项目镜像基于 GNU/Linux Debian 构建，安装前请确认目标软件包名称是否准确  
+    部分软件包名称在不同 Linux 发行版间可能存在差异，可通过 `apt search <package-name>` 命令或 [Command Not Found](https://command-not-found.com/) 搜索确认
 
   </TabsContent>
 </Tabs>

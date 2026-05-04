@@ -17,7 +17,7 @@ export default function AISearchLinkButton() {
         )}
       >
         <MessagesSquareIcon className="size-4 text-fd-muted-foreground group-hover:text-fd-accent-foreground" />
-        <span>Ask AI</span>
+        <span>询问 AI</span>
         <div className="ms-auto inline-flex gap-0.5">
           <kbd className="rounded-md border bg-fd-background px-1.5 text-fd-muted-foreground group-hover:text-fd-accent-foreground">{isMac ? '⌘' : 'Ctrl'}</kbd>
           <kbd className="rounded-md border bg-fd-background px-1.5 text-fd-muted-foreground group-hover:text-fd-accent-foreground">I</kbd>

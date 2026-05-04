@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
             className={cn(
               buttonVariants({
                 variant: 'secondary',
-                className: 'text-fd-muted-foreground rounded-2xl',
+                className: 'text-fd-muted-foreground rounded-2xl cursor-pointer transition-colors gap-2',
               }),
             )}
           >

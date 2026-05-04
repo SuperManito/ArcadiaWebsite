@@ -112,7 +112,7 @@ export default function DefaultSearchDialog(props: SharedProps) {
                       'rounded-lg text-start px-2 py-1.5',
                       isSelected
                         ? 'text-fd-primary bg-fd-primary/10'
-                        : 'hover:text-fd-accent-foreground hover:bg-fd-accent',
+                        : 'hover:text-fd-accent-foreground hover:bg-fd-accent transition-colors',
                     )}
                   >
                     <p className="font-medium mb-0.5">{item.name}</p>

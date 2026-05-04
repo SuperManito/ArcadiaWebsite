@@ -4,6 +4,7 @@ import type { InputRef, TabsProps } from 'antd'
 import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Input, InputNumber, Popover, Row, Segmented, Select, Space, Switch, Tabs, theme } from 'antd'
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock'
 import { useTheme } from 'fumadocs-ui/provider/base'
+import { motion } from 'motion/react'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { DockerIcon, Icon, PodmanIcon } from '@/components/Icon'
@@ -369,16 +370,28 @@ export function InstallCommand() {
   const s = useInstallSharedState()
   const { algorithm } = s
   const primaryColor = usePrimaryColor()
+  const [activeKey, setActiveKey] = useState('cli')
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState<number | 'auto'>('auto')
+  useEffect(() => {
+    if (!contentRef.current)
+      return
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setHeight(entry.contentRect.height)
+      }
+    })
+    observer.observe(contentRef.current)
+    return () => observer.disconnect()
+  }, [])
   const items: TabsProps['items'] = [
     {
       key: 'cli',
       label: <span className="text-base font-semibold font-mono">CLI 命令行</span>,
-      children: <CliInstall s={s} />,
     },
     {
       key: 'compose',
       label: <span className="text-base font-semibold font-mono">Compose 编排</span>,
-      children: <ComposeInstall s={s} />,
     },
   ]
   const { resolvedTheme } = useTheme()
@@ -411,10 +424,28 @@ export function InstallCommand() {
       </style>
       <Tabs
         centered
-        animated={{ inkBar: true, tabPane: true }}
-        defaultActiveKey="cli"
+        animated={{ inkBar: true, tabPane: false }}
+        activeKey={activeKey}
+        onChange={setActiveKey}
         items={items}
+        style={{ marginBottom: 16 }}
       />
+      <motion.div
+        animate={{ height }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        style={{ overflow: 'hidden' }}
+      >
+        <div ref={contentRef}>
+          <motion.div
+            key={activeKey}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeKey === 'cli' ? <CliInstall s={s} /> : <ComposeInstall s={s} />}
+          </motion.div>
+        </div>
+      </motion.div>
     </ConfigProvider>
   )
 }
