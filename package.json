@@ -39,7 +39,7 @@
     "flexsearch": "^0.8.212",
     "fumadocs-core": "16.8.10",
     "fumadocs-mdx": "15.0.2",
-    "fumadocs-openapi": "^10.8.1",
+    "fumadocs-openapi": "10.8.1",
     "fumadocs-ui": "16.8.10",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "lucide-react": "^1.14.0",
@@ -58,7 +58,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^8.2.0",
+    "@antfu/eslint-config": "^9.0.0",
     "@commitlint/cli": "^21.0.0",
     "@commitlint/config-conventional": "^21.0.0",
     "@next/eslint-plugin-next": "^16.2.6",
@@ -67,7 +67,7 @@
     "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^9.39.4",
+    "eslint": "^10.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.4",
     "postcss": "^8.5.14",
