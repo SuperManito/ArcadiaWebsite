@@ -10,3 +10,7 @@ onlyBuiltDependencies:
 allowBuilds:
   esbuild: true
   sharp: true
+
+minimumReleaseAgeExclude:
+  - fumadocs-core@16.9.2
+  - fumadocs-ui@16.9.2
