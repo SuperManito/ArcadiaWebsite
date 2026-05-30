@@ -2,6 +2,7 @@
   "title": "WebSocket",
   "icon": "ChevronsLeftRightEllipsis",
   "pages": [
-    "log"
+    "log",
+    "cron-tasks"
   ]
 }

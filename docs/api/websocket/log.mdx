@@ -2,9 +2,12 @@
 title: 获取实时日志
 ---
 
-此接口使用 WebSocket 协议，连接后会持续推送日志数据。
+持续推送日志数据，消息格式如下
 
-连接后需要监听事件 `runLog`，消息格式如下
+<Callout icon={false}>
+接口路径：`/api/ws`  
+事件名称：`runLog`
+</Callout>
 
 <TypeTable
   noRequiredMark={true}
@@ -26,8 +29,3 @@ title: 获取实时日志
     },
   }}
 />
-
-<Callout title="接口说明">
-接口地址 `ws://localhost:5678/api/ws`  
-握手鉴权方式、返回数据格式与全局 HTTP 接口一致
-</Callout>

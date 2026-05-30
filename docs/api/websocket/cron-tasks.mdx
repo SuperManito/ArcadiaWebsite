@@ -1,0 +1,87 @@
+---
+title: 定时任务状态推送
+---
+
+当定时任务开始或结束时，服务端会主动向所有已连接的客户端广播任务状态变更事件。
+
+目前用于控制面板《定时任务 - 仪表盘》中“当前运行”指标的详情面板中
+
+## 执行开始
+
+定时任务开始执行时触发，在任务的 Shell 命令运行前推送。
+
+<Callout icon={false}>
+接口路径：`/api/ws`  
+事件名称：`task:started`
+</Callout>
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    taskId: {
+      description: '任务 ID',
+      type: 'number',
+      required: true,
+    },
+    taskName: {
+      description: '任务名称',
+      type: 'string',
+      required: true,
+    },
+    taskType: {
+      description: '任务类型',
+      type: "'system' | 'user'",
+      required: true,
+    },
+    startTime: {
+      description: '任务开始时间（13 位毫秒时间戳）',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+## 执行结束
+
+定时任务执行完毕后触发，无论成功或失败均会推送。
+
+<Callout icon={false}>
+接口路径：`/api/ws`  
+事件名称：`task:completed`
+</Callout>
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    taskId: {
+      description: '任务 ID',
+      type: 'number',
+      required: true,
+    },
+    taskName: {
+      description: '任务名称',
+      type: 'string',
+      required: true,
+    },
+    taskType: {
+      description: '任务类型',
+      type: "'system' | 'user'",
+      required: true,
+    },
+    completedTime: {
+      description: '任务结束时间（13 位毫秒时间戳）',
+      type: 'number',
+      required: true,
+    },
+    duration: {
+      description: '任务执行耗时（毫秒）',
+      type: 'number',
+      required: true,
+    },
+    success: {
+      description: '任务是否执行成功（进程退出码为 0 或 null 时为 true）',
+      type: 'boolean',
+      required: true,
+    },
+  }}
+/>

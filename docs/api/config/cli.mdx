@@ -69,6 +69,24 @@ import { GET, POST } from '@/components/RequestTag';
       type: 'string<number>',
       required: true,
     },
+    DEFAULT_JS_RUNTIME: {
+      description: '默认 JavaScript 运行时，支持 node、bun、deno',
+      typeDescription: '"node" | "bun" | "deno"',
+      type: 'string',
+      required: true,
+    },
+    DEFAULT_TS_RUNTIME: {
+      description: '默认 TypeScript 运行时，支持 tsx、bun、deno、ts-node、node',
+      typeDescription: '"tsx" | "bun" | "deno" | "ts-node" | "node"',
+      type: 'string',
+      required: true,
+    },
+    ENABLE_PYTHON_UV: {
+      description: '是否使用 uv 运行 Python 脚本（替代 python3）',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
+      required: true,
+    },
   }}
 />
 
@@ -83,7 +101,10 @@ import { GET, POST } from '@/components/RequestTag';
   "ENABLE_TASK_AFTER_EXTRA": "",
   "ENABLE_AUTO_DELETE_REMOTE_FILE": "",
   "ENABLE_CUSTOM_NOTIFY": "",
-  "RUN_DELAY_MAX_SECONDS": "300"
+  "RUN_DELAY_MAX_SECONDS": "300",
+  "DEFAULT_JS_RUNTIME": "node",
+  "DEFAULT_TS_RUNTIME": "tsx",
+  "ENABLE_PYTHON_UV": ""
 }
 ```
 
@@ -145,6 +166,21 @@ import { GET, POST } from '@/components/RequestTag';
     RUN_DELAY_MAX_SECONDS: {
       description: '随机延迟最大秒数（非负整数字符串）',
       type: 'string<number>',
+    },
+    DEFAULT_JS_RUNTIME: {
+      description: '默认 JavaScript 运行时',
+      typeDescription: '"node" | "bun" | "deno"',
+      type: 'string',
+    },
+    DEFAULT_TS_RUNTIME: {
+      description: '默认 TypeScript 运行时',
+      typeDescription: '"tsx" | "bun" | "deno" | "ts-node" | "node"',
+      type: 'string',
+    },
+    ENABLE_PYTHON_UV: {
+      description: '是否使用 uv 运行 Python 脚本',
+      typeDescription: '"true" 启用，"" 禁用',
+      type: 'string',
     },
   }}
 />

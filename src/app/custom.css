@@ -29,9 +29,12 @@ table tr:hover {
   background-color: color-mix(in oklab, var(--color-fd-accent) 80%, transparent);
 }
 
-.type-table-type-highlight .shiki:not(.not-fumadocs-codeblock *) {
-  --padding-left: 0;
-  --padding-right: 0;
+.type-table-type-highlight {
+  .shiki:not(.not-fumadocs-codeblock *),
+  .shiki:not(.not-fumadocs-codeblock *) .line {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 .github-info > p {
