@@ -1,0 +1,12 @@
+{
+  "title": "Dependency 依赖管理",
+  "icon": "Package",
+  "pages": [
+    "schema",
+    "list",
+    "create",
+    "delete",
+    "operate",
+    "error"
+  ]
+}

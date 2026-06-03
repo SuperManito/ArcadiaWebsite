@@ -1,0 +1,76 @@
+---
+title: 系统配置
+---
+import { GET, POST } from '@/components/RequestTag';
+
+## 获取系统配置
+
+<GET>/config/system</GET>
+
+### 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    timezone: {
+      description: '系统时区，IANA 时区标识符（如 Asia/Shanghai）。重启服务后生效',
+      type: 'string',
+      required: true,
+    },
+    npmRegistry: {
+      description: 'npm 镜像源地址（完整 URL），留空使用 npm 官方源',
+      type: 'string',
+      required: true,
+    },
+    pipIndexUrl: {
+      description: 'pip index-url（完整 URL），留空使用 PyPI 官方源',
+      type: 'string',
+      required: true,
+    },
+    aptMirrorUrl: {
+      description: 'APT 镜像源地址，填写 Debian 主源根路径（完整 URL，如 https://mirrors.aliyun.com/debian）',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "timezone": "Asia/Shanghai",
+  "npmRegistry": "https://registry.npmmirror.com",
+  "pipIndexUrl": "https://mirrors.aliyun.com/pypi/simple/",
+  "aptMirrorUrl": "http://mirrors.aliyun.com/debian"
+}
+```
+
+---
+
+## 更新系统配置
+
+<POST>/config/system</POST>
+
+支持部分字段更新，仅传入需要修改的字段即可。
+
+### 请求
+
+<TypeTable
+  type={{
+    timezone: {
+      description: '系统时区，IANA 时区标识符（注：重启服务后生效）',
+      type: 'string',
+    },
+    npmRegistry: {
+      description: 'npm 镜像源地址（完整 URL）',
+      type: 'string',
+    },
+    pipIndexUrl: {
+      description: 'pip index-url（完整 URL）',
+      type: 'string',
+    },
+    aptMirrorUrl: {
+      description: 'APT 镜像源地址，Debian 主源根路径',
+      type: 'string',
+    },
+  }}
+/>

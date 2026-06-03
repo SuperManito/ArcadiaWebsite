@@ -1,0 +1,37 @@
+---
+title: 查看错误日志
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/dependency/error</GET>
+
+查询某条依赖记录最近一次失败时的命令输出。安装成功后该字段会自动清空。
+
+## 请求
+
+Query 参数：
+
+<TypeTable
+  type={{
+    id: {
+      description: '依赖 ID',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  type={{
+    id: {
+      description: '依赖 ID',
+      type: 'number',
+    },
+    last_error: {
+      description: '最近一次失败的命令输出，最长 8000 字节；若从未失败则为空字符串',
+      type: 'string',
+    },
+  }}
+/>

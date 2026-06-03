@@ -1,0 +1,49 @@
+---
+title: 操作依赖
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/dependency/operate</POST>
+
+对依赖执行安装、卸载或状态同步操作。安装和卸载任务通过串行队列执行，不会并发。  
+每个任务完成后通过 WebSocket `depOperateResult` 事件实时推送结果。
+
+## 请求
+
+<TypeTable
+  type={{
+    action: {
+      description: '操作类型：install 安装、uninstall 卸载、sync 同步已安装版本',
+      type: 'string<"install" | "uninstall" | "sync">',
+      required: true,
+    },
+    ids: {
+      description: '目标依赖 ID 数组。sync 操作时可省略（对所有记录执行）；install / uninstall 时必填',
+      type: 'number[]',
+    },
+  }}
+/>
+
+## 响应
+
+### install / uninstall
+
+<TypeTable
+  type={{
+    total: {
+      description: '加入队列的任务数量',
+      type: 'number',
+    },
+  }}
+/>
+
+### sync
+
+<TypeTable
+  type={{
+    updated: {
+      description: '本次同步更新了状态的记录数',
+      type: 'number',
+    },
+  }}
+/>

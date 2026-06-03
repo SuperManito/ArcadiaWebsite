@@ -1,0 +1,70 @@
+---
+title: 查询列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/dependency</GET>
+
+## 请求
+
+Query 参数：
+
+<TypeTable
+  type={{
+    page: {
+      description: '页码，默认 1',
+      type: 'string',
+      default: '1',
+    },
+    size: {
+      description: '每页条数，默认 20',
+      type: 'string',
+      default: '20',
+    },
+    ecosystem: {
+      description: '生态过滤，可选值 npm / pnpm / pip / apt / luarocks / gem；不传则返回全部',
+      type: 'string',
+    },
+    status: {
+      description: '状态过滤，值为状态码字符串（如 `0`）；不传则返回全部',
+      type: 'string',
+    },
+    search: {
+      description: '关键字搜索，匹配 name 或 remark',
+      type: 'string',
+    },
+    orderBy: {
+      description: '排序字段，可选 id / name / ecosystem / status / create_time / update_time',
+      type: 'string',
+    },
+    order: {
+      description: '排序方向，`0` 升序，`1` 降序',
+      type: "string<'0' | '1'>",
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  type={{
+    data: {
+      description: '依赖列表',
+      type: 'DepItem[]',
+    },
+    total: {
+      description: '符合条件的总记录数',
+      type: 'number',
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+    },
+    size: {
+      description: '每页条数',
+      type: 'number',
+    },
+  }}
+/>
+
+`DepItem` 结构同 [数据关系模型](./schema) 中的字段。

@@ -69,6 +69,8 @@ import { InstallCommand } from '@/components/InstallCommand';
 
 无法访问？详见下方排除故障指南，希望对你有所帮助。
 
+## 常见问题 [step]
+
 <Accordions type="multiple">
   <Accordion title="排除控制面板故障" id="排除控制面板故障">
     下面是解决步骤顺序和思路
@@ -149,5 +151,10 @@ import { InstallCommand } from '@/components/InstallCommand';
   </Accordion>
   <Accordion title="关于如何订阅代码仓库与脚本" id="关于如何订阅代码仓库与脚本">
     具体请详见[代码同步](/docs/sync)文档，代码同步功能是 Arcadia 平台用于导入代码（文件）的统称，目前支持 “代码仓库” 与 “代码文件” 两种类型并提供丰富的功能性配置。
+
+    <Callout type="info">如果你想**自动更新**代码同步功能中订阅的脚本，请在控制面板《定时任务》页面创建 `arcadia update` 个人任务</Callout>
+  </Accordion>
+  <Accordion title="关于如何清理日志" id="关于如何清理日志">
+    详见 CLI 文档 [清理日志](/docs/cli/sundry/rmlog)
   </Accordion>
 </Accordions>

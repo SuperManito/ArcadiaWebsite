@@ -3,6 +3,7 @@
   "icon": "ChevronsLeftRightEllipsis",
   "pages": [
     "log",
-    "cron-tasks"
+    "cron-tasks",
+    "dependency"
   ]
 }

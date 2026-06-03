@@ -15,7 +15,9 @@
 
 <p align="center">
     <strong>
-        <a href="https://arcadia.cool" style="text-decoration: none;">官方网站</a>
+        <a href="https://arcadia.cool" style="text-decoration: none;">官方网站</a> |
+        <a href="https://arcadia.cool/docs/changelog" style="text-decoration: none;">更新日志</a> |
+        <a href="https://github.com/SuperManito/Arcadia" style="text-decoration: none;">源代码仓库</a>
     </strong>
 </p>
 

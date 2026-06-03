@@ -1,0 +1,23 @@
+---
+title: 删除依赖
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/dependency</DELETE>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '依赖 ID，支持单个数字或数字数组（批量删除）',
+      type: 'number | number[]',
+      required: true,
+    },
+  }}
+/>
+
+## 限制
+
+- 状态为**安装中**（`1`）或**卸载中**（`4`）的依赖不允许删除，会返回错误。
+- 删除记录**不会自动卸载**对应的包，包体仍会保留在系统中；如需卸载请先执行卸载操作。

@@ -1,0 +1,46 @@
+---
+title: 数据关系模型
+---
+
+数据库用于存储依赖记录的元数据。依赖的安装、卸载和版本检测通过 `shell/utils/dep.sh` 脚本完成，脚本执行结果回写到数据库。
+
+```prisma
+model dependencyManage {
+  id            Int      @id @default(autoincrement())
+  name          String
+  ecosystem     String
+  installed_ver String   @default("")
+  status        Int      @default(0)
+  last_error    String   @default("")
+  remark        String   @default("")
+  create_time   DateTime @default(now())
+  update_time   DateTime @default(now()) @updatedAt
+
+  @@unique([name, ecosystem])
+  @@index([ecosystem, status])
+  @@index([ecosystem])
+}
+```
+
+### 字段说明
+
+| 字段 | 说明 |
+|------|------|
+| `name` | 包名，可携带版本表达式，如 `axios@1.7.0`、`requests>=2.0`、`curl` |
+| `ecosystem` | 包管理生态，固定为 `npm`、`pnpm`、`pip`、`apt` 之一 |
+| `installed_ver` | 安装成功后回写的实际版本号；空字符串表示尚未安装 |
+| `status` | 状态码，见下表 |
+| `last_error` | 最近一次失败时的命令输出（截取前 8000 字节）；安装成功时自动清空 |
+| `remark` | 用户备注 |
+| `create_time` | 记录创建时间 |
+| `update_time` | 记录最后更新时间 |
+
+### 状态码
+
+| 值 | 含义 |
+|----|------|
+| `0` | 未安装 |
+| `1` | 安装中 |
+| `2` | 已安装 |
+| `3` | 失败 |
+| `4` | 卸载中 |

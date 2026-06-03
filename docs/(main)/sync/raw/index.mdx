@@ -11,6 +11,7 @@ icon: FileCode
 | :-: | :-: | :-: | :-: | --- |
 | `name` | 是 | `string` | 无 | 代码文件名称 |
 | `url` | 是 | `string` | 无 | 代码文件地址 |
+| `fileName` | 否 | `string` | 无 | 指定文件名称，需要包含后缀格式，不填则自动截取链接地址中的文件名 |
 | `enable` | 否 | `boolean` | `true` | 是否启用该配置 |
 | `cronSettings` | 否 | `object` | 无 | 定时任务设置 |
 
@@ -37,6 +38,9 @@ raw:
       updateTaskList: true
   - name: Repo2
     url: 'https://github.com/User2/Repo2/raw/master/template.py'
+  - name: Repo3
+    url: 'https://github.com/User3/Repo3/raw/master/example.js'
+    fileName: 'repo3_example.js'
 ```
 
 配置好后你需要执行 `arcadia update raw` 命令来使该配置生效

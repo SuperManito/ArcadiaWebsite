@@ -1,0 +1,38 @@
+---
+title: 新增依赖
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/dependency</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '包名，可携带版本表达式，如 axios@1.7.0、requests>=2.0',
+      type: 'string',
+      required: true,
+    },
+    ecosystem: {
+      description: '包管理生态，固定为 npm / pnpm / pip / apt / luarocks / gem 之一',
+      type: 'string<Ecosystems>',
+      required: true,
+    },
+    remark: {
+      description: '备注（可选）',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+返回新创建的依赖记录，字段同 [数据关系模型](./schema)。
+
+## 错误
+
+| 错误信息 | 说明 |
+|----------|------|
+| `name 不能为空` | name 为空字符串 |
+| `{ecosystem}/{name} 已存在` | 相同 ecosystem + name 的记录已存在 |

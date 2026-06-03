@@ -29,9 +29,9 @@ containrrr/watchtower -c \
 
 ## 更新源码
 
-一般小版本升级直接更新源码即可
+小版本升级直接更新源码即可
 
-```bash
+```bash title="更新源代码"
 arcadia upgrade
 ```
 
@@ -71,6 +71,7 @@ cd /arcadia
 
   前往查看[安装文档](/docs/quick-start)
 
-## 更新配置文件
 
-配置文件位于 config 目录下，最新的配置文件模板位于 src/sample 目录下，可通过控制面板的**对比工具**页面进行可视化对比操作，不建议使用命令手动进行替换
+<Callout title="更新镜像容器后依赖需要重新安装" type="idea">
+  如果你有在控制面板《环境配置 - 依赖管理》配置全局依赖，那么可以使用该页面提供的 ”一键安装“ 功能自动补全环境。
+</Callout>

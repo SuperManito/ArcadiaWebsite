@@ -89,7 +89,6 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
         Deno 是一个现代的 JavaScript 和 TypeScript 运行时环境，具有安全性高、高性能网络等特点。默认采用沙盒机制，脚本程序需显式授予权限才能访问文件系统、网络和环境变量等敏感操作。
 
         <Callout type="warn">
-
           Deno 一般无法直接运行 Node.js 原生项目，因为它导入包（库）的语法与 Node.js 不兼容。  
           由于沙箱下的默认权限不能满足项目基本需求，因此使用 Deno 时会默认赋予一些权限，具体如下：  
           · 环境变量：允许全部  
@@ -195,6 +194,10 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
     apt-get update && apt-get install -y golang
     ```
 
+    <Callout>
+      可通过控制面板《环境配置 - 依赖管理》进行安装，点击添加按钮选择 `APT` 生态类型，包名 `golang`
+    </Callout>
+
     [官方网站](https://golang.org)
 
   </TabsContent>
@@ -205,6 +208,10 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
     apt-get update && apt-get install -y lua5.4 luarocks
     ```
 
+    <Callout>
+      可通过控制面板《环境配置 - 依赖管理》进行安装，点击添加按钮选择 `APT` 生态类型，包名 `lua5.4 luarocks`（分开添加）
+    </Callout>
+
     [官方网站](https://www.lua.org)
 
   </TabsContent>
@@ -214,6 +221,10 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
     ```bash title="安装命令"
     apt-get update && apt-get install -y ruby
     ```
+
+    <Callout>
+      可通过控制面板《环境配置 - 依赖管理》进行安装，点击添加按钮选择 `APT` 生态类型，包名 `ruby`
+    </Callout>
 
     [官方网站](https://www.ruby-lang.org)
 
@@ -266,6 +277,12 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
 
 ## 解决依赖
 
+<Callout title="可视化全局依赖管理">
+  建议优先使用控制面板《环境配置 - 依赖管理》管理全局依赖，目前支持六种包管理器，还可利用该功能安装其它包管理器或语言环境
+
+  平台目前仅内置 `npm`、`pip`、`APT`，其中 `APT` 为 Linux 系统依赖，其它包管理器需要自行安装后才可使用
+</Callout>
+
 <Tabs defaultValue="js-dep" updateAnchor>
   <TabsList>
     <TabsTrigger value="js-dep">
@@ -306,7 +323,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
 
   <TabsContent id="javascript-dep" value="js-dep">
 
-    ```npm title="安装命令"
+    ```npm title="全局安装命令"
     npm install -g <package-name>
     ```
 
@@ -318,6 +335,10 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
     </Callout>
 
     `-g` 选项代表全局安装，适用于大多数场景，不使用该选项则会安装在当前项目的 `node_modules` 目录下。
+
+    <Callout type="idea">
+      可通过控制面板《环境配置 - 依赖管理》安装 `pnpm` 与 `yarn`，点击添加按钮选择 `npm` 生态类型
+    </Callout>
 
   </TabsContent>
 
