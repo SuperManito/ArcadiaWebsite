@@ -40,9 +40,6 @@ export function TeamProfile() {
       <TeamProfileCard name="Super Manito" username="SuperManito">
         项目创始人，全栈开发者兼总设计师，不仅人长得帅敲代码也很厉害~
       </TeamProfileCard>
-      <TeamProfileCard name="mzzsfy" username="mzzsfy">
-        后端开发者，架构工程师。
-      </TeamProfileCard>
     </div>
   )
 }

@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'fumadocs-core/link'
 import { cn } from '@/lib/cn'
 

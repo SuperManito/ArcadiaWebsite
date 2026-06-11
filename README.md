@@ -21,6 +21,10 @@
     </strong>
 </p>
 
+<p align="center">
+    <img src="https://api.netlify.com/api/v1/badges/1618e420-30d4-4bcb-ba66-619d997ec214/deploy-status" alt="netlify-build-status">
+</p>
+
 # 文档
 
 文档使用 [Fumadocs](https://fumadocs.dev) + [Next.js](https://nextjs.org) 进行构建

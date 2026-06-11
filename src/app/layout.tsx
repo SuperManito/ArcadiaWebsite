@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { NextProvider } from 'fumadocs-core/framework/next'
 import { Inter } from 'next/font/google'
 import Banner from '@/components/Banner'
-import GoogleAnalytics from '@/components/GoogleAnalytics'
 import { Provider } from '@/components/provider'
 import { releaseNotice } from '@/lib/layout.shared'
 
@@ -32,19 +33,19 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
-      <head>
-        <GoogleAnalytics />
-      </head>
+      <GoogleAnalytics gaId="G-P076XXL2MH" />
       <body className="flex flex-col min-h-screen">
-        <Banner>{releaseNotice}</Banner>
-        <Provider>
-          <AntdRegistry>
-            {children}
-          </AntdRegistry>
-        </Provider>
+        <NextProvider>
+          <Banner>{releaseNotice}</Banner>
+          <Provider>
+            <AntdRegistry>
+              {children}
+            </AntdRegistry>
+          </Provider>
+        </NextProvider>
       </body>
     </html>
   )

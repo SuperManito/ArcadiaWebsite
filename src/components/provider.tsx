@@ -1,9 +1,16 @@
 'use client'
-import type { ReactNode } from 'react'
+import { i18nProvider } from 'fumadocs-ui/i18n'
 import { RootProvider } from 'fumadocs-ui/provider/next'
 import SearchDialog from '@/components/search'
-import { i18nUI } from '@/lib/i18n'
+import { translations } from '@/lib/i18n'
 
-export function Provider({ children }: { children: ReactNode }) {
-  return <RootProvider i18n={i18nUI.provider('cn')} search={{ SearchDialog }}>{children}</RootProvider>
+export function Provider({ children }: { children: React.ReactNode }) {
+  return (
+    <RootProvider
+      i18n={i18nProvider(translations)}
+      search={{ SearchDialog }}
+    >
+      {children}
+    </RootProvider>
+  )
 }

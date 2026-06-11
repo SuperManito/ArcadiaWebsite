@@ -3,9 +3,7 @@ import type { MotionProps, UseInViewOptions, Variants } from 'motion/react'
 import {
   AnimatePresence,
   motion,
-
   useInView,
-
 } from 'motion/react'
 import React, { useRef } from 'react'
 

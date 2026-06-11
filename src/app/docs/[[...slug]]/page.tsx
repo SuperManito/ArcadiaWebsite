@@ -11,8 +11,10 @@ import {
 import { createRelativeLink } from 'fumadocs-ui/mdx'
 import { notFound } from 'next/navigation'
 import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions'
+import { OpenAPIPage } from '@/components/APIPage'
 import ClientFade from '@/components/ClientFade'
 import { gitConfig } from '@/lib/layout.shared'
+import { openapi } from '@/lib/openapi'
 import { getPageImage, source } from '@/lib/source'
 import { getMDXComponents } from '@/mdx-components'
 
@@ -22,7 +24,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   if (!page)
     notFound()
 
-  const MDX = page.data.body
+  const MdxContent = page.data.body
   // const lastModifiedTime = await getGithubLastEdit({
   //   owner: gitConfig.user,
   //   repo: gitConfig.docRepo,
@@ -45,13 +47,16 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       <DocsDescription className="mb-0 text-fd-muted-foreground">{page.data.description}</DocsDescription>
       <DocsBody>
         <ClientFade>
-          <MDX
+          <MdxContent
             components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
+              // this allows you to link to other pages with relative file paths
               a: createRelativeLink(source, page),
               DocsCategory: ({ url }) => {
                 return <DocsCategory url={url ?? page.url} />
               },
+              OpenAPIPage: async props => (
+                <OpenAPIPage {...await openapi.preloadOpenAPIPage(page)} {...props} />
+              ),
             })}
           />
         </ClientFade>
