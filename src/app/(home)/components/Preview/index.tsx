@@ -8,7 +8,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import BlurFade from '../BlurFade'
 import styles from './index.module.css'
-import Safari from './Safari'
+import { Safari } from './Safari'
 import ThreeDMarquee from './TreeDMarquee'
 
 // 静态资源路径（相对于 /static 目录）
@@ -16,8 +16,10 @@ const LIGHT_IMAGE_PATHS = [
   '/images/preview/code-edit-light.png',
   '/images/preview/cron-dashboard-light.png',
   '/images/preview/cron-config-light.png',
+  '/images/preview/daemon-light.png',
   '/images/preview/log-light.png',
-  '/images/preview/env-light.png',
+  '/images/preview/config-env-light.png',
+  '/images/preview/config-dep-light.png',
   '/images/preview/file-light.png',
   '/images/preview/terminal-light.png',
   '/images/preview/login-light.png',
@@ -27,17 +29,21 @@ const DARK_IMAGE_PATHS = [
   '/images/preview/code-edit-dark.png',
   '/images/preview/cron-dashboard-dark.png',
   '/images/preview/cron-config-dark.png',
+  '/images/preview/daemon-dark.png',
   '/images/preview/log-dark.png',
-  '/images/preview/env-dark.png',
+  '/images/preview/config-env-dark.png',
+  '/images/preview/config-dep-dark.png',
   '/images/preview/file-dark.png',
   '/images/preview/terminal-dark.png',
   '/images/preview/login-dark.png',
 ]
 
-const marqueeIndices = [7, 1, 2, 3, 4, 5, 0, 5, 4, 3, 2, 1, 7, 2, 0, 3, 1, 4, 0, 5, 0, 5, 4, 2, 5, 1, 7, 1, 7, 2, 3, 4, 0, 5]
+const marqueeIndices = [9, 1, 2, 4, 5, 7, 0, 6, 5, 4, 2, 1, 9, 3, 0, 4, 1, 5, 0, 7, 0, 8, 6, 2, 8, 1, 9, 1, 9, 2, 4, 5, 0, 7]
 
 const lightMarqueeImgs = marqueeIndices.map(i => LIGHT_IMAGE_PATHS[i])
 const darkMarqueeImgs = marqueeIndices.map(i => DARK_IMAGE_PATHS[i])
+
+const previewTitle = '兼具美感与现代化的管理面板'
 
 function ThreeDMarqueeComponents({ onClick }: { onClick?: () => void }) {
   const { isDark } = useTheme()
@@ -102,7 +108,7 @@ function PreviewContentDefault() {
       <span className="text-neutral-600 dark:text-neutral-400 text-2xl font-bold tracking-tighter" style={{ width: '100%', textAlign: 'center', display: 'block' }}>
         <BlurFade delay={0.25} inView>
           <span className="font-bold tracking-tighter">
-            兼具美感与现代化的控制面板
+            {previewTitle}
           </span>
         </BlurFade>
       </span>
@@ -141,7 +147,7 @@ function PreviewContentMobile() {
         </div>
       </div>
       <span className="text-neutral-600 dark:text-neutral-400 text-base" style={{ paddingTop: '1rem', width: '100%', textAlign: 'center', display: 'block' }}>
-        兼具美感与现代化的控制面板
+        {previewTitle}
       </span>
     </div>
 

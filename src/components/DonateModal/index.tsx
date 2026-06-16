@@ -46,7 +46,7 @@ export default function DonateModal() {
         </div>
       </button>
       <Modal centered width={340} styles={{ body: { justifyContent: 'center', display: 'flex', height: '340px' } }} closable={false} open={isModalOpen} cancelText="" onOk={handleOk} onCancel={handleCancel} footer={[]}>
-        <Space orientation="vertical">
+        <Space orientation="vertical" size={20}>
           <WechatPayImage />
           <Space size={6} align="center" style={{ justifyContent: 'center', width: '100%' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">

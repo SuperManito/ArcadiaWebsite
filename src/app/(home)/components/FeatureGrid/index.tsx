@@ -42,7 +42,7 @@ export default function FeatureGrid() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 text-left max-w-7xl mx-auto relative group/grid"
+      className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3 text-left max-w-7xl mx-auto relative group/grid"
     >
       {features.map((feature, index) => {
         return (
@@ -70,7 +70,7 @@ function FeatureCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
-      className="feature-card relative rounded-xl sm:rounded-2xl bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-sm p-3 sm:p-6 overflow-hidden group/card"
+      className="feature-card relative rounded-xl sm:rounded-2xl bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-800/50 shadow-sm p-3 sm:p-5 overflow-hidden group/card"
     >
       {/* 边框高亮 */}
       <div
@@ -95,10 +95,10 @@ function FeatureCard({
           <Icon icon={feature.icon} size={32} />
         </div>
       </div>
-      <div className="text-sm sm:text-xl font-bold text-neutral-900 dark:text-white mb-1.5 sm:mb-3 relative z-10 drop-shadow-sm">
+      <div className="text-sm sm:text-lg font-bold text-neutral-900 dark:text-white mb-1.5 sm:mb-3 relative z-10 drop-shadow-sm">
         {feature.title}
       </div>
-      <div className="text-neutral-600 dark:text-neutral-400 text-[11px] sm:text-sm leading-snug sm:leading-relaxed relative z-10 line-clamp-3 sm:line-clamp-none">
+      <div className="text-neutral-600 dark:text-neutral-400 text-[11px] sm:text-[13px] leading-snug sm:leading-relaxed relative z-10 line-clamp-3 sm:line-clamp-none">
         {feature.description}
       </div>
     </motion.div>
