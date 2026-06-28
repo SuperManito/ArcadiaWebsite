@@ -209,7 +209,9 @@ export default function LanguageShowcase() {
               <span className="text-neutral-600 dark:text-neutral-400 tracking-tighter text-[.9rem] md:text-[1.1rem] block">一键运行代码文件，支持多种编程语言类型</span>
             </BlurFade>
           </div>
-          <TypewriterEffect words={words} />
+          <div className="w-54 md:w-125">
+            <TypewriterEffect words={words} />
+          </div>
           <LanguageLogos />
         </div>
       </section>
