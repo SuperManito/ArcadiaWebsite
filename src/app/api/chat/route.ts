@@ -142,8 +142,8 @@ export async function POST(req: Request) {
       // eslint-disable-next-line ts/no-use-before-define
       search: searchTool,
     },
+    instructions: SYSTEM_PROMPT,
     messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
       ...(await convertToModelMessages<ChatUIMessage>(reqJson.messages ?? [], {
         convertDataPart(part) {
           if (part.type === 'data-client') {
