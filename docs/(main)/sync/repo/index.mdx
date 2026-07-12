@@ -124,9 +124,9 @@ icon: Warehouse
 
       ```yaml title="示例"
       scriptsType:
-          - js
-          - py
-          - ts
+        - js
+        - py
+        - ts
       ```
       工作原理是在读取该项配置时会使用 `join()` 方法将数组合并成一个用空格进行分割的字符串 `js py ts`，之后会通过遍历数组的方式转变成基于 [**grep**](https://www.runoob.com/linux/linux-comm-grep.html) 指令过滤规则的最终形态字符串 `\.js$|\.py$|\.ts$`
 
