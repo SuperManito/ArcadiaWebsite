@@ -4,6 +4,7 @@ import { ImageZoom } from 'fumadocs-ui/components/image-zoom'
 import * as TabsComponents from 'fumadocs-ui/components/tabs'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { Icon } from '@/components/Icon'
+import { Mermaid } from '@/components/Mermaid'
 import * as TypeTableComponents from '@/components/TypeTable'
 import { TypeTableServer } from '@/components/TypeTable/TypeTableServer'
 
@@ -16,6 +17,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     TypeTable: TypeTableServer,
     ...AccordionComponents,
     Icon,
+    Mermaid,
     ...components,
   }
 }

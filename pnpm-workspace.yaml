@@ -1,3 +1,7 @@
+minimumReleaseAgeExclude:
+  - '@fumadocs/*'
+  - 'fumadocs-*'
+  - '@fuma-*'
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -10,8 +14,3 @@ onlyBuiltDependencies:
 allowBuilds:
   esbuild: true
   sharp: true
-
-minimumReleaseAgeExclude:
-  - '@fumadocs/*'
-  - 'fumadocs-*'
-  - '@fuma-*'

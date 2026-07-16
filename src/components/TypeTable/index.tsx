@@ -141,7 +141,7 @@ function Item({
         </code>
         {typeDescriptionLink
           ? (
-              <Link href={typeDescriptionLink} className="underline @max-xl:hidden">
+              <Link href={typeDescriptionLink} className="underline @max-xl:hidden type-table-type-highlight">
                 {type}
               </Link>
             )
