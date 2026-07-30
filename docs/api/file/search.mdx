@@ -1,0 +1,120 @@
+---
+title: 全局文件搜索
+---
+import { GET } from '@/components/RequestTag';
+
+## 代码目录搜索
+
+<GET>/file/search</GET>
+
+### 请求
+
+<TypeTable
+  type={{
+    search: {
+      description: '搜索关键字，匹配文件/目录的相对路径（空则返回空数组）',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+### 响应
+
+与 [获取文件树](/docs/api/file/tree) 响应结构相同，返回匹配关键字的文件树数组。
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    path: {
+      description: '绝对路径',
+      type: 'string',
+      required: true,
+    },
+    title: {
+      description: '目录名称',
+      type: 'string',
+      required: true,
+    },
+    name: {
+      description: '文件名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '文件类型',
+      type: "string<'folder' | 'file'>",
+      required: true,
+    },
+    updated_at: {
+      description: '最后修改时间',
+      type: 'string',
+      required: true,
+    },
+    created_at: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    children: {
+      description: '成员，即下级内容',
+      type: 'object[]',
+      required: true,
+    },
+  }}
+/>
+
+<Callout type="idea">
+  含有 `children` 属性的对象为目录，应使用 `title` 字段获取目录名称
+</Callout>
+
+```json title="示例"
+[
+  {
+    "path": "/arcadia/repo",
+    "title": "repo",
+    "type": "folder",
+    "updated_at": "2024-01-01 00:00:00",
+    "created_at": "2024-01-01 00:00:00",
+    "children": [
+      {
+        "path": "/arcadia/repo/my-project/index.js",
+        "name": "index.js",
+        "type": "file",
+        "updated_at": "2024-01-01 00:00:00",
+        "created_at": "2024-01-01 00:00:00"
+      }
+    ]
+  }
+]
+```
+
+## 日志目录搜索
+
+<GET>/file/search/log</GET>
+
+仅返回位于日志目录内的目录和 `.log` 后缀文件。
+
+### 请求
+
+<TypeTable
+  type={{
+    search: {
+      description: '搜索关键字，匹配文件/目录的相对路径（空则返回空数组）',
+      type: 'string',
+      required: true,
+    },
+    startTime: {
+      description: '开始时间过滤，格式固定为 yyyy-MM-dd HH:mm',
+      type: 'string',
+    },
+    endTime: {
+      description: '结束时间过滤，格式固定为 yyyy-MM-dd HH:mm',
+      type: 'string',
+    },
+  }}
+/>
+
+### 响应
+
+与[代码目录搜索响应](#代码目录搜索)相同

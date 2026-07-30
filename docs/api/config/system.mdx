@@ -32,6 +32,32 @@ import { GET, POST } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
+    logRetentionDays: {
+      description: '系统日志保留天数（含操作日志和登录日志）',
+      type: 'string<number>',
+      required: true,
+    },
+    messageRetentionDays: {
+      description: '消息中心已读消息保留天数',
+      type: 'string<number>',
+      required: true,
+    },
+    taskHistoryRetentionDays: {
+      description: '定时任务执行统计数据保留天数',
+      type: 'string<number>',
+      required: true,
+    },
+    cleanupCronExpression: {
+      description: '定时自动清理的 cron 表达式，控制清理任务的执行频率。为空时系统自动生成每天执行一次的默认表达式',
+      type: 'string',
+      required: true,
+    },
+    cleanupCronEnabled: {
+      description: '是否启用定时自动清理',
+      typeDescription: '"true" 启用，"false" 禁用',
+      type: 'string',
+      required: true,
+    },
   }}
 />
 
@@ -40,7 +66,12 @@ import { GET, POST } from '@/components/RequestTag';
   "timezone": "Asia/Shanghai",
   "npmRegistry": "https://registry.npmmirror.com",
   "pipIndexUrl": "https://mirrors.aliyun.com/pypi/simple/",
-  "aptMirrorUrl": "http://mirrors.aliyun.com/debian"
+  "aptMirrorUrl": "http://mirrors.aliyun.com/debian",
+  "logRetentionDays": "7",
+  "messageRetentionDays": "7",
+  "taskHistoryRetentionDays": "7",
+  "cleanupCronExpression": "23 4 * * *",
+  "cleanupCronEnabled": "true"
 }
 ```
 
@@ -70,6 +101,27 @@ import { GET, POST } from '@/components/RequestTag';
     },
     aptMirrorUrl: {
       description: 'APT 镜像源地址，Debian 主源根路径',
+      type: 'string',
+    },
+    logRetentionDays: {
+      description: '系统日志保留天数（正整数字符串）',
+      type: 'string<number>',
+    },
+    messageRetentionDays: {
+      description: '消息中心已读消息保留天数（正整数字符串）',
+      type: 'string<number>',
+    },
+    taskHistoryRetentionDays: {
+      description: '定时任务执行统计数据保留天数（正整数字符串）',
+      type: 'string<number>',
+    },
+    cleanupCronExpression: {
+      description: '定时自动清理的 cron 表达式',
+      type: 'string',
+    },
+    cleanupCronEnabled: {
+      description: '是否启用定时自动清理',
+      typeDescription: '"true" 启用，"false" 禁用',
       type: 'string',
     },
   }}

@@ -4,6 +4,7 @@
   "pages": [
     "list",
     "tree",
+    "search",
     "get-content",
     "save-content",
     "delete",

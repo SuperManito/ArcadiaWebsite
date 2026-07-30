@@ -1,29 +1,36 @@
 ---
-title: 推送通知
+title: 消息通知
 icon: Bell
 ---
+import { POST } from '@/components/RequestTag';
+
+## 第三方渠道推送通知
 
 <Callout type="warn" title="过时的内容">
-即将上线消息中心和监控告警功能，当前内容将被废弃已不再维护，注意持续关注项目的功能变动
+即将上线监控告警功能，当前内容将被废弃已不再维护，注意持续关注项目的功能变动
 </Callout>
 
-用于在运行脚本后将指定内容推送到你的设备上，推送内容由脚本而定，可同时使用多个渠道的推送通知服务  
-目前提供：Server酱、Bark、Telegram、钉钉、企业微信、iGot、pushplus、go-cqhttp、WxPusher
+<details>
 
-此功能基于底层 `sendNotify.js` 脚本实现
+<summary>旧版通知渠道</summary>
+
+用于在脚本运行后将指定内容推送到你的设备上，支持多个渠道同时推送，推送内容由脚本而定。
+目前支持：Server酱、Bark、Telegram、钉钉、企业微信、iGot、pushplus、go-cqhttp、WxPusher
+
+此功能基于底层 `sendNotify.js` 脚本实现，仅支持常见 js 脚本
 
 <Callout type="info" title="控制面板入口">
 编辑配置 - 下拉选择 `config.sh` - 推送通知设置区域
 </Callout>
 
-- ### 通知尾
+- ### 通知尾 [!toc]
 
     ```bash
     export NOTIFY_TAIL="本通知 By：https://github.com/SuperManito/Arcadia"
     ```
     默认如上，如想修改请编辑 **config.sh** 配置文件中的变量
 
-- ### 通知屏蔽
+- ### 通知屏蔽 [!toc]
 
     ```bash
     export NOTIFY_MASKING=""
@@ -32,7 +39,8 @@ icon: Bell
 
 ***
 
-## Server酱
+## Server酱 [!toc]
+
 官网：https://sct.ftqq.com
 
 - SCHKEY 或 SendKey（必填）
@@ -50,7 +58,7 @@ icon: Bell
 
 ***
 
-## Bark
+## Bark [!toc]
 
 - 设备码（必填）
 
@@ -75,7 +83,7 @@ icon: Bell
 
 ***
 
-## Telegram
+## Telegram [!toc]
 
 <Callout type="warn" title="注意">
 注意网络连通性问题，可能需要魔法
@@ -130,7 +138,8 @@ icon: Bell
 
 ***
 
-## 钉钉
+## 钉钉 [!toc]
+
 官方文档：https://developers.dingtalk.com/document/app/custom-robot-access
 
 - token后面的内容（必填）
@@ -153,7 +162,8 @@ icon: Bell
 
 ***
 
-## 企业微信机器人
+## 企业微信机器人 [!toc]
+
 官方文档：https://work.weixin.qq.com/api/doc/90000/90136/91770
 
 - 密钥（必填）
@@ -165,8 +175,9 @@ icon: Bell
 
 ***
 
-## 企业微信应用
-参考文档：http://note.youdao.com/s/HMiudGkb
+## 企业微信应用 [!toc]
+
+参考文档：http://note.youdao.com/s/HMiudGkb  
 ㅤㅤㅤㅤㅤhttp://note.youdao.com/noteshare?id=1a0c8aff284ad28cbd011b29b3ad0191
 
 - id（必填）
@@ -178,7 +189,8 @@ icon: Bell
 
 ***
 
-## iGot聚合
+## iGot聚合 [!toc] [!toc]
+
 官方文档：https://wahao.github.io/Bark-MP-helper
 
 - 推送key（必填）
@@ -190,7 +202,7 @@ icon: Bell
 
 ***
 
-## pushplus
+## pushplus [!toc]
 
 官网：http://www.pushplus.plus
 
@@ -212,9 +224,10 @@ icon: Bell
 
 ***
 
-## WxPusher
-官方仓库：https://github.com/wxpusher/wxpusher-client
-官方文档：https://wxpusher.zjiecode.com/docs
+## WxPusher [!toc]
+
+官方仓库：https://github.com/wxpusher/wxpusher-client  
+官方文档：https://wxpusher.zjiecode.com/docs  
 微信公众号：WxPusher 消息推送平台
 
 - appToken（必填）
@@ -244,6 +257,122 @@ icon: Bell
   export WP_URL=""
   ```
 
+</details>
+
 ***
 
-此页文档如有描述错误或其它问题请积极向开发者进行反馈，谢谢
+## 对接消息中心
+
+平台消息中心功能提供了统一的消息推送与管理，具备通知聚合能力，您可以将业务消息集中推送至此。
+
+消息中心内置自动去重机制，支持最大字符数：`标题 200` `内容 20000`，超出部分将被截断。
+
+- ### Markdown 语法
+
+  消息内容支持 Markdown 格式渲染，常用语法如下：
+
+  ```markdown
+  # 标题（支持 1-6 级）
+  ## 二级标题
+
+  **加粗文本** 和 *斜体文本*
+
+  - 无序列表项
+  - 另一项
+
+  1. 有序列表
+  2. 第二项
+
+  [链接文本](https://example.com)
+
+  ![图片描述](https://example.com/image.png)
+  ![自定义尺寸](https://example.com/image.png =200x100)
+
+  `行内代码`
+
+  ```javascript
+  // 代码块（支持语言高亮）
+  console.log('Hello')
+  ```
+
+  > 引用文本
+
+  | 表头 | 表头 |
+  |------|------|
+  | 内容 | 内容 |
+  ```
+
+  <Callout type="info" title="注意">
+  仅支持 `http://` 和 `https://` 开头的外部链接和图片，其他协议将被转为纯文本。
+  </Callout>
+
+- ### SDK
+
+  SDK 位于项目 `src/utils/message-sdk` 目录下，零外部依赖，仅支持本地环境调用。
+
+  ```javascript tab="Node.js (ESM)"
+  import { push } from '/arcadia/src/utils/message-sdk'
+
+  // 推送 info 类型消息（默认）
+  await push('备份完成', '数据库备份已成功完成')
+  // 推送 success 类型消息
+  await push('版本更新', 'v2.1.0 已发布', 'success')
+  ```
+
+  ```javascript tab="Node.js (CommonJS)"
+  const { push } = require('/arcadia/src/utils/message-sdk')
+
+  !(async () => {
+    // 推送 info 类型消息（默认）
+    await push('备份完成', '数据库备份已成功完成')
+    // 推送 success 类型消息
+    await push('版本更新', 'v2.1.0 已发布', 'success')
+  })()
+  ```
+
+  调用导出方法 `push(title, content, type)` 
+
+  | 参数 | 必填 | 说明 |
+  |------|------|------|
+  | title | 是 | 消息标题 |
+  | content | 是 | 消息内容 |
+  | type | 否 | 消息类型，默认 `info`，可选值：`info`、`warn`、`error`、`success` |
+
+  返回值：推送成功返回 true，推送失败抛出 Error
+
+  其它语言建议使用下方的本地 HTTP 请求方式
+
+- ### HTTP 请求
+
+  - #### API
+
+    内部接口，仅支持本地调用，无认证，与 SDK 的工作原理相同
+
+    <POST>http://127.0.0.1:5678/api/inner/message/push</POST>
+
+    <TypeTable
+      type={{
+        title: {
+          description: '消息标题',
+          type: 'string',
+          required: true,
+        },
+        content: {
+          description: '消息内容',
+          type: 'string',
+          required: true,
+        },
+        type: {
+          description: '消息级别',
+          type: "string<'info' | 'info' | 'error' | 'success'>",
+        },
+      }}
+    />
+
+  - #### OpenAPI
+
+    详见 [Message 消息中心 - 推送消息](/docs/openapi/message/v1-create-post)
+
+- ### CLI（命令行）
+
+  详见 [CLI - 推送通知](/docs/cli/sundry/notify)

@@ -1,0 +1,83 @@
+---
+title: 历史数据清理
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/api/log/cleanup</POST>
+
+清理各类业务数据与日志
+
+## 请求
+
+<TypeTable
+  type={{
+    days: {
+      description: '保留天数覆盖值（正整数），不传则从用户配置读取各类型的独立保留天数',
+      type: 'number',
+    },
+    types: {
+      description: '指定要执行的清理类型，不传则执行全部。可选值：log（系统日志）、message（已读消息）、taskHistory（定时任务历史）',
+      type: 'string[]',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    log: {
+      description: '系统日志清理结果',
+      type: 'CleanupLogResult',
+    },
+    message: {
+      description: '已读消息清理结果',
+      type: '{ count: number }',
+    },
+    taskHistory: {
+      description: '定时任务执行统计数据清理结果',
+      type: '{ count: number }',
+    },
+  }}
+/>
+
+- CleanupLogResult
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    serverLog: {
+      description: '系统操作日志清理结果',
+      type: 'number',
+    },
+    loginLog: {
+      description: '登录日志清理结果',
+      type: 'number',
+    },
+    openApiLog: {
+      description: '开放接口日志清理结果',
+      type: 'number',
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "log": {
+    "serverLog": 120,
+    "loginLog": 45
+  },
+  "message": {
+    "count": 30
+  },
+  "taskHistory": {
+    "count": 15
+  }
+}
+```
+
+<Callout type="info">
+  各类型的保留天数分别由《个人设置 - 通用》中的 “数据与日志清理” 配置控制，默认均为 7 天。  
+  系统日志 `log` 类型总共包含系统操作日志、登录日志、开放接口日志、代码文件运行日志。
+</Callout>

@@ -57,7 +57,7 @@ import { GET } from '@/components/RequestTag';
   type={{
     data: {
       description: '数据项',
-      type: 'CronTasksData[]',
+      type: 'CronTaskData[]',
       required: true,
     },
     page: {
@@ -78,7 +78,7 @@ import { GET } from '@/components/RequestTag';
   }}
 />
 
-- CronTasksData
+- CronTaskData
 
 <TypeTable
   noRequiredMark={true}
@@ -155,6 +155,11 @@ import { GET } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
+    error_notify: {
+      description: '任务执行失败时是否自动推送通知（1=启用，0=禁用）',
+      type: 'number',
+      required: true,
+    },
     is_running: {
       description: '当前运行状态（任务是否正在运行）',
       type: 'boolean',
@@ -208,6 +213,7 @@ import { GET } from '@/components/RequestTag';
       "create_time": "2024-01-01 00:00:00",
       "remark": "",
       "bind": "",
+      "error_notify": 1,
       "is_running": false
     },
     {
@@ -225,6 +231,7 @@ import { GET } from '@/components/RequestTag';
       "create_time": "2024-01-01 00:00:00",
       "remark": "",
       "bind": "",
+      "error_notify": 1,
       "is_running": true
     },
     ...

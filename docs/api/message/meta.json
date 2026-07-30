@@ -1,0 +1,12 @@
+{
+  "title": "Message 消息中心",
+  "icon": "Mail",
+  "pages": [
+    "schema",
+    "list",
+    "detail",
+    "unread-count",
+    "status",
+    "delete"
+  ]
+}

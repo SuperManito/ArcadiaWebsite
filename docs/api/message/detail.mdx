@@ -3,7 +3,7 @@ title: 获取详情
 ---
 import { GET } from '@/components/RequestTag';
 
-<GET>/message/detail</GET>
+<GET>/message</GET>
 
 ## 请求
 
@@ -19,5 +19,51 @@ import { GET } from '@/components/RequestTag';
 
 ## 响应
 
-```json title="示例"
-```
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    category: {
+      description: '消息类型',
+      type: 'string',
+      typeDescription: 'user、system、cron 等',
+      required: true,
+    },
+    type: {
+      description: '消息级别',
+      type: "string<'info' | 'warn' | 'error' | 'success'>",
+      required: true,
+    },
+    title: {
+      description: '消息标题',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '消息内容',
+      type: 'string',
+      required: true,
+    },
+    source: {
+      description: '消息来源',
+      type: 'string',
+      typeDescription: '格式为 "消息类型@资源ID"（如 cron@42）',
+      required: true,
+    },
+    status: {
+      description: '已读状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 已读，0 未读',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

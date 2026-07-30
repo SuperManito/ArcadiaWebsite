@@ -42,6 +42,7 @@ tags:
   - name: Env 环境变量
   - name: Cron 定时任务
   - name: Exec 命令执行
+  - name: Message 消息中心
 
 components:
   securitySchemes:
@@ -480,6 +481,10 @@ components:
         bind:
           type: string
           description: 后端用于关联底层内容的参数（仅系统任务使用）
+        error_notify:
+          type: integer
+          description: 任务执行失败时是否自动推送通知（1=启用，0=禁用）
+          default: 1
         is_running:
           type: boolean
           description: 当前运行状态（任务是否正在运行）
@@ -502,6 +507,7 @@ components:
             - create_time
             - remark
             - bind
+            - error_notify
             - is_running
     CronCreateRequest:
       description: 创建定时任务请求体（name、cron、shell 必填）
@@ -808,6 +814,136 @@ components:
           description: 变量内容（可省略）
       required:
         - key
+    MessageType:
+      type: string
+      enum:
+        - info
+        - warn
+        - error
+        - success
+      description: 消息级别
+    MessageCreateRequest:
+      type: object
+      description: 创建消息请求体
+      properties:
+        title:
+          type: string
+          description: 消息标题
+        content:
+          type: string
+          description: 消息内容
+        type:
+          $ref: '#/components/schemas/MessageType'
+      required:
+        - title
+        - content
+    MessageData:
+      type: object
+      description: 消息完整记录（响应数据）
+      properties:
+        id:
+          type: integer
+          description: 唯一标识
+        category:
+          type: string
+          description: 消息类型
+        type:
+          $ref: '#/components/schemas/MessageType'
+        title:
+          type: string
+          description: 消息标题
+        content:
+          type: string
+          description: 消息内容
+        source:
+          type: string
+          description: 消息来源
+        status:
+          type: integer
+          description: 读取状态，`0` 未读、`1` 已读
+        create_time:
+          type: string
+          description: 创建时间
+      required:
+        - id
+        - category
+        - type
+        - title
+        - content
+        - source
+        - status
+        - create_time
+    MessageListParams:
+      type: object
+      properties:
+        page:
+          type: integer
+          default: 1
+        size:
+          type: integer
+          default: 20
+        status:
+          type: string
+          description: 状态筛选（0=未读，1=已读）
+        search:
+          type: string
+          description: 搜索关键词
+        order:
+          type: string
+          enum: ['0', '1']
+          description: 指定排序方式 0 升序 | 1 降序，默认降序
+        orderBy:
+          type: string
+          default: create_time
+    MessageListResult:
+      description: 消息列表响应
+      allOf:
+        - $ref: '#/components/schemas/PageResponseBase'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/MessageData'
+          required:
+            - data
+    MessageReadStatusRequest:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          oneOf:
+            - type: integer
+            - type: array
+              items:
+                type: integer
+          description: 消息 ID（单个或数组）
+        status:
+          type: integer
+          description: 目标状态（1=已读，0=未读）
+    MessageReadAllRequest:
+      type: object
+      properties:
+        status:
+          type: integer
+          default: 1
+          description: 目标状态（1=已读，0=未读）
+    MessageDeleteRequest:
+      type: object
+      required: [id]
+      properties:
+        id:
+          oneOf:
+            - type: integer
+            - type: array
+              items:
+                type: integer
+          description: 消息 ID（单个或数组）
+    UnreadCountResponse:
+      type: object
+      properties:
+        total:
+          type: integer
 paths:
   /file/v1/list:
     get:
@@ -1611,3 +1747,172 @@ paths:
               schema:
                 type: string
                 description: 执行结果信息
+
+  /message/v1/create:
+    post:
+      summary: 推送消息
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreateRequest'
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageData'
+  /message/v1/list:
+    get:
+      summary: 分页查询
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      parameters:
+        - name: page
+          in: query
+          description: 指定页数，默认1
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: 指定分页大小数量，默认20
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          description: 状态筛选（0=未读，1=已读）
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: 消息级别过滤，支持逗号分隔多值（如 info,error）
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: 搜索关键词
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: 指定排序方式 0 升序 | 1 降序，默认降序
+          schema:
+            type: string
+            enum: ['0', '1']
+        - name: orderBy
+          in: query
+          description: 指定排序字段，默认 create_time
+          schema:
+            type: string
+            default: create_time
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListResult'
+  /message/v1/unreadCount:
+    get:
+      summary: 获取未读消息计数
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCountResponse'
+  /message/v1/detail:
+    get:
+      summary: 获取消息详情
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      parameters:
+        - name: id
+          in: query
+          description: 消息 ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageData'
+  /message/v1/readStatus:
+    post:
+      summary: 更新消息已读状态
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageReadStatusRequest'
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /message/v1/readAll:
+    post:
+      summary: 更新全部消息已读状态
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageReadAllRequest'
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /message/v1/delete:
+    post:
+      summary: 删除消息
+      tags:
+        - Message 消息中心
+      security:
+        - Token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageDeleteRequest'
+      responses:
+        '200':
+          description: 响应
+          content:
+            application/json:
+              schema:
+                type: boolean

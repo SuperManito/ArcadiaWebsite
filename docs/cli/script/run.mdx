@@ -1,5 +1,5 @@
 ---
-title: 运行代码文件（脚本）
+title: 运行代码文件
 description: 运行代码
 ---
 import { CHECK, CLOSE } from '@/components/Icon';
@@ -44,6 +44,26 @@ import { CHECK, CLOSE } from '@/components/Icon';
     --tsx，--use-tsx            使用 tsx 执行
     --ts-node，--use-ts-node    使用 ts-node 执行
 
+    沙箱：
+
+    --sandbox                                 沙箱模式，在受限环境中运行代码，隔离网络、文件系统和内存
+    --sandbox-net-allow <spec>                出站白名单，仅放行匹配规则的出站连接（指定后取代默认全量联网），可多次使用
+    --sandbox-net-deny <spec>                 出站黑名单，仅屏蔽匹配规则的出站连接（默认联网不变），可多次使用，与 --sandbox-net-allow 互斥
+    --sandbox-net-deny-all                    完全断网，阻断所有出站网络连接
+    --sandbox-net-deny-local                  屏蔽局域网，阻断本地回环、私网网段及云元数据地址，可与 --sandbox-net-deny 叠加
+    --sandbox-net-allow-bind <port>           允许绑定指定端口，放行指定 TCP 端口的服务端绑定监听（与出站控制独立），可多次使用
+    --sandbox-net-allow-bind-all              允许绑定任意端口，放行所有 TCP 端口绑定监听，与 --sandbox-net-allow-bind 互斥
+    --sandbox-http-allow <rule>               HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式："METHOD host/path"），可多次使用，与 --sandbox-http-deny 互斥
+    --sandbox-http-deny <rule>                HTTP 请求黑名单，屏蔽匹配的 HTTP/HTTPS 请求（格式："METHOD host/path"），可多次使用，与 --sandbox-http-allow 互斥
+    --sandbox-max-memory <size>               内存上限，限制进程最大内存用量（例如 512M、1G）
+    --sandbox-clear-env                       清空环境变量，移除所有继承的环境变量（仅保留最小系统路径）
+    --sandbox-env KEY=VALUE                   注入环境变量，向进程追加自定义环境变量，可多次使用
+    --sandbox-allow-env-whitelist VAR1,VAR2   环境变量白名单，仅保留指定变量（隐式启用清空），与 --sandbox-clear-env 互斥
+    --sandbox-allow-env-blacklist VAR1,VAR2   环境变量黑名单，排除指定变量（其余正常继承）
+    --sandbox-allow-read <path>               允许只读访问，在预设挂载之外追加只读目录，可多次使用
+    --sandbox-allow-write <path>              允许读写访问，在预设挂载之外追加读写目录，可多次使用
+    --sandbox-opts <args>                     透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用
+
   命令帮助：
 
     <name> 文件名(仅scripts目录)  <path> 相对路径或绝对路径  <url> 链接地址  [--options] 命令选项
@@ -57,7 +77,7 @@ arcadia run <name/path/url> [--options]
 
 ### 文件名称 `name`
 
-仅限 `scripts` 个人目录下的代码文件，并且仅涵盖 `根目录`，你可以把你常用的脚本存放在这里
+仅限 `scripts` 个人目录下的代码文件，并且仅涵盖 `根目录`，你可以把你常用的代码文件（脚本）存放在这里
 
 ### 路径 `path`
 
@@ -121,7 +141,7 @@ arcadia run <name/path/url> [--options]
 | `--deno`, `--use-deno`         | [Deno](https://deno.com) | 否 | 使用 Deno 运行时 |
 | `--bun`, `--use-bun`           | [Bun](https://bun.sh) | 否 | 使用 Bun 运行时 |
 | `--node`, `--use-node`         | [Node.js](https://nodejs.org) | 否 | 使用 Node.js 运行时 |
-| `--ts-tsx`, `--use-tsx`        | [TypeScript Execute (tsx)](https://tsx.is) | 否 | 使用 tsx 执行 |
+| `--tsx`, `--use-tsx`         | [TypeScript Execute (tsx)](https://tsx.is) | 否 | 使用 tsx 执行 |
 | `--ts-node`, `--use-ts-node`   | [ts-node](https://typestrong.org/ts-node) | 否 | 使用 ts-node 执行 |
 
 
@@ -270,3 +290,223 @@ arcadia stop <name/path>
 - 删除任务 `pm2 delete <任务名>`
 
 默认存在二个项目内置的服务 `arcadia_server` `tgbot`，请不要删除它们其中的任何一个
+
+---
+
+## 沙箱（BETA）
+
+```bash
+arcadia run <name/path/url> --sandbox
+```
+
+### 什么是沙箱？ [!toc]
+
+沙箱是将代码进程关入一个独立运行环境内执行的能力。启用后，代码只能访问它自己的文件目录和必要的系统运行库，无法读取其它目录中的文件，也无法影响其它进程。这尤其适合运行来自不可信来源的代码文件时使用。
+
+此功能基于 [sandlock](https://github.com/multikernel/sandlock) 实现，通过 Linux Landlock LSM 和 seccomp-bpf 提供文件系统隔离与网络控制。
+
+
+<Callout type="info" title="手动安装命令">
+  ```bash title="安装命令"
+  wget -O /arcadia/src/shell/sandbox/sandlock.tar.gz https://github.com/multikernel/sandlock/releases/download/v0.7.0/sandlock-$(arch)-unknown-linux-gnu.tar.gz
+  tar -xzf /arcadia/src/shell/sandbox/sandlock.tar.gz
+  rm -rf /arcadia/src/shell/sandbox/sandlock.tar.gz
+  chmod a+x /arcadia/src/shell/sandbox/sandlock
+  ```
+</Callout>
+
+<Callout title="命令兼容性">
+  终止运行命令 `arcadia stop` 在沙箱模式下仍然可用，不支持守护进程 `arcadia rund` 模式。
+</Callout>
+
+### 预设配置 [!toc]
+
+启用沙箱功能后，代码进程将按以下预设配置运行，这是沙箱的基准隔离状态，可通过下方的自定义配置选项进一步调整：
+
+- **文件系统**：仅可读写自身所在目录，可读取系统运行库，其它所有目录均不可见
+- **网络**：与宿主共享网络，允许完整网络访问
+- **环境变量**：全量继承当前运行环境的所有变量，与正常运行一致
+- **进程可见性**：代码进程只能看到沙箱内部的进程，无法查看或影响宿主上的其它进程
+
+### 自定义配置项 [!toc]
+
+> 以下选项均需配合 `--sandbox` 使用，用于在预设配置基础上进行自定义调整。
+
+| 选项 | 选项值 | 描述 |
+| :-: | :-: | ----- |
+| `--sandbox-net-allow` | 是 | 出站白名单，仅放行匹配规则的出站连接（指定后取代默认全量联网），可多次使用，与其余网络选项互斥 |
+| `--sandbox-net-deny` | 是 | 出站黑名单，仅屏蔽匹配规则的出站连接（默认联网不变），可多次使用，可与 `--sandbox-net-deny-local` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-deny-all` | 否 | 完全断网，阻断所有出站网络连接，与其余网络选项互斥 |
+| `--sandbox-net-deny-local` | 否 | 屏蔽局域网，阻断本地回环、私网网段及云元数据地址（`169.254.169.254`），可与 `--sandbox-net-deny` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-allow-bind` | 是 | 允许绑定指定端口，放行指定 TCP 端口的服务端绑定监听（与出站控制独立），可多次使用 |
+| `--sandbox-net-allow-bind-all` | 否 | 允许绑定任意端口，放行所有 TCP 端口绑定监听，与 `--sandbox-net-allow-bind` 互斥 |
+| `--sandbox-http-allow` | 是 | HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-deny` 互斥 |
+| `--sandbox-http-allow` | 是 | HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-deny` 互斥 |
+| `--sandbox-max-memory` | 是 | 内存上限，限制进程最大内存用量，支持 `M`（兆字节）和 `G`（吉字节）单位 |
+| `--sandbox-clear-env` | 否 | 清空环境变量，移除所有继承的环境变量（仅保留最小系统路径），可配合 `--sandbox-env` 补充注入 |
+| `--sandbox-env` | 是 | 注入环境变量，向进程追加自定义环境变量（`KEY=VALUE`），可多次使用 |
+| `--sandbox-allow-env-whitelist` | 是 | 环境变量白名单，仅保留逗号分隔的指定变量（隐式启用清空），与 `--sandbox-clear-env` 互斥 |
+| `--sandbox-allow-env-blacklist` | 是 | 环境变量黑名单，排除逗号分隔的指定变量（其余正常继承），与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥 |
+| `--sandbox-allow-read` | 是 | 允许只读访问，在预设挂载之外追加只读目录，可多次使用 |
+| `--sandbox-allow-write` | 是 | 允许读写访问，在预设挂载之外追加读写目录，可多次使用 |
+| `--sandbox-opts` | 是 | 透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用 |
+
+### 使用示例 [!toc]
+
+<Accordions type="multiple">
+  <Accordion title="基础沙箱用法" id="基础沙箱用法">
+    沙箱预设已包含默认的网络出站放行、文件系统隔离和资源限制。以下示例展示如何在预设基础上叠加自定义配置。
+
+    ```bash title="启用沙箱（使用预设配置）"
+    arcadia run example.js --sandbox
+    ```
+
+    ```bash title="在预设基础上完全断网"
+    arcadia run example.js --sandbox --sandbox-net-deny-all
+    ```
+
+    ```bash title="在预设基础上屏蔽局域网与云元数据"
+    arcadia run example.js --sandbox --sandbox-net-deny-local
+    ```
+
+    ```bash title="组合使用：内存限制 + 环境变量隔离"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-max-memory 256M \
+      --sandbox-clear-env \
+      --sandbox-env NOTIFY_KEY=xxx \
+      --sandbox-env TZ=Asia/Shanghai
+    ```
+  </Accordion>
+
+  <Accordion title="网络出站控制" id="网络出站控制">
+    预设为全量放行出站连接。以下选项用于在此基础上收紧：
+
+    - **白名单**（`--sandbox-net-allow`）：指定后取代默认全量联网，仅放行匹配的连接。
+    - **黑名单**（`--sandbox-net-deny` / `--sandbox-net-deny-local`）：默认联网不变，仅屏蔽匹配的连接，二者可叠加。
+    - **完全断网**（`--sandbox-net-deny-all`）：不可与任何其它网络选项叠加。
+
+    ```bash title="白名单：仅允许访问指定 API 和 DNS"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-net-allow tcp://api.openai.com:443 \
+      --sandbox-net-allow udp://1.1.1.1:53
+    ```
+
+    ```bash title="黑名单：屏蔽内网段 + 云元数据"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-net-deny 10.0.0.0/8 \
+      --sandbox-net-deny-local
+    ```
+
+    <Callout type="info" title="规则语法">
+      规则支持以下格式：
+
+      | 格式 | 含义 |
+      | --- | --- |
+      | `api.example.com:443` | 指定主机 + 端口（无 scheme 前缀时同时覆盖 TCP 和 UDP） |
+      | `tcp://api.example.com:443` | 仅 TCP |
+      | `udp://1.1.1.1:53` | 仅 UDP（如 DNS 查询） |
+      | `10.0.0.0/8` | CIDR 网段 |
+      | `169.254.169.254` | 单个 IP |
+      | `1.1.1.1:*` | 指定主机的所有端口 |
+      | `:8443` | 指定任意主机的特定端口 |
+      | `*` | 任意出站连接 |
+
+      注意：主机名仅 `--sandbox-net-allow` 支持（启动时解析并锁定）；`--sandbox-net-deny` 只接受 IP/CIDR。
+    </Callout>
+  </Accordion>
+
+  <Accordion title="HTTP 请求过滤" id="HTTP请求过滤">
+    在预设出站放行或自定义网络控制的基础上，可进一步按 HTTP 方法和路径过滤请求。HTTPS 证书信任由沙箱自动处理，无需配置。
+
+    ```bash title="白名单：仅允许 GET 文档站和 POST API"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-http-allow "GET docs.python.org/*" \
+      --sandbox-http-allow "POST api.openai.com/v1/*"
+    ```
+
+    ```bash title="黑名单：屏蔽所有对 /admin 路径的请求"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-http-deny "* */admin/*"
+    ```
+
+    <Callout type="info" title="规则格式">
+      每条规则格式为 `"METHOD host/path"`（需用引号包裹，因为含空格）：
+
+      - `METHOD`：HTTP 方法（`GET`、`POST`、`*` 表示任意方法）
+      - `host/path`：目标主机 + 路径模式（`*` 为通配符）
+
+      `--sandbox-http-allow` 与 `--sandbox-http-deny` 互斥，不可同时使用。
+    </Callout>
+  </Accordion>
+
+  <Accordion title="端口绑定（服务端监听）" id="端口绑定">
+    预设禁止绑定监听任何端口。如果代码文件需要作为服务端运行，需显式放行：
+
+    ```bash title="允许绑定指定端口"
+    arcadia run server.js \
+      --sandbox \
+      --sandbox-net-allow-bind 8080,9000-9005
+    ```
+
+    ```bash title="允许绑定任意端口"
+    arcadia run server.js \
+      --sandbox \
+      --sandbox-net-allow-bind-all
+    ```
+
+    端口绑定控制与出站网络控制完全独立，互不干涉。
+  </Accordion>
+
+  <Accordion title="文件系统访问" id="文件系统访问">
+    沙箱预设已挂载代码文件（脚本）运行所需的基本目录。如需额外访问其它路径：
+
+    ```bash title="追加只读 + 读写目录"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-read /tmp/data \
+      --sandbox-allow-write /tmp/output
+    ```
+
+    `--sandbox-allow-read` 授予只读权限，`--sandbox-allow-write` 授予读写权限，均可多次使用。
+  </Accordion>
+
+  <Accordion title="环境变量控制" id="环境变量控制">
+    预设继承全部环境变量。以下选项用于收紧或定制：
+
+    ```bash title="白名单模式：仅保留 PATH 和 HOME"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-env-whitelist PATH,HOME
+    ```
+
+    ```bash title="黑名单模式：排除敏感变量"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-env-blacklist SECRET_KEY,PRIVATE_TOKEN
+    ```
+
+    逻辑关系：
+    - `--sandbox-clear-env` 与 `--sandbox-allow-env-whitelist` 互斥（后者已隐式启用清空）。
+    - `--sandbox-env` 始终在清空/过滤之后追加，可与任意选项组合。
+    - `--sandbox-allow-env-blacklist` 与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥。
+  </Accordion>
+
+  <Accordion title="--sandbox-opts 透传底层参数" id="透传底层参数">
+    用于传递上述选项未覆盖的 sandlock 底层参数。选项名与值写在同一字符串内，可多次使用。
+
+    ```bash title="透传含特殊字符的参数"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-opts "--net-deny 'udp://192.168.0.0/16'"
+    ```
+
+    <Callout type="warn" title="注意">
+      参数值含通配符、方括号等特殊字符时，必须用引号包裹。请勿通过此选项重复传递已由专用选项控制的参数（如 `--net-allow`、`--net-deny`、`--clean-env` 等），以免冲突。
+    </Callout>
+  </Accordion>
+</Accordions>

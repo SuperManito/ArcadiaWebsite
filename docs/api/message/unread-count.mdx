@@ -1,0 +1,23 @@
+---
+title: 获取未读消息计数
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/unread/count</GET>
+
+## 请求
+
+无请求参数。
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    total: {
+      description: '未读消息总数',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>

@@ -1,0 +1,36 @@
+---
+title: 数据关系模型
+---
+
+消息中心的数据模型用于存储系统内各类通知消息，支持分类过滤、去重合并和已读状态管理。
+
+```prisma
+// 消息中心通知
+model message {
+  id           Int      @id @default(autoincrement())
+  category     String   @default("system") // 系统类型 user,system,cron 等
+  type         String   @default("info") // info, warn, error, success
+  title        String
+  content      String
+  source       String   @default("") // 源,点击跳转,格式 xxx@id
+  status       Int      @default(0) // 0:未读 1:已读
+  repeat_count Int      @default(0) // 去重合并计数
+  create_time  DateTime @default(now())
+
+  @@index([category])
+  @@index([status])
+}
+```
+
+### 字段说明
+
+| 字段 | 说明 |
+|------|------|
+| category | 消息分类，默认 `system`。常见值：`user`（用户消息）、`system`（系统消息）、`cron`（定时任务） |
+| type | 消息类型，默认 `info`。可选值：`info`、`warn`、`error`、`success` |
+| title | 消息标题，必填，最大 200 字符 |
+| content | 消息内容，必填，最大 20000 字符 |
+| source | 来源标识，格式 `xxx@id`（如 `cron@42`），用于前端点击跳转 |
+| status | 已读状态。`0` 未读，`1` 已读 |
+| repeat_count | 去重合并计数，相同消息在 5 分钟窗口内重复推送时自增 |
+| create_time | 创建时间，自动生成 |

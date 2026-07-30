@@ -13,7 +13,7 @@ import { GET, POST } from '@/components/RequestTag';
   noRequiredMark={true}
   type={{
     REMOVE_LOG_DAYS_AGO: {
-      description: '日志保留天数，运行删除日志任务时保留最近 N 天的日志',
+      description: '代码文件运行日志保留天数，运行 arcadia rmlog 命令时保留最近 N 天的日志',
       type: 'string<number>',
       required: true,
     },
@@ -121,7 +121,7 @@ import { GET, POST } from '@/components/RequestTag';
 <TypeTable
   type={{
     REMOVE_LOG_DAYS_AGO: {
-      description: '日志保留天数（正整数字符串）',
+      description: '代码文件运行日志保留天数（正整数字符串），该配置项可在控制面板《个人设置 - 通用》中修改',
       type: 'string<number>',
     },
     ENABLE_UPDATE_EXTRA: {
@@ -187,7 +187,6 @@ import { GET, POST } from '@/components/RequestTag';
 
 ```json title="示例"
 {
-  "REMOVE_LOG_DAYS_AGO": "14",
   "ENABLE_UPDATE_EXTRA": "true"
 }
 ```

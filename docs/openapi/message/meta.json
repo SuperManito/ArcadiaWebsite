@@ -1,0 +1,13 @@
+{
+  "title": "Message 消息中心",
+  "icon": "Mail",
+  "pages": [
+    "v1-list-get",
+    "v1-create-post",
+    "v1-unreadCount-get",
+    "v1-detail-get",
+    "v1-readStatus-post",
+    "v1-readAll-post",
+    "v1-delete-post"
+  ]
+}

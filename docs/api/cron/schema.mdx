@@ -28,6 +28,7 @@ model tasks {
   config        String    @default("")
   remark        String    @default("")
   bind          String    @default("")
+  error_notify  Int       @default(1)
 }
 
 model tasksExecutionStats {
@@ -46,3 +47,37 @@ model tasksExecutionStats {
 }
 ```
 
+## 工作原理
+
+定时任务的生命周期由 Cron 引擎驱动，整体流程如下：
+
+<Mermaid
+  chart="
+graph TD
+  A[Cron 引擎触发] --> B[runCronTask]
+  B --> C[并发检查]
+  C --> D[runTaskModel]
+  D --> E[emitTaskStarted]
+  D --> F[execShell]
+  F --> G[onExit 回调]
+  G --> H[cleanupRunningTaskState]
+  G --> I[emitTaskCompleted]
+  G --> J[persistTaskExecution]
+  G --> K{success?}
+  K -->|No| L[notifyTaskFailure]"
+/>
+
+### 流程说明
+
+| 阶段 | 说明 |
+|------|------|
+| Cron 引擎触发 | node-cron 按 cron 表达式触发定时回调 |
+| runCronTask | 任务执行入口，负责并发检查和状态管理 |
+| runTaskModel | 执行具体的任务模型（Shell 命令） |
+| emitTaskStarted | 通过 WebSocket 推送任务开始事件 |
+| execShell | 执行 Shell 脚本，捕获 stdout/stderr |
+| onExit 回调 | Shell 进程退出后触发清理和持久化 |
+| cleanupRunningTaskState | 清理运行中任务的状态缓存 |
+| emitTaskCompleted | 通过 WebSocket 推送任务完成事件 |
+| persistTaskExecution | 持久化任务执行记录到数据库 |
+| notifyTaskFailure | 任务失败时发送通知（需开启 error_notify） |

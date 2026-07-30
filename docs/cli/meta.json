@@ -19,6 +19,7 @@
     "server/service",
     "server/tgbot",
     "---其它---",
-    "sundry/rmlog"
+    "sundry/rmlog",
+    "sundry/notify"
   ]
 }

@@ -47,6 +47,11 @@ import { POST } from '@/components/RequestTag';
       type: 'string<CronTasksConfig>',
       typeDescription: '值为 JSON 序列化后的字符串',
     },
+    error_notify: {
+      description: '任务执行失败时是否自动推送通知（1=启用，0=禁用）',
+      type: 'number',
+      default: '1',
+    },
   }}
 />
 

@@ -3,7 +3,9 @@ title: 删除
 ---
 import { DELETE } from '@/components/RequestTag';
 
-<DELETE>/message/delete</DELETE>
+## 删除消息
+
+<DELETE>/message</DELETE>
 
 ## 请求
 
@@ -17,7 +19,30 @@ import { DELETE } from '@/components/RequestTag';
   }}
 />
 
+## 清空所有消息
+
+<DELETE>/message/all</DELETE>
+
+## 请求
+
+<TypeTable
+  type={{
+    status: {
+      description: '目标已读状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 已读，0 未读，不传则清空全部',
+    },
+  }}
+/>
+
 ## 响应
 
-```json title="示例"
-```
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    count: {
+      description: '被删除的消息数量',
+      type: 'number',
+    },
+  }}
+/>

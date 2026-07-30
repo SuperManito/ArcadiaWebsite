@@ -8,13 +8,14 @@
     "user",
     "file",
     "cron",
+    "daemon",
     "env",
+    "dependency",
     "exec",
+    "message",
+    "config",
     "token",
     "log",
-    "config",
-    "daemon",
-    "dependency",
     "captcha/index",
     "websocket"
   ]

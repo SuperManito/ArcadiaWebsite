@@ -11,7 +11,7 @@ export const features: FeatureItem[] = [
     icon: 'tabler:clock-play',
   },
   {
-    title: '守护任务管理',
+    title: '守护进程任务管理',
     description: '平台支持创建与管理持续运行的任务，可将代码文件设置为守护任务并一键启动，支持实时日志查看与丰富的启动配置。',
     icon: 'tabler:shield-code',
   },
@@ -32,7 +32,7 @@ export const features: FeatureItem[] = [
   },
   {
     title: '沉浸式代码编辑',
-    description: '深度定制 Monaco Editor，在网页端还原桌面级的语法高亮。支持标签页多开与移动端适配，随时随地高效编写与调试代码。',
+    description: '集成深度定制的 Monaco Editor，在网页端还原桌面级的语法高亮。支持标签页多开与移动端适配，随时随地高效编写与调试代码。',
     icon: 'ci:window-code-block',
   },
   {

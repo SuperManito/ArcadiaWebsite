@@ -34,6 +34,39 @@ import { POST } from '@/components/RequestTag';
 返回事件 ID 字符串，关于如何获取日志详见 [获取实时日志](/docs/api/websocket/log)。
 
 
+## 获取运行命令
+
+<POST>/exec/file/command</POST>
+
+获取运行指定代码文件时实际执行的 shell 命令字符串（不执行，仅返回命令），可用于在终端中手动运行。支持传入命令选项和环境变量配置。
+
+### 请求
+
+<TypeTable
+  type={{
+    path: {
+      description: '代码文件路径',
+      type: 'string',
+      required: true,
+    },
+    options: {
+      description: '命令选项配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+    envs: {
+      description: '环境变量配置',
+      type: '{ key: string; value: string }[]',
+      required: false,
+    },
+  }}
+/>
+
+### 响应
+
+返回完整的 shell 命令字符串。
+
+
 ## 调试运行
 
 <POST>/exec/file/debug</POST>

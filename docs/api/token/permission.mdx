@@ -24,6 +24,8 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
 | `env:query` | 查询环境变量 |
 | `env:manage` | 管理环境变量 |
 | `file:list` | 列出文件目录 |
+| `message:push` | 推送消息到消息中心 |
+| `message:query` | 查询消息 |
 
 ## 权限键一览
 
@@ -33,6 +35,7 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
     <TabsTrigger value="env">环境变量 (env)</TabsTrigger>
     <TabsTrigger value="file">文件系统 (file)</TabsTrigger>
     <TabsTrigger value="exec">命令执行 (exec)</TabsTrigger>
+    <TabsTrigger value="message">消息中心 (message)</TabsTrigger>
   </TabsList>
 
   <TabsContent id="cron" value="cron">
@@ -119,6 +122,26 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
   | `/exec/v1/file/stream` | POST | `exec:file` |
   | `/exec/v1/file/stop` | POST | `exec:file` |
   | `/exec/v1/status` | GET | `exec:status` |
+
+  </TabsContent>
+
+  <TabsContent id="message" value="message">
+
+  | 权限键 | 说明 | 默认启用 | 危险 |
+  | ----- | --- | :----: | :--: |
+  | `message:push` | 向消息中心推送用户消息 | ✅ | — |
+  | `message:query` | 分页查询、获取未读计数和消息详情 | ✅ | — |
+  | `message:manage` | 标记消息已读和删除消息 | — | — |
+
+  | 接口路径 | 方法 | 所需权限 |
+  | ------ | --- | --- |
+  | `/message/v1/create` | POST | `message:push` |
+  | `/message/v1/page` | GET | `message:query` |
+  | `/message/v1/unreadCount` | GET | `message:query` |
+  | `/message/v1/detail` | GET | `message:query` |
+  | `/message/v1/readStatus` | POST | `message:manage` |
+  | `/message/v1/readAll` | POST | `message:manage` |
+  | `/message/v1/delete` | POST | `message:manage` |
 
   </TabsContent>
 
