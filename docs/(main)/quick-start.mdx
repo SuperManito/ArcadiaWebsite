@@ -147,14 +147,25 @@ import { InstallCommand } from '@/components/InstallCommand';
   <Accordion title="关于定时任务功能" id="关于定时任务功能">
     定时任务功能是 Arcadia 平台的核心功能之一，定时任务会运行任务配置中的 Shell 命令，不强制关联代码文件。
 
-    其中系统类型的任务由[代码同步](/docs/sync)功能自动管理，你可以通过代码同步功能中的定时任务配置来实现自动导入定时任务。
+    其中系统类型的任务由[代码同步](/docs/sync)功能自动管理，你可以通过代码同步功能中的 `cronSettings - 定时任务配置` 来实现自动导入运行目标代码文件的定时任务。
   </Accordion>
   <Accordion title="关于如何订阅代码仓库与脚本" id="关于如何订阅代码仓库与脚本">
     具体请详见[代码同步](/docs/sync)文档，代码同步功能是 Arcadia 平台用于导入代码（文件）的统称，目前支持 “代码仓库” 与 “代码文件” 两种类型并提供丰富的功能性配置。
 
-    <Callout type="info">如果你想**自动更新**代码同步功能中订阅的脚本，请在控制面板《定时任务》页面创建 `arcadia update` 个人任务</Callout>
+    <Callout type="info">
+      如果你想**自动更新**代码同步功能中订阅的仓库以及代码文件（脚本），请在控制面板《定时任务》页面创建 `arcadia update` 个人任务
+    </Callout>
   </Accordion>
   <Accordion title="关于如何清理日志" id="关于如何清理日志">
-    详见 CLI 文档 [清理日志](/docs/cli/sundry/rmlog)
+    系统内置了一个自动清理历史数据的定时任务，你可以在控制面板《个人设置 - 通用》页面进行自定义配置。该任务属于内置定时任务，独立于用户定时任务管理体系，因此你无法在控制面板《定时任务》页面看到它。
+
+    如果你想了解的是如何清理代码文件运行日志，详见 [CLI 文档 - 清理日志](/docs/cli/sundry/rmlog)，清理代码文件运行日志是上方所提到的自动清理历史数据的一部分，因此不用手动操作。
+  </Accordion>
+  <Accordion title="关于移动端使用" id="关于移动端使用">
+    推荐以**独立应用模式**使用，可像原生应用一样快速访问控制面板。具体配置方法如下：
+
+    以 <Icon size="1.1em">simple-icons:apple</Icon> iOS 为例，打开 <Icon size="1em">logos:safari</Icon> Safari 浏览器并访问 Arcadia 登录页面（不要登录），点击 <Icon size="1em">material-symbols:ios-share</Icon> **分享**，然后分别点击 `查看更多 - 添加到主屏幕`。
+
+    注意部分移动端系统的浏览器会锁定 60hz 刷新率，因此可能相较于高刷桌面端在观感上会有所差异。
   </Accordion>
 </Accordions>

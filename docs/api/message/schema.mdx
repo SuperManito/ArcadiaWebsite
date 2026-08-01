@@ -12,13 +12,12 @@ model message {
   type         String   @default("info") // info, warn, error, success
   title        String
   content      String
-  source       String   @default("") // 源,点击跳转,格式 xxx@id
   status       Int      @default(0) // 0:未读 1:已读
-  repeat_count Int      @default(0) // 去重合并计数
   create_time  DateTime @default(now())
 
   @@index([category])
-  @@index([status])
+  @@index([status, create_time])
+  @@index([create_time])
 }
 ```
 
@@ -30,7 +29,5 @@ model message {
 | type | 消息类型，默认 `info`。可选值：`info`、`warn`、`error`、`success` |
 | title | 消息标题，必填，最大 200 字符 |
 | content | 消息内容，必填，最大 20000 字符 |
-| source | 来源标识，格式 `xxx@id`（如 `cron@42`），用于前端点击跳转 |
 | status | 已读状态。`0` 未读，`1` 已读 |
-| repeat_count | 去重合并计数，相同消息在 5 分钟窗口内重复推送时自增 |
-| create_time | 创建时间，自动生成 |
+| create_time | 创建时间 |

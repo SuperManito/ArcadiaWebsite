@@ -97,37 +97,87 @@ import { GET } from '@/components/RequestTag';
 
 ### 响应
 
-返回数组对象
+返回对象，包含趋势数据数组和耗时排行数据
 
 <TypeTable
   noRequiredMark={true}
   type={{
-    timestamp: {
+    trend: {
+      description: '任务执行趋势数据数组',
+      type: 'array',
+      required: true,
+    },
+    'trend[].timestamp': {
       description: '执行时间戳',
       type: 'number',
       required: true,
     },
-    taskId: {
+    'trend[].taskId': {
       description: '任务ID',
       type: 'number',
       required: true,
     },
-    taskName: {
+    'trend[].taskName': {
       description: '任务名称',
       type: 'string',
       required: true,
     },
-    taskType: {
+    'trend[].taskType': {
       description: '任务类型',
       type: "string<'system' | 'user'>",
       required: true,
     },
-    duration: {
+    'trend[].duration': {
       description: '运行时长，单位毫秒',
       type: 'number',
       required: true,
     },
-    success: {
+    'trend[].success': {
+      description: '运行结果（是否成功）',
+      type: 'boolean',
+      required: true,
+    },
+    durationRanking: {
+      description: '耗时排行数据',
+      type: 'object',
+      required: true,
+    },
+    'durationRanking.longest': {
+      description: '最长耗时 Top 5（按 duration 降序）',
+      type: 'array',
+      required: true,
+    },
+    'durationRanking.shortest': {
+      description: '最短耗时 Top 5（按 duration 升序）',
+      type: 'array',
+      required: true,
+    },
+    'durationRanking.longest[].taskId': {
+      description: '任务ID',
+      type: 'number',
+      required: true,
+    },
+    'durationRanking.longest[].taskName': {
+      description: '任务名称',
+      type: 'string',
+      required: true,
+    },
+    'durationRanking.longest[].taskType': {
+      description: '任务类型',
+      type: "string<'system' | 'user'>",
+      required: true,
+    },
+    'durationRanking.longest[].execTimestamp': {
+      description: '执行时间戳（13位毫秒）',
+      type: 'number',
+      required: true,
+    },
+    'durationRanking.longest[].duration': {
+      description: '运行时长，单位毫秒',
+      type: 'number',
+      required: true,
+    },
+    'durationRanking.longest[].success': {
       description: '运行结果（是否成功）',
       type: 'boolean',
       required: true,
@@ -135,26 +185,51 @@ import { GET } from '@/components/RequestTag';
   }}
 />
 
+> `durationRanking.shortest[]` 的字段结构与 `durationRanking.longest[]` 完全一致。
+
 ```json title="示例"
-[
-    {
-        "timestamp": 1773161661000,
-        "taskId": 1,
-        "taskName": "更新仓库",
-        "taskType": "user",
-        "duration": 21749,
-        "success": true
-    },
-    {
-        "timestamp": 1773233647000,
-        "taskId": 1,
-        "taskName": "更新仓库",
-        "taskType": "user",
-        "duration": 7042,
-        "success": true
+{
+    "trend": [
+        {
+            "timestamp": 1773161661000,
+            "taskId": 1,
+            "taskName": "更新仓库",
+            "taskType": "user",
+            "duration": 21749,
+            "success": true
+        },
+        {
+            "timestamp": 1773233647000,
+            "taskId": 1,
+            "taskName": "更新仓库",
+            "taskType": "user",
+            "duration": 7042,
+            "success": true
+        }
+    ],
+    "durationRanking": {
+        "longest": [
+            {
+                "taskId": 1,
+                "taskName": "更新仓库",
+                "taskType": "user",
+                "execTimestamp": 1773161661000,
+                "duration": 21749,
+                "success": true
+            }
+        ],
+        "shortest": [
+            {
+                "taskId": 1,
+                "taskName": "更新仓库",
+                "taskType": "user",
+                "execTimestamp": 1773233647000,
+                "duration": 7042,
+                "success": true
+            }
+        ]
     }
-    ...
-]
+}
 ```
 
 ## 获取正在运行中的任务

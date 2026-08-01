@@ -48,12 +48,6 @@ import { GET } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
-    source: {
-      description: '消息来源',
-      type: 'string',
-      typeDescription: '格式为 "消息类型@资源ID"（如 cron@42）',
-      required: true,
-    },
     status: {
       description: '已读状态',
       type: 'number<1 | 0>',

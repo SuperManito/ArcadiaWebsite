@@ -271,7 +271,7 @@ import { POST } from '@/components/RequestTag';
 
   消息内容支持 Markdown 格式渲染，常用语法如下：
 
-  ```markdown
+  ````mdx
   # 标题（支持 1-6 级）
   ## 二级标题
 
@@ -290,9 +290,9 @@ import { POST } from '@/components/RequestTag';
 
   `行内代码`
 
-  ```javascript
+  ```bash
   // 代码块（支持语言高亮）
-  console.log('Hello')
+  echo "Hello, World!"
   ```
 
   > 引用文本
@@ -300,11 +300,7 @@ import { POST } from '@/components/RequestTag';
   | 表头 | 表头 |
   |------|------|
   | 内容 | 内容 |
-  ```
-
-  <Callout type="info" title="注意">
-  仅支持 `http://` 和 `https://` 开头的外部链接和图片，其他协议将被转为纯文本。
-  </Callout>
+  ````
 
 - ### SDK
 
@@ -348,7 +344,9 @@ import { POST } from '@/components/RequestTag';
 
     内部接口，仅支持本地调用，无认证，与 SDK 的工作原理相同
 
-    <POST>http://127.0.0.1:5678/api/inner/message/push</POST>
+    基准地址：`http://127.0.0.1:5678`
+
+    <POST>/api/inner/message/push</POST>
 
     <TypeTable
       type={{

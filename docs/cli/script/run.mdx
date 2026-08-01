@@ -25,7 +25,7 @@ import { CHECK, CLOSE } from '@/components/Icon';
     -D, --delay                 延迟执行 - 随机倒数一定秒数后再执行代码文件
     -a, --agent                 网络代理 - 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，配置方法详见文档
     -T, --timeout               运行超时 - 设置运行任务超时机制，选项后需跟 timeout 指令的参数作为选项值
-    -N, --no-log                不记录日志 - 不存储代码运行日志到本地
+    -N, --no-log                禁用日志 - 不记录代码运行日志
     -p, --proxy                 启用下载代理 - 仅适用于执行位于 GitHub 仓库的代码文件，代理固定为 jsDelivr CDN
     -c, --concurrent            并发运行 - 默认运行1个任务，若想增加运行任务数量那么请传参任务数量
     -t, --thread                并发线程数 - 指定同时运行的最大任务数量，选项后需跟正整数，需与并发运行同时使用
@@ -128,7 +128,7 @@ arcadia run <name/path/url> [--options]
 | `-D`, `--delay`                | 延迟执行 | 否 | 随机倒数一定秒数后再运行代码文件，该秒数上限可以在配置文件中定义 |
 | `-a`, `--agent`                | 网络代理 | 否 | 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，使用方法详见下方说明  |
 | `-T`, `--timeout`              | 运行超时 | 是 | 设置运行任务超时机制，选项后需跟 [timeout](https://www.coonote.com/linux/linux-cmd-timeout.html) 指令的参数作为选项值 |
-| `-N`, `--no-log`               | 不记录日志 | 否 | 不存储代码运行日志到本地 |
+| `-N`, `--no-log`               | 禁用日志 | 否 | 不记录代码运行日志 |
 | `-p`, `--proxy`                | 启用下载代理 | 否 | 仅适用于执行位于 GitHub 仓库的代码文件，该代理固定为 [jsDelivr](https://www.jsdelivr.com/?docs=gh) 公共 CDN 加速代理 |
 | `-c`, `--concurrent`           | 并发运行 | 否 | 默认运行1个任务，若想增加运行任务数量那么请传参 `任务数量(正整数)` |
 | `-t`, `--thread`               | 指定并发线程 | 是 | 指定同时运行的最大任务数量，选项后需跟正整数，需与并发运行同时使用 |
@@ -304,7 +304,6 @@ arcadia run <name/path/url> --sandbox
 沙箱是将代码进程关入一个独立运行环境内执行的能力。启用后，代码只能访问它自己的文件目录和必要的系统运行库，无法读取其它目录中的文件，也无法影响其它进程。这尤其适合运行来自不可信来源的代码文件时使用。
 
 此功能基于 [sandlock](https://github.com/multikernel/sandlock) 实现，通过 Linux Landlock LSM 和 seccomp-bpf 提供文件系统隔离与网络控制。
-
 
 <Callout type="info" title="手动安装命令">
   ```bash title="安装命令"

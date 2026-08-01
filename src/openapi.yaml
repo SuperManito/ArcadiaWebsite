@@ -855,9 +855,6 @@ components:
         content:
           type: string
           description: 消息内容
-        source:
-          type: string
-          description: 消息来源
         status:
           type: integer
           description: 读取状态，`0` 未读、`1` 已读
@@ -870,7 +867,6 @@ components:
         - type
         - title
         - content
-        - source
         - status
         - create_time
     MessageListParams:
