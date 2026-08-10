@@ -17,7 +17,7 @@ arcadia run <name/path/url> --sandbox
 
 沙箱是一种将代码进程放入受限独立环境中运行的隔离机制。启用后，代码只能访问自身文件目录和必要的系统运行库，除这些路径外无法读取其它目录中的文件，也无法调试其它进程。特别适合运行来自不可信来源的代码文件。
 
-此功能由 [Sandlock](https://github.com/multikernel/sandlock) 驱动，Arcadia CLI 仅作为 Sandlock 的包装器，沙箱已成为 AI Agent 开发环境的主流配置。
+此功能由 [Sandlock](https://github.com/multikernel/sandlock) 驱动，Arcadia CLI 仅作为 Sandlock 的包装器，沙箱已成为 AI Agent 运行的默认环境配置。
 
 - 更新 Sandlock
 
@@ -83,7 +83,7 @@ arcadia run <name/path/url> --sandbox
 | :-: | :-: | ----- |
 | `--sandbox-net-allow` | ✓ | 出站白名单，仅放行匹配规则的出站连接（指定后取代默认网络预设），可多次使用，与其余出站控制选项互斥 |
 | `--sandbox-net-deny` | ✓ | 出站黑名单，在默认屏蔽本地的基础上追加屏蔽匹配规则的出站连接，可多次使用，可与 `--sandbox-net-deny-local` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
-| `--sandbox-net-deny-all` | | 完全断网，阻断所有出站网络连接，与其余出站控制选项互斥（端口绑定不受影响） |
+| `--sandbox-net-deny-all` | | 完全断网，阻断所有出站网络连接，与其余出站控制及 HTTP 过滤选项互斥（端口绑定不受影响） |
 | `--sandbox-net-deny-local` | | 屏蔽局域网与本机，阻断本地回环、私网网段及云元数据地址段（`169.254.0.0/16`）及 IPv6 回环、ULA、链路本地地址，可与 `--sandbox-net-deny` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
 | `--sandbox-net-allow-bind` | ✓ | 允许绑定指定 TCP 端口，支持端口列表与区间（如 `8080`、`8080,9000-9005`），与出站控制独立，可多次使用 |
 | `--sandbox-net-allow-bind-all` | | 允许绑定任意端口，放行所有 TCP 端口绑定监听，与 `--sandbox-net-allow-bind` 互斥 |
@@ -141,7 +141,7 @@ arcadia run <name/path/url> --sandbox
 
     - **白名单**（`--sandbox-net-allow`）：指定后取代默认网络预设，仅放行匹配的连接。
     - **黑名单**（`--sandbox-net-deny` / `--sandbox-net-deny-local`）：在默认屏蔽本地的基础上追加屏蔽匹配的连接，二者可叠加。
-    - **完全断网**（`--sandbox-net-deny-all`）：与其余出站控制选项互斥，端口绑定不受影响。
+    - **完全断网**（`--sandbox-net-deny-all`）：与其余出站控制及 HTTP 过滤选项互斥，端口绑定不受影响。
 
     ```bash title="白名单：仅允许访问指定 API 和 DNS"
     arcadia run example.js \
@@ -171,15 +171,19 @@ arcadia run <name/path/url> --sandbox
       | 格式 | 含义 |
       | --- | --- |
       | `api.example.com:443` | 指定主机 + 端口（不带协议前缀 scheme 时同时覆盖 TCP 和 UDP） |
+      | `api.example.com:80,443` | 同一主机的多个端口 |
       | `tcp://api.example.com:443` | 仅 TCP |
       | `udp://1.1.1.1:53` | 仅 UDP（如 DNS 查询） |
+      | `udp://*:*` / `tcp://*:*` | 任意目标的指定协议、所有端口 |
       | `10.0.0.0/8` | CIDR 网段 |
       | `169.254.169.254` | 单个 IP |
+      | `[2606:4700::/32]:443` | IPv6 网段 + 端口 |
       | `1.1.1.1:*` | 指定主机的所有端口 |
       | `:8443` | 指定任意主机的特定端口 |
-      | `*` | 任意出站连接 |
+      | `*` / `*:*` | 任意出站连接（二者等价） |
+      | `icmp://*` | ICMP（如 ping，仅 `--sandbox-net-allow`） |
 
-      注意：主机名仅 `--sandbox-net-allow` 支持（启动时解析并锁定）；`--sandbox-net-deny` 仅接受 IP（可带端口或 CIDR），不支持主机名与协议前缀。
+      注意：主机名仅 `--sandbox-net-allow` 支持（启动时解析并锁定）；`--sandbox-net-deny` 仅接受 IP/CIDR（可带端口与协议前缀），不支持主机名。
     </Callout>
   </Accordion>
 
@@ -202,7 +206,7 @@ arcadia run <name/path/url> --sandbox
     <Callout type="info" title="规则格式">
       每条规则格式为 `"METHOD host/path"`（需用引号包裹，因为含空格）：
 
-      - `METHOD`：HTTP 方法（`GET`、`POST`、`*` 表示任意方法）
+      - `METHOD`：HTTP 方法（如 `GET`、`POST`，`*` 表示任意方法，不区分大小写）
       - `host/path`：目标主机 + 路径模式（`*` 为通配符）
 
       `--sandbox-http-allow` 与 `--sandbox-http-deny` 互斥，不可同时使用。
