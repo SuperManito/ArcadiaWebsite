@@ -1,9 +1,7 @@
 'use client'
 import type { SharedProps } from 'fumadocs-ui/components/dialog/search'
-import { create } from '@orama/orama'
-import { stopwords as mandarinStopwords } from '@orama/stopwords/mandarin'
-import { createTokenizer } from '@orama/tokenizers/mandarin'
 import { useDocsSearch } from 'fumadocs-core/search/client'
+import { staticClient } from 'fumadocs-core/search/client/orama-static'
 import {
   SearchDialog,
   SearchDialogClose,
@@ -21,19 +19,6 @@ import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
 // import { useI18n } from 'fumadocs-ui/contexts/i18n'
-
-function initOrama() {
-  return create({
-    schema: { _: 'string' },
-    // https://docs.orama.com/docs/orama-js/supported-languages
-    components: {
-      tokenizer: createTokenizer({
-        language: 'mandarin',
-        stopWords: mandarinStopwords,
-      }),
-    },
-  })
-}
 
 const items = [
   {
@@ -67,9 +52,9 @@ export default function DefaultSearchDialog(props: SharedProps) {
   const [tag, setTag] = useState<string | undefined>()
   // const { locale } = useI18n() // (optional) for i18n
   const { search, setSearch, query } = useDocsSearch({
-    type: 'static',
-    initOrama,
-    tag,
+    client: staticClient({
+      tag,
+    }),
     // locale,
   })
 
