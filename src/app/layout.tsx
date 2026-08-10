@@ -38,9 +38,6 @@ const inter = Inter({
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
-      <GoogleAnalytics gaId="G-P076XXL2MH" />
-      <SpeedInsights />
-      <Analytics />
       <body className="flex flex-col min-h-screen">
         <NextProvider>
           <Banner>{releaseNotice}</Banner>
@@ -50,6 +47,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             </AntdRegistry>
           </Provider>
         </NextProvider>
+        <GoogleAnalytics gaId="G-P076XXL2MH" />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   )
