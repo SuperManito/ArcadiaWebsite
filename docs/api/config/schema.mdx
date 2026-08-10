@@ -78,3 +78,11 @@ model config {
 | 字段 | 说明 | 用途 |
 |------|------|------|
 | `jwtSecret` | JWT 签名密钥，首次启动自动生成 | API 鉴权中间件 |
+| `updateCheckLastAt` | 最近一次真实检测时间（毫秒字符串） | 版本更新 - 被动检测频率控制 |
+| `updateCheckFailedAt` | 最近一次检测失败时间（毫秒字符串），失败后停止被动检测直到检测成功 | 版本更新 - 被动检测失败停止 |
+| `updatePendingCommit` | 待处理更新的目标 commit，空字符串代表无 | 版本更新 - 待更新状态 |
+| `updatePendingTag` | 待处理更新的版本号，空字符串代表无 | 版本更新 - 待更新状态 |
+| `updateCurrentTag` | 当前版本号缓存，结果含 unknown，空字符串代表从未计算过 | 版本更新 - 版本号展示 |
+| `updateCurrentCommit` | 当前 HEAD commit，空字符串代表从未计算过 | 版本更新 - 版本号展示 |
+| `updateUpgradePending` | 是否存在未完成更新任务（`true`/`false`） | 版本更新 - 更新执行互斥 |
+| `updateNotified` | 是否已发送过新版本提醒（`true`/`false`） | 版本更新 - 新版本提醒去重 |

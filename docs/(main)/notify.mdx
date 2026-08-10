@@ -265,64 +265,74 @@ import { POST } from '@/components/RequestTag';
 
 平台消息中心功能提供了统一的消息推送与管理，具备通知聚合能力，您可以将业务消息集中推送至此。
 
-消息中心内置自动去重机制，支持最大字符数：`标题 200` `内容 20000`，超出部分将被截断。
+消息中心内置自动去重以及限流机制，消息本体支持最大字符数：`标题 200` `内容 20000`，超出部分将被截断。
 
-- ### Markdown 语法
+````mdx title="消息内容支持 Markdown 语法（自动识别）"
+# 标题（支持 1-6 级）
+## 二级标题
 
-  消息内容支持 Markdown 格式渲染，常用语法如下：
+**加粗文本** 和 *斜体文本*
 
-  ````mdx
-  # 标题（支持 1-6 级）
-  ## 二级标题
+- 无序列表项
+- 另一项
 
-  **加粗文本** 和 *斜体文本*
+1. 有序列表
+2. 第二项
 
-  - 无序列表项
-  - 另一项
+[链接文本](https://example.com)
 
-  1. 有序列表
-  2. 第二项
+![图片描述](https://example.com/image.png)
+![自定义尺寸](https://example.com/image.png =200x100)
 
-  [链接文本](https://example.com)
+`行内代码`
 
-  ![图片描述](https://example.com/image.png)
-  ![自定义尺寸](https://example.com/image.png =200x100)
+```bash
+// 代码块（支持语言高亮）
+echo "Hello, World!"
+```
 
-  `行内代码`
+> 引用文本
 
-  ```bash
-  // 代码块（支持语言高亮）
-  echo "Hello, World!"
-  ```
-
-  > 引用文本
-
-  | 表头 | 表头 |
-  |------|------|
-  | 内容 | 内容 |
-  ````
+| 表头 | 表头 |
+| :-: | --- |
+| 内容 | 内容 |
+````
 
 - ### SDK
 
   SDK 位于项目 `src/utils/message-sdk` 目录下，零外部依赖，仅支持本地环境调用。
 
   ```javascript tab="Node.js (ESM)"
-  import { push } from '/arcadia/src/utils/message-sdk'
+  async function sendArcadiaMessage(title, content, type = 'info') {
+    try {
+      const { push } = await import('/arcadia/src/utils/message-sdk')
+      await push(title, content, type)
+    } catch (error) {
+      console.error('推送消息失败：', error)
+    }
+  }
 
   // 推送 info 类型消息（默认）
-  await push('备份完成', '数据库备份已成功完成')
+  await sendArcadiaMessage('备份完成', '数据库备份已成功完成')
   // 推送 success 类型消息
-  await push('版本更新', 'v2.1.0 已发布', 'success')
+  await sendArcadiaMessage('版本更新', 'v2.1.0 已发布', 'success')
   ```
 
   ```javascript tab="Node.js (CommonJS)"
-  const { push } = require('/arcadia/src/utils/message-sdk')
+  async function sendArcadiaMessage(title, content, type = 'info') {
+    try {
+      const { push } = require('/arcadia/src/utils/message-sdk')
+      await push(title, content, type)
+    } catch (error) {
+      console.error('推送消息失败：', error)
+    }
+  }
 
   !(async () => {
     // 推送 info 类型消息（默认）
-    await push('备份完成', '数据库备份已成功完成')
+    await sendArcadiaMessage('备份完成', '数据库备份已成功完成')
     // 推送 success 类型消息
-    await push('版本更新', 'v2.1.0 已发布', 'success')
+    await sendArcadiaMessage('版本更新', 'v2.1.0 已发布', 'success')
   })()
   ```
 

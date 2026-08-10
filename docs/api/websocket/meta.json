@@ -3,7 +3,11 @@
   "icon": "ChevronsLeftRightEllipsis",
   "pages": [
     "log",
+    "daemon-log",
     "cron-tasks",
-    "dependency"
+    "dependency",
+    "message",
+    "update",
+    "terminal"
   ]
 }

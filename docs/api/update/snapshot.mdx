@@ -1,0 +1,45 @@
+---
+title: 版本快照
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/api/update</GET>
+
+获取当前版本与更新状态快照，只读本地缓存与 git（版本号从未计算过时现算一次），不发起网络请求。
+
+## 请求
+
+无请求参数。
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    current: {
+      description: '当前版本信息',
+      type: 'object',
+      required: true,
+    },
+    'current.versionTag': {
+      description: '版本号标签，null=未知（从未计算过或本地无匹配 tag），前端展示为“未知”',
+      type: 'string | null',
+      required: true,
+    },
+    'current.commit': {
+      description: 'commit 短哈希（本地 git 解析，取不到为 null）',
+      type: 'string | null',
+      required: true,
+    },
+    lastCheckedAt: {
+      description: '上次成功检测时间（毫秒时间戳），从未检测时为 null',
+      type: 'number | null',
+      required: true,
+    },
+    updating: {
+      description: '是否有更新任务正在执行（含后端重启后仍在运行的更新脚本）',
+      type: 'boolean',
+      required: true,
+    },
+  }}
+/>

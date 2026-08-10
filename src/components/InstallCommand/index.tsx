@@ -38,7 +38,7 @@ function useInstallSharedState() {
 
   const mirrorOptions = [
     { label: '无', value: '' },
-    { label: '阿里云（备用镜像）', value: 'registry.cn-hangzhou.aliyuncs.com/' },
+    { label: '阿里云（官方备用镜像）', value: 'registry.cn-hangzhou.aliyuncs.com/' },
     { label: '毫秒镜像', value: 'docker.1ms.run/' },
     { label: 'DaoCloud 道客', value: 'docker.m.daocloud.io/' },
   ]

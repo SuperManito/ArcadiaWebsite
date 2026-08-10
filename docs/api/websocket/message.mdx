@@ -1,0 +1,41 @@
+---
+title: 新消息通知
+---
+
+系统产生新消息时推送，前端用于刷新未读消息数量与消息列表。
+
+<Callout icon={false}>
+接口路径：`/api/ws`  
+事件名称：`message:new`  
+方向：服务端 → 客户端
+</Callout>
+
+<TypeTable
+  type={{
+    id: {
+      description: '消息 ID',
+      type: 'number',
+      required: true,
+    },
+    category: {
+      description: '消息分类',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '消息类型',
+      type: "'info' | 'warn' | 'error' | 'success'",
+      required: true,
+    },
+    title: {
+      description: '消息标题',
+      type: 'string',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

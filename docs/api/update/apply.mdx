@@ -1,0 +1,16 @@
+---
+title: 一键更新
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/api/update/apply</POST>
+
+触发更新执行。直接使用最近一次检测到的可更新目标启动后台更新，启动后立即返回，不阻塞更新任务；更新结果通过 Socket 广播 `update:refresh` 通知前端。
+
+## 请求
+
+无请求体。
+
+## 响应
+
+无响应内容，`result` 固定为 `true`，表示已转入后台执行。

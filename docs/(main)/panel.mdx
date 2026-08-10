@@ -15,11 +15,17 @@ icon: AppWindow
 
 ## 在移动端使用
 
-前端控制面板对移动端进行了深度适配，推荐以**独立应用模式**使用，可像原生应用一样快速访问控制面板，具体配置方法如下：
+前端控制面板对移动端进行了深度适配，推荐以**独立应用模式**使用，能达到原生应用级的流畅体验，具体配置方法如下：
 
-以 <Icon size="1.1em">simple-icons:apple</Icon> iOS 为例，打开 <Icon size="1em">logos:safari</Icon> Safari 浏览器并访问 Arcadia 登录页面（不要登录），点击 <Icon size="1em">material-symbols:ios-share</Icon> **分享**，然后分别点击 `查看更多 - 添加到主屏幕`。
+- 以 <Icon size="1.1em">simple-icons:apple</Icon> iOS 为例，打开 <Icon size="1em">logos:safari</Icon> Safari 浏览器并访问 Arcadia 登录页面（注：不要登录），点击 <Icon size="1em">material-symbols:ios-share</Icon> **分享**，然后分别点击 `查看更多 - 添加到主屏幕`。
 
-注意部分移动端系统的浏览器会锁定 60hz 刷新率，因此可能相较于高刷桌面端在观感上会有所差异。
+注意部分系统的浏览器会锁定 60fps，因此相较于在高刷新率屏幕场景下使用时观感和体验会有所差异。苹果 Safari 浏览器默认限制 60fps，推荐启用高帧率模式（启用方法详见下方）。
+
+<Callout title="为 Safari 浏览器启用高帧率模式">
+  苹果设备默认启用 ProMotion 自适应高刷，Safari 浏览器默认限制在了 60fps，以 iOS 为例具体启用方法详见下方，如果你的设备不支持高刷那么请直接忽略
+
+  `设置 APP` > `App` > 下滑找到 `Safari 浏览器` > 滑至底部点击 `高级` > `功能开关` > 下滑找到 `Prefer Page Rendering Updates Near 60fps` 关闭。
+</Callout>
 
 ## 常见问题
 

@@ -1,0 +1,9 @@
+{
+  "title": "Update 版本更新",
+  "icon": "CircleFadingArrowUp",
+  "pages": [
+    "snapshot",
+    "check",
+    "apply"
+  ]
+}

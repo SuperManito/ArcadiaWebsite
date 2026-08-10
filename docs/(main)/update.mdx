@@ -3,75 +3,106 @@ title: 更新升级
 icon: ArrowBigUp
 ---
 
-正式版的版本号格式为 `x.xx.xx`，其中第一位为主版本号，第二位为次版本号，第三位为修订版本号，更新修订版本无需重新部署直接更新项目源码即可，次版本根据更新日志的要求而定；如果你使用的是测试版本那么需要持续保持镜像容器至最新
+本部分文档用于指导更新 Arcadia 和容器镜像，如果你想了解的是如何更新导入的代码文件，那么请前往查看 [CLI 文档](/docs/cli/update/upgrade)。
 
-<details>
+## 更新方式
 
-<summary>自动更新镜像容器工具</summary>
+| 方式 | 说明 |
+| --- | --- |
+| 控制面板 | 在《个人设置 - 关于》页面一键检查更新 |
+| CLI | 详见 [CLI - 更新 Arcadia](/docs/cli/update/upgrade) |
 
-使用 [watchtower](https://github.com/containrrr/watchtower) 自动更新镜像容器
+<Callout type="warning">
+  如果您的网络环境不稳定，建议在 CLI 中进行更新以便能够更好的排查问题
+</Callout>
 
-```
-docker run -d \
---name watchtower \
---restart unless-stopped \
--v /var/run/docker.sock:/var/run/docker.sock \
-containrrr/watchtower -c \
---schedule "0 0 */2 * * *"
-```
+- ### 更新原理 [!toc]
 
-最下边的 Cron 表达式是更新频率（秒、分、时、日、月、周），可自行定义
-该工具容器会自动更新正在使用的镜像并在更新后自动重启相关容器
+  Arcadia 平台更新基于 Git 从远程仓库拉取最新源码，因此环境需要能够访问 GitHub 才能更新，如果环境不能有效连通 GitHub 可参考下方的设置代理方法。
 
-</details>
+  <details>
+  <summary>使用免费代理进行更新（展开查看）</summary>
 
-如果你想了解的是如何更新导入的代码文件，那么请前往查看 [CLI 文档](/docs/cli/update/upgrade)
-
-## 更新源码
-
-小版本升级直接更新源码即可
-
-```bash title="更新源代码"
-arcadia upgrade
-```
-
-如果你的网络环境不能有效连通 GitHub，那么则需要使用代理，下面提供一个简单且免费的方法
-
-<details>
-<summary>使用免费代理进行更新</summary>
-
-```bash title="将项目官方远程仓库地址替换为开源代理地址"
-cd /arcadia/src
-git remote set-url origin https://ghfast.top/https://github.com/SuperManito/Arcadia.git
-cd /arcadia
-```
-
-之后就可以正常使用 `arcadia upgrade` 了
-
-</details>
-
-## 更新容器
-
-- #### 一键更新
-
-  ```bash
-  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower -c --run-once arcadia
+  ```bash title="配置 GitHub Proxy 免费代理"
+  # 进入 Arcadia 源码目录
+  cd /arcadia/src
+  # 将远程仓库地址指向代理地址
+  git remote set-url origin https://ghfast.top/https://github.com/SuperManito/Arcadia.git
+  # 返回用户根目录
+  cd /arcadia
   ```
 
-  可以通过此命令一键更新，不过需要注意的是更新镜像容器会删除已安装的环境例如 npm 依赖包等，需要重新安装
+  之后就可以正常更新了，不用每次更新时都重复配置一遍
 
-- #### 重新部署
+  <Callout title="使用注意" type="warning">
+    代理可能会不稳定，若更新失败请再次尝试或自行更换代理。注意代理来源的安全性，避免使用不明来源的代理。
+  </Callout>
 
-  根据通知要求而定，如果你想重新安装那么需要先删除运行中的容器和镜像
+  </details>
+  
+  如果部署在离线环境中那么请通过[更新镜像以及容器](#更新镜像以及容器)的方式进行更新
 
-  ```bash
-  docker rm -f arcadia
-  docker rmi arcadia
-  ```
+- ### 版本号设计 [!toc]
 
-  前往查看[安装文档](/docs/quick-start)
+  版本号格式为 `x.xx.xx`，由三部分构成：
 
+  - 主版本号：大版本更新，可能存在破坏性变更，更新前请阅读更新日志
+  - 次版本号：视更新日志要求而定，一般直接更新源码即可
+  - 修订版本号：小版本更新，直接更新源码即可，无需重新部署
+
+- ### 更新期间注意事项 [!toc]
+
+  - 更新期间请勿干预，等待更新完成后再操作
+  - 更新完成后服务可能自动重启，面板页面可能短暂断开，属于正常现象
+  - 若更新完成后服务长时间未恢复，请在终端中执行 `ad service start` 重新启动服务并自查原因
+
+## 更新镜像以及容器
+
+由于平台特性导致容器镜像体积较大，因此本项目不会频繁发布新镜像
+
+```bash title="删除旧容器和镜像"
+docker rm -f arcadia
+docker rmi supermanito/arcadia
+```
+
+删除旧容器和镜像不会丢失用户数据，代码运行环境除外，之后请前往查看[《安装文档》](/docs/quick-start)重新安装 Arcadia 即可
 
 <Callout title="更新镜像容器后依赖需要重新安装" type="idea">
   如果你有在控制面板《环境配置 - 依赖管理》配置全局依赖，那么可以使用该页面提供的 ”一键安装“ 功能自动补全环境。
 </Callout>
+
+## 切换至测试版 [!toc]
+
+<details>
+<summary>一键切换脚本（展开查看）</summary>
+
+```bash
+#!/bin/bash
+cd /arcadia/src
+
+git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+current="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+
+if [[ "$current" != "dev" ]]; then
+  echo -e "\n正在切换分支，可能会消耗较长时间用于下载，请耐心等待...\n"
+fi
+
+git fetch origin
+
+if [[ "$current" == "dev" ]]; then
+  git checkout -f -B main origin/main
+  echo -e "\n已切换回用户版本\n"
+else
+  git checkout -f -B dev origin/dev
+  echo -e "\n已为您切换至开发版本，感谢参与测试\n"
+fi
+
+pm2 delete arcadia_server >/dev/null 2>&1 || true
+ad service start
+```
+
+<Callout>
+  开发环境可能会不稳定，若无特殊需求请勿切换至开发环境，若切换后出现问题请重复运行本脚本切换回生产分支。
+</Callout>
+
+</details>

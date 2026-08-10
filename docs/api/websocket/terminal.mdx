@@ -1,0 +1,91 @@
+---
+title: 终端
+---
+
+终端会话使用独立的 `/terminal` 命名空间，一个连接同时只允许一个终端会话。
+
+<Callout icon={false}>
+接口路径：`/api/ws`  
+命名空间：`/terminal`  
+认证：与主连接一致，`Authorization` 头携带 `Bearer <token>`
+</Callout>
+
+## 客户端 → 服务端
+
+### 创建会话
+
+事件名称：`terminal:spawn`
+
+<TypeTable
+  type={{
+    cols: {
+      description: '终端列数',
+      type: 'number',
+    },
+    rows: {
+      description: '终端行数',
+      type: 'number',
+    },
+    cwd: {
+      description: '工作目录',
+      type: 'string',
+    },
+    command: {
+      description: '指定要执行的命令（缺省时进入交互式 shell）',
+      type: 'string',
+    },
+  }}
+/>
+
+```ts
+socket.emit('terminal:spawn', { cols: 80, rows: 24, cwd: '/arcadia' })
+socket.on('terminal:output', (data: string) => {
+  // 追加到终端
+})
+```
+
+### 输入
+
+事件名称：`terminal:input`，载荷为字符串。
+
+### 调整尺寸
+
+事件名称：`terminal:resize`
+
+<TypeTable
+  type={{
+    cols: {
+      description: '终端列数',
+      type: 'number',
+      required: true,
+    },
+    rows: {
+      description: '终端行数',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+## 服务端 → 客户端
+
+### 就绪
+
+事件名称：`terminal:ready`，无载荷。会话创建成功后可开始输入。
+
+### 输出
+
+事件名称：`terminal:output`，载荷为字符串。
+
+### 退出
+
+事件名称：`terminal:exit`，载荷为进程退出码（number）。
+
+### 错误
+
+事件名称：`terminal:error`，载荷为错误信息字符串。
+
+## 注意事项
+
+- 每个连接只允许一个会话，重复 `terminal:spawn` 会返回 `terminal:error`；
+- 连接断开时服务端会自动结束并清理当前会话。

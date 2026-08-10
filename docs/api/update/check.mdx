@@ -1,0 +1,74 @@
+---
+title: 检查更新
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/api/update/check</GET>
+
+执行真实更新检测（git fetch + Releases API），返回检测状态、当前版本与可更新目标。并发请求复用同一次检测；更新任务执行中拒绝检测；主动检测不推送消息中心通知。
+
+## 请求
+
+无请求参数。
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    status: {
+      description: '检测结果状态码',
+      type: 'number<0 | 1 | 2>',
+      typeDescription: '0=已是最新；1=有可用更新；2=检测失败',
+      required: true,
+    },
+    current: {
+      description: '当前版本信息',
+      type: 'object',
+      required: true,
+    },
+    'current.versionTag': {
+      description: '当前版本号标签（dev 分支固定为 Dev；生产分支取最近 tag 并去除 v 前缀，取不到为 null）',
+      type: 'string | null',
+      required: true,
+    },
+    'current.commit': {
+      description: '当前 commit 短哈希（本地 git 解析，取不到为 null）',
+      type: 'string | null',
+      required: true,
+    },
+    target: {
+      description: '可更新目标（status=1 时存在）',
+      type: 'object',
+    },
+    'target.versionTag': {
+      description: '目标版本号标签（GitHub 最新正式 Release 的 tag_name，去除 v 前缀，获取失败为 null）',
+      type: 'string | null',
+    },
+    'target.commit': {
+      description: '目标 commit 短哈希',
+      type: 'string',
+    },
+    'target.fullCommit': {
+      description: '目标 commit 完整 SHA',
+      type: 'string',
+    },
+    'target.changelog': {
+      description: '更新说明，存在更新时始终返回最新正式 Release 正文，获取失败为 null',
+      type: 'string | null',
+    },
+    error: {
+      description: '错误信息（仅 status=2 时存在）',
+      type: 'object',
+    },
+    'error.code': {
+      description: '错误码',
+      type: 'number<0 | 1 | 2 | 3>',
+      typeDescription: '0（无法获取本地或远程版本信息）；1 无法连接远程仓库（网络不可达或超时）；2 当前仓库状态异常，无法确定跟踪分支；3 本地与远程版本存在差异，无法自动更新',
+    },
+    'error.message': {
+      description: '错误信息（git 类错误透传原生报错）',
+      type: 'string',
+    },
+  }}
+/>

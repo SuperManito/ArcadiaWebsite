@@ -25,7 +25,8 @@ import { GET } from '@/components/RequestTag';
     },
     type: {
       description: '日志类型过滤',
-      type: "string<'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'>",
+      type: 'string',
+      typeDescription: 'trace=跟踪，debug=调试，info=信息，warn=警告，error=错误，fatal=致命',
       typeDescription: '多个类型用英文逗号分隔',
     },
     order: {
@@ -86,7 +87,8 @@ import { GET } from '@/components/RequestTag';
     },
     type: {
       description: '日志类型',
-      type: "string<'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'>",
+      type: 'string',
+      typeDescription: 'trace=跟踪，debug=调试，info=信息，warn=警告，error=错误，fatal=致命',
       required: true,
     },
   }}

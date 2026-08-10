@@ -1,0 +1,69 @@
+---
+title: 运行代码文件
+description: 运行代码
+---
+
+<Callout type="info" title="控制面板中的运行代码文件功能基于调用该命令实现" />
+
+✍在本篇内容中你将学习到如何运行代码文件这一基础功能。看上去内容很多？其实非常简单。
+
+需要特别说明的是，代码文件是各编程语言程序文件的统称，并非所有代码文件都属于脚本类型。
+
+```sh title="$ arcadia run"
+❖ Arcadia CLI - 运行代码文件
+
+  使用方法：
+
+    arcadia run <name/path/url> [--options]
+
+  命令选项：
+
+    -l, --loop                  循环运行 - 连续多次的执行代码文件，选项后需跟循环次数
+    -s, --silent                静默运行 - 不推送任何通知消息
+    -w, --wait                  推迟执行 - 等待指定时间后再运行任务，选项后需跟时间值
+    -D, --delay                 延迟执行 - 随机倒数一定秒数后再执行代码文件
+    -a, --agent                 网络代理 - 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，配置方法详见文档
+    -T, --timeout               运行超时 - 设置运行任务超时机制，选项后需跟 timeout 指令的参数作为选项值
+    -N, --no-log                禁用日志 - 不记录代码运行日志
+    -p, --proxy                 启用下载代理 - 仅适用于执行位于 GitHub 仓库的代码文件，代理固定为 jsDelivr CDN
+    -c, --concurrent            并发运行 - 默认运行1个任务，若想增加运行任务数量那么请传参任务数量
+    -t, --thread                并发线程数 - 指定同时运行的最大任务数量，选项后需跟正整数，需与并发运行同时使用
+    -b, --background            后台运行 - 不在前台输出代码执行进度，不占用终端命令行
+    -r, --recombine-env         变量重组 - 按照指定顺序重新组合复合变量的值，选项后需跟变量名称、分隔符、重组表达式
+ㅤ                                        表达式语法：多个值用 "," 隔开，值区间用 "-" 连接，可以用 "%" 表示值的总数
+    -R, --recombine-env-group   分组运行 - 为每组变量单独运行，是变量重组的扩展，传参基本一致，其中重组表达式内用 "@" 来区分不同组
+    -S, --split-env             拆分运行 - 将复合变量的值拆分后为每个值声明变量并单独运行代码文件，选项后需跟需要拆分的变量名称、分隔符
+
+    -E, --exec-args             执行参数 - 将该选项后面的内容作为参数传递给代码执行器
+    --                          传递选项 - 将该选项后面的所有内容都作为选项参数传递给代码文件
+
+    --deno，--use-deno          使用 Deno 运行时
+    --bun，--use-bun            使用 Bun 运行时
+    --node，--use-node          使用 Node.js 运行时
+    --tsx，--use-tsx            使用 tsx 执行
+    --ts-node，--use-ts-node    使用 ts-node 执行
+
+    沙箱：
+
+    --sandbox                                 沙箱模式，在受限环境中运行代码
+    --sandbox-net-allow <spec>                出站白名单，仅放行匹配的出站连接，可多次使用，与黑名单选项互斥
+    --sandbox-net-deny <spec>                 出站黑名单，屏蔽匹配的出站连接，可多次使用，与白名单选项互斥
+    --sandbox-net-deny-all                    完全断网，阻断所有出站连接，与其它出站控制选项互斥
+    --sandbox-net-deny-local                  屏蔽局域网，可与黑名单选项叠加使用，与白名单选项、完全断网选项互斥
+    --sandbox-net-allow-bind <port>           允许绑定指定端口，放行 TCP 服务端监听，可多次使用
+    --sandbox-net-allow-bind-all              允许绑定任意端口，放行 TCP 服务端监听
+    --sandbox-http-allow <rule>               HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求，可多次使用，与黑名单选项互斥
+    --sandbox-http-deny <rule>                HTTP 请求黑名单，屏蔽匹配的 HTTP/HTTPS 请求，可多次使用，与白名单选项互斥
+    --sandbox-max-memory <size>               内存上限（例如 512M、1G）
+    --sandbox-clear-env                       清空环境变量，仅保留最小系统路径
+    --sandbox-env KEY=VALUE                   注入环境变量，可多次使用
+    --sandbox-allow-env-whitelist VAR1,VAR2   环境变量白名单，仅保留指定变量（隐式清空）
+    --sandbox-allow-env-blacklist VAR1,VAR2   环境变量黑名单，排除指定变量
+    --sandbox-allow-read <path>               追加只读目录，可多次使用
+    --sandbox-allow-write <path>              追加读写目录，可多次使用
+    --sandbox-opts <args>                     透传底层参数给沙箱引擎，可多次使用
+
+  命令帮助：
+
+    <name> 文件名(仅scripts目录)  <path> 相对路径或绝对路径  <url> 链接地址  [--options] 命令选项
+```

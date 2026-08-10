@@ -1,0 +1,438 @@
+---
+title: 隔离运行（沙箱）
+---
+
+
+> 该功能目前处于实验性
+
+```bash
+arcadia run <name/path/url> --sandbox
+```
+
+<Callout icon={false}>
+  沙箱模式仍支持使用 `arcadia stop` 终止运行中的代码文件，但不支持守护进程 `arcadia rund` 模式。
+</Callout>
+
+### 什么是沙箱？ [!toc]
+
+沙箱是一种将代码进程放入受限独立环境中运行的隔离机制。启用后，代码只能访问自身文件目录和必要的系统运行库，除这些路径外无法读取其它目录中的文件，也无法调试其它进程。特别适合运行来自不可信来源的代码文件。
+
+此功能由 [Sandlock](https://github.com/multikernel/sandlock) 驱动，Arcadia CLI 仅作为 Sandlock 的包装器，沙箱已成为 AI Agent 开发环境的主流配置。
+
+- 更新 Sandlock
+
+  ```bash tab="GitHub"
+  download_url="https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
+  query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
+  target_dir="${ARCADIA_DIR}/src/shell/sandbox"
+  sandlock_path="${target_dir}/sandlock"
+  [ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
+
+  [[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
+      echo "Sandlock 已是最新版本 ${current_version}" ||
+      {
+          git -C "${target_dir}" ls-files --others --exclude-standard -z |
+              tr '\0' '\n' |
+              sed "s|^|${target_dir}/|" |
+              tr '\n' ' ' |
+              xargs -r rm -f
+          wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
+          chmod a+x "${target_dir}/sandlock"
+          echo "Sandlock 已安装"
+      }
+  ```
+
+  ```bash tab="GitHub Proxy 代理"
+  download_url="https://ghfast.top/https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
+  query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
+  target_dir="${ARCADIA_DIR}/src/shell/sandbox"
+  sandlock_path="${target_dir}/sandlock"
+  [ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
+
+  [[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
+      echo "Sandlock 已是最新版本 ${current_version}" ||
+      {
+          git -C "${target_dir}" ls-files --others --exclude-standard -z |
+              tr '\0' '\n' |
+              sed "s|^|${target_dir}/|" |
+              tr '\n' ' ' |
+              xargs -r rm -f
+          wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
+          chmod a+x "${target_dir}/sandlock"
+          echo "Sandlock 已安装"
+      }
+  ```
+
+  Arcadia CLI 会在首次启用沙箱功能时自动下载 Sandlock，但不会自动检查新版本；若长期使用沙箱功能，建议定期手动更新。
+
+### 预设配置 [!toc]
+
+启用沙箱功能后，代码进程将按以下预设配置运行，这是沙箱的基准隔离状态，可通过下方的自定义配置选项进一步调整：
+
+- **文件系统**：仅可读写代码文件所在目录与 `/tmp`，可读取系统运行库等只读挂载，其余目录不可访问
+- **网络**：默认禁止访问本机与内网地址，公网访问正常
+- **端口绑定**：默认禁止监听任何端口
+- **环境变量**：全量继承当前运行环境的所有变量，与正常运行一致
+- **进程可见性**：与宿主共享 PID 命名空间，`/proc` 中仍可见宿主进程；沙箱通过 seccomp 阻断对其它进程的调试等危险操作
+
+### 自定义配置项 [!toc]
+
+> 以下选项均需配合 `--sandbox` 使用，用于在预设配置基础上进行自定义调整。
+
+| 选项 | 选项值 | 描述 |
+| :-: | :-: | ----- |
+| `--sandbox-net-allow` | 是 | 出站白名单，仅放行匹配规则的出站连接（指定后取代默认网络预设），可多次使用，与其余出站控制选项互斥 |
+| `--sandbox-net-deny` | 是 | 出站黑名单，在默认屏蔽本地的基础上追加屏蔽匹配规则的出站连接，可多次使用，可与 `--sandbox-net-deny-local` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-deny-all` | 否 | 完全断网，阻断所有出站网络连接，与其余出站控制选项互斥（端口绑定不受影响） |
+| `--sandbox-net-deny-local` | 否 | 屏蔽局域网（预设默认已启用），阻断本地回环、私网网段及云元数据地址段（`169.254.0.0/16`）及 IPv6 回环、ULA、链路本地地址，可与 `--sandbox-net-deny` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-allow-bind` | 是 | 允许绑定指定 TCP 端口，支持端口列表与区间（如 `8080`、`8080,9000-9005`），与出站控制独立，可多次使用 |
+| `--sandbox-net-allow-bind-all` | 否 | 允许绑定任意端口，放行所有 TCP 端口绑定监听，与 `--sandbox-net-allow-bind` 互斥 |
+| `--sandbox-http-allow` | 是 | HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-deny` 互斥 |
+| `--sandbox-http-deny` | 是 | HTTP 请求黑名单，屏蔽匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-allow` 互斥 |
+| `--sandbox-max-memory` | 是 | 内存上限，限制进程最大内存用量，支持 `M`（兆字节）和 `G`（吉字节）单位（不区分大小写） |
+| `--sandbox-clear-env` | 否 | 清空环境变量，移除所有继承的环境变量（仅保留最小系统路径），可配合 `--sandbox-env` 补充注入 |
+| `--sandbox-env` | 是 | 注入环境变量，向进程追加自定义环境变量（`KEY=VALUE`），可多次使用 |
+| `--sandbox-allow-env-whitelist` | 是 | 环境变量白名单，仅保留逗号分隔的指定变量（隐式启用清空），与 `--sandbox-clear-env` 互斥 |
+| `--sandbox-allow-env-blacklist` | 是 | 环境变量黑名单，排除逗号分隔的指定变量（其余正常继承），与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥 |
+| `--sandbox-allow-read` | 是 | 允许只读访问，在预设挂载之外追加只读目录，可多次使用 |
+| `--sandbox-allow-write` | 是 | 允许读写访问，在预设挂载之外追加读写目录，可多次使用 |
+| `--sandbox-opts` | 是 | 透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用 |
+
+### 使用示例 [!toc]
+
+<Accordions type="multiple">
+  <Accordion title="基础沙箱用法" id="基础沙箱用法">
+    沙箱预设已包含默认的本地/私网屏蔽与文件系统隔离。以下示例展示如何在预设基础上叠加自定义配置。
+
+    ```bash title="启用沙箱（使用预设配置）"
+    arcadia run example.js --sandbox
+    ```
+
+    ```bash title="在预设基础上完全断网"
+    arcadia run example.js --sandbox --sandbox-net-deny-all
+    ```
+
+    ```bash title="显式声明屏蔽局域网与云元数据（预设默认已启用）"
+    arcadia run example.js --sandbox --sandbox-net-deny-local
+    ```
+
+    ```bash title="组合使用：内存限制 + 环境变量隔离"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-max-memory 256M \
+      --sandbox-clear-env \
+      --sandbox-env NOTIFY_KEY=xxx \
+      --sandbox-env TZ=Asia/Shanghai
+    ```
+
+    ```bash title="运行不可信脚本：完全断网 + 内存限制 + 清空环境变量"
+    arcadia run untrusted.js \
+      --sandbox \
+      --sandbox-net-deny-all \
+      --sandbox-max-memory 256M \
+      --sandbox-clear-env
+    ```
+
+    注意：`--sandbox` 预设默认禁止访问本机与内网地址，公网访问正常；需要完全断网时必须显式指定 `--sandbox-net-deny-all`。
+  </Accordion>
+
+  <Accordion title="网络出站控制" id="网络出站控制">
+    预设默认禁止访问本机与内网地址，公网出站连接正常放行。以下选项用于进一步调整：
+
+    - **白名单**（`--sandbox-net-allow`）：指定后取代默认网络预设，仅放行匹配的连接。
+    - **黑名单**（`--sandbox-net-deny` / `--sandbox-net-deny-local`）：在默认屏蔽本地的基础上追加屏蔽匹配的连接，二者可叠加。
+    - **完全断网**（`--sandbox-net-deny-all`）：与其余出站控制选项互斥，端口绑定不受影响。
+
+    ```bash title="白名单：仅允许访问指定 API 和 DNS"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-net-allow tcp://api.openai.com:443 \
+      --sandbox-net-allow udp://1.1.1.1:53
+    ```
+
+    ```bash title="黑名单：在默认本地屏蔽基础上追加自定义网段"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-net-deny 198.51.100.0/24
+    ```
+
+    ```bash title="Agent 场景：仅允许访问指定 API，并收紧环境变量"
+    arcadia run agent.js \
+      --sandbox \
+      --sandbox-net-allow tcp://api.openai.com:443 \
+      --sandbox-http-allow "POST api.openai.com/v1/*" \
+      --sandbox-allow-env-whitelist PATH,HOME \
+      --sandbox-env OPENAI_API_KEY=xxx
+    ```
+
+    <Callout type="info" title="规则语法">
+      规则支持以下格式：
+
+      | 格式 | 含义 |
+      | --- | --- |
+      | `api.example.com:443` | 指定主机 + 端口（不带协议前缀 scheme 时同时覆盖 TCP 和 UDP） |
+      | `tcp://api.example.com:443` | 仅 TCP |
+      | `udp://1.1.1.1:53` | 仅 UDP（如 DNS 查询） |
+      | `10.0.0.0/8` | CIDR 网段 |
+      | `169.254.169.254` | 单个 IP |
+      | `1.1.1.1:*` | 指定主机的所有端口 |
+      | `:8443` | 指定任意主机的特定端口 |
+      | `*` | 任意出站连接 |
+
+      注意：主机名仅 `--sandbox-net-allow` 支持（启动时解析并锁定）；`--sandbox-net-deny` 仅接受 IP（可带端口或 CIDR），不支持主机名与协议前缀。
+    </Callout>
+  </Accordion>
+
+  <Accordion title="HTTP 请求过滤" id="HTTP请求过滤">
+    在预设网络或自定义网络控制的基础上，可进一步按 HTTP 方法和路径过滤请求。
+
+    ```bash title="白名单：仅允许 GET 文档站和 POST API"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-http-allow "GET docs.python.org/*" \
+      --sandbox-http-allow "POST api.openai.com/v1/*"
+    ```
+
+    ```bash title="黑名单：屏蔽所有对 /admin 路径的请求"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-http-deny "* */admin/*"
+    ```
+
+    <Callout type="info" title="规则格式">
+      每条规则格式为 `"METHOD host/path"`（需用引号包裹，因为含空格）：
+
+      - `METHOD`：HTTP 方法（`GET`、`POST`、`*` 表示任意方法）
+      - `host/path`：目标主机 + 路径模式（`*` 为通配符）
+
+      `--sandbox-http-allow` 与 `--sandbox-http-deny` 互斥，不可同时使用。
+    </Callout>
+
+    使用 HTTPS 过滤时默认不需要配置证书，Arcadia CLI 会根据运行文件的语言环境自动配置；需要自定义证书加载方式时，请参考下方对应语言和请求库的示例。
+
+    <Tabs defaultValue="python">
+      <TabsList>
+        <TabsTrigger value="python">Python</TabsTrigger>
+        <TabsTrigger value="javascript">JavaScript / TypeScript</TabsTrigger>
+        <TabsTrigger value="go">Go</TabsTrigger>
+        <TabsTrigger value="rust">Rust</TabsTrigger>
+        <TabsTrigger value="ruby">Ruby</TabsTrigger>
+        <TabsTrigger value="other">其他</TabsTrigger>
+      </TabsList>
+
+      <TabsContent id="http-cert-python" value="python">
+        <Tabs defaultValue="requests">
+          <TabsList>
+            <TabsTrigger value="requests">requests</TabsTrigger>
+            <TabsTrigger value="ssl-cert-file">httpx / urllib</TabsTrigger>
+          </TabsList>
+
+          <TabsContent id="http-cert-python-requests" value="requests">
+            `requests` 通过 `REQUESTS_CA_BUNDLE` 加载：
+
+            ```bash
+            arcadia run example.py --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env REQUESTS_CA_BUNDLE=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+
+          <TabsContent id="http-cert-python-ssl" value="ssl-cert-file">
+            `httpx` 和标准库 `urllib` 都通过 `SSL_CERT_FILE` 加载：
+
+            ```bash
+            arcadia run example.py --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env SSL_CERT_FILE=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+        </Tabs>
+      </TabsContent>
+
+      <TabsContent id="http-cert-javascript" value="javascript">
+        <Tabs defaultValue="node-bun">
+          <TabsList>
+            <TabsTrigger value="node-bun">Node / Bun</TabsTrigger>
+            <TabsTrigger value="deno">Deno</TabsTrigger>
+          </TabsList>
+
+          <TabsContent id="http-cert-javascript-node-bun" value="node-bun">
+            node / tsx / ts-node / Bun 都通过 `NODE_EXTRA_CA_CERTS` 加载。CLI 已自动设置，以下写法适用于自定义 `--http-ca-out` 路径或打包产物：
+
+            ```bash
+            arcadia run example.js --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env NODE_EXTRA_CA_CERTS=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+
+          <TabsContent id="http-cert-javascript-deno" value="deno">
+            Deno 通过 `DENO_CERT` 加载。CLI 已自动设置，以下写法适用于自定义 `--http-ca-out` 路径：
+
+            ```bash
+            arcadia run example.ts --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env DENO_CERT=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+        </Tabs>
+      </TabsContent>
+
+      <TabsContent id="http-cert-go" value="go">
+        Go 的 `net/http` 通过 `SSL_CERT_FILE` 加载：
+
+        ```bash
+        arcadia run example.go --sandbox \
+          --sandbox-http-allow "GET api.example.com/*" \
+          --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+          --sandbox-env SSL_CERT_FILE=/tmp/sandlock-ca.pem
+        ```
+      </TabsContent>
+
+      <TabsContent id="http-cert-rust" value="rust">
+        reqwest 默认（native-tls / rustls-native-certs）通过 `SSL_CERT_FILE` 加载：
+
+        ```bash
+        arcadia run example.rs --sandbox \
+          --sandbox-http-allow "GET api.example.com/*" \
+          --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+          --sandbox-env SSL_CERT_FILE=/tmp/sandlock-ca.pem
+        ```
+
+        如果依赖 `webpki-roots` 或 `rustls-platform-verifier` 这类自带/平台证书校验的库，环境变量不生效，需在代码中显式加载：
+
+        ```rust
+        let pem = std::fs::read("/tmp/sandlock-ca.pem")?;
+        let cert = reqwest::Certificate::from_pem(&pem)?;
+        let client = reqwest::Client::builder()
+            .add_root_certificate(cert)
+            .build()?;
+        ```
+      </TabsContent>
+
+      <TabsContent id="http-cert-ruby" value="ruby">
+        <Tabs defaultValue="openssl">
+          <TabsList>
+            <TabsTrigger value="openssl">net/http / rest-client / httparty</TabsTrigger>
+          </TabsList>
+
+          <TabsContent id="http-cert-ruby-openssl" value="openssl">
+            `net/http`、`rest-client`、`httparty` 底层都基于 OpenSSL，通过 `SSL_CERT_FILE` 加载：
+
+            ```bash
+            arcadia run example.rb --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env SSL_CERT_FILE=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+        </Tabs>
+      </TabsContent>
+
+      <TabsContent id="http-cert-other" value="other">
+        <Tabs defaultValue="openssl">
+          <TabsList>
+            <TabsTrigger value="openssl">Lua / Perl</TabsTrigger>
+            <TabsTrigger value="curl">curl</TabsTrigger>
+          </TabsList>
+
+          <TabsContent id="http-cert-other-openssl" value="openssl">
+            Lua `luasec` 和 Perl `LWP` 都基于 OpenSSL，通过 `SSL_CERT_FILE` 加载：
+
+            ```bash
+            arcadia run example.lua --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env SSL_CERT_FILE=/tmp/sandlock-ca.pem
+            ```
+          </TabsContent>
+
+          <TabsContent id="http-cert-other-curl" value="curl">
+            Shell 脚本中的 curl 可通过 `CURL_CA_BUNDLE` 或 `--cacert` 加载：
+
+            ```bash
+            arcadia run example.sh --sandbox \
+              --sandbox-http-allow "GET api.example.com/*" \
+              --sandbox-opts "--http-ca-out /tmp/sandlock-ca.pem" \
+              --sandbox-env CURL_CA_BUNDLE=/tmp/sandlock-ca.pem
+            ```
+
+            ```bash title="example.sh"
+            curl --cacert /tmp/sandlock-ca.pem https://api.example.com
+            ```
+          </TabsContent>
+        </Tabs>
+      </TabsContent>
+    </Tabs>
+  </Accordion>
+
+  <Accordion title="端口绑定（服务端监听）" id="端口绑定">
+    预设禁止绑定监听任何端口。如果代码文件需要作为服务端运行，需显式放行：
+
+    ```bash title="允许绑定指定端口"
+    arcadia run server.js \
+      --sandbox \
+      --sandbox-net-allow-bind 8080,9000-9005
+    ```
+
+    ```bash title="允许绑定任意端口"
+    arcadia run server.js \
+      --sandbox \
+      --sandbox-net-allow-bind-all
+    ```
+
+    端口绑定控制与出站网络控制完全独立，互不干涉。
+  </Accordion>
+
+  <Accordion title="文件系统访问" id="文件系统访问">
+    沙箱预设已挂载代码文件（脚本）运行所需的基本目录。如需额外访问其它路径：
+
+    ```bash title="追加只读 + 读写目录"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-read /tmp/data \
+      --sandbox-allow-write /tmp/output
+    ```
+
+    `--sandbox-allow-read` 授予只读权限，`--sandbox-allow-write` 授予读写权限，均可多次使用。
+  </Accordion>
+
+  <Accordion title="环境变量控制" id="环境变量控制">
+    预设继承全部环境变量。以下选项用于收紧或定制：
+
+    ```bash title="白名单模式：仅保留 PATH 和 HOME"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-env-whitelist PATH,HOME
+    ```
+
+    ```bash title="黑名单模式：排除敏感变量"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-allow-env-blacklist SECRET_KEY,PRIVATE_TOKEN
+    ```
+
+    逻辑关系：
+    - `--sandbox-clear-env` 与 `--sandbox-allow-env-whitelist` 互斥（后者已隐式启用清空）。
+    - `--sandbox-env` 始终在清空/过滤之后追加，可与任意选项组合。
+    - `--sandbox-allow-env-blacklist` 与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥。
+  </Accordion>
+
+  <Accordion title="关于透传底层参数" id="透传底层参数">
+    用于传递上述选项未覆盖的 sandlock 底层参数。选项名与值写在同一字符串内，可多次使用。
+
+    ```bash title="透传未覆盖的底层参数（自定义 CA 注入）"
+    arcadia run example.js \
+      --sandbox \
+      --sandbox-opts "--http-allow 'GET example.com/*' --http-inject-ca /etc/ssl/certs/custom-ca.pem"
+    ```
+
+    <Callout type="warn" title="注意">
+      透传参数中含空格、引号、通配符、方括号等特殊字符时，必须用引号包裹。请勿与高层选项重复传递同一参数（例如已使用 `--sandbox-http-allow` 时，不要再通过 opts 传 `--http-allow`），否则会抛出错误。
+    </Callout>
+  </Accordion>
+</Accordions>

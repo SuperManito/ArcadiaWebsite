@@ -4,3 +4,28 @@ icon: ChevronsLeftRightEllipsis
 ---
 
 <DocsCategory />
+
+## 连接说明
+
+- 服务地址：`/api/ws`（与 HTTP 同源部署时使用相对路径，跨域部署时使用完整地址）；
+- 命名空间：默认 `/` 与 `/terminal`；
+- 认证：连接时在 `Authorization` 头携带 `Bearer <token>`，与 HTTP API 使用同一 JWT；
+- 事件命名：统一为 `领域:动作`，全部小写，如 `run:log`、`task:started`、`daemon:log:data`。
+
+## 事件分类
+
+- 全局事件（默认命名空间）：实时日志、任务状态、依赖操作、消息、版本更新；
+- 终端（`/terminal` 命名空间）：终端会话的输入输出与生命周期；
+- 守护日志（默认命名空间）：守护任务实时日志的订阅与推送。
+
+## 连接示例
+
+```ts
+import { io } from 'socket.io-client'
+
+// 默认命名空间
+const socket = io({ path: '/api/ws', extraHeaders: { Authorization: `Bearer ${token}` } })
+
+// 终端命名空间
+const terminal = io('/terminal', { path: '/api/ws', extraHeaders: { Authorization: `Bearer ${token}` } })
+```
