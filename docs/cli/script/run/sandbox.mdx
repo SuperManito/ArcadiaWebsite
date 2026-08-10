@@ -81,22 +81,22 @@ arcadia run <name/path/url> --sandbox
 
 | 选项 | 选项值 | 描述 |
 | :-: | :-: | ----- |
-| `--sandbox-net-allow` | 是 | 出站白名单，仅放行匹配规则的出站连接（指定后取代默认网络预设），可多次使用，与其余出站控制选项互斥 |
-| `--sandbox-net-deny` | 是 | 出站黑名单，在默认屏蔽本地的基础上追加屏蔽匹配规则的出站连接，可多次使用，可与 `--sandbox-net-deny-local` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
-| `--sandbox-net-deny-all` | 否 | 完全断网，阻断所有出站网络连接，与其余出站控制选项互斥（端口绑定不受影响） |
-| `--sandbox-net-deny-local` | 否 | 屏蔽局域网（预设默认已启用），阻断本地回环、私网网段及云元数据地址段（`169.254.0.0/16`）及 IPv6 回环、ULA、链路本地地址，可与 `--sandbox-net-deny` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
-| `--sandbox-net-allow-bind` | 是 | 允许绑定指定 TCP 端口，支持端口列表与区间（如 `8080`、`8080,9000-9005`），与出站控制独立，可多次使用 |
-| `--sandbox-net-allow-bind-all` | 否 | 允许绑定任意端口，放行所有 TCP 端口绑定监听，与 `--sandbox-net-allow-bind` 互斥 |
-| `--sandbox-http-allow` | 是 | HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-deny` 互斥 |
-| `--sandbox-http-deny` | 是 | HTTP 请求黑名单，屏蔽匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-allow` 互斥 |
-| `--sandbox-max-memory` | 是 | 内存上限，限制进程最大内存用量，支持 `M`（兆字节）和 `G`（吉字节）单位（不区分大小写） |
-| `--sandbox-clear-env` | 否 | 清空环境变量，移除所有继承的环境变量（仅保留最小系统路径），可配合 `--sandbox-env` 补充注入 |
-| `--sandbox-env` | 是 | 注入环境变量，向进程追加自定义环境变量（`KEY=VALUE`），可多次使用 |
-| `--sandbox-allow-env-whitelist` | 是 | 环境变量白名单，仅保留逗号分隔的指定变量（隐式启用清空），与 `--sandbox-clear-env` 互斥 |
-| `--sandbox-allow-env-blacklist` | 是 | 环境变量黑名单，排除逗号分隔的指定变量（其余正常继承），与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥 |
-| `--sandbox-allow-read` | 是 | 允许只读访问，在预设挂载之外追加只读目录，可多次使用 |
-| `--sandbox-allow-write` | 是 | 允许读写访问，在预设挂载之外追加读写目录，可多次使用 |
-| `--sandbox-opts` | 是 | 透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用 |
+| `--sandbox-net-allow` | ✓ | 出站白名单，仅放行匹配规则的出站连接（指定后取代默认网络预设），可多次使用，与其余出站控制选项互斥 |
+| `--sandbox-net-deny` | ✓ | 出站黑名单，在默认屏蔽本地的基础上追加屏蔽匹配规则的出站连接，可多次使用，可与 `--sandbox-net-deny-local` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-deny-all` | | 完全断网，阻断所有出站网络连接，与其余出站控制选项互斥（端口绑定不受影响） |
+| `--sandbox-net-deny-local` | | 屏蔽局域网与本机，阻断本地回环、私网网段及云元数据地址段（`169.254.0.0/16`）及 IPv6 回环、ULA、链路本地地址，可与 `--sandbox-net-deny` 叠加，与 `--sandbox-net-allow`、`--sandbox-net-deny-all` 互斥 |
+| `--sandbox-net-allow-bind` | ✓ | 允许绑定指定 TCP 端口，支持端口列表与区间（如 `8080`、`8080,9000-9005`），与出站控制独立，可多次使用 |
+| `--sandbox-net-allow-bind-all` | | 允许绑定任意端口，放行所有 TCP 端口绑定监听，与 `--sandbox-net-allow-bind` 互斥 |
+| `--sandbox-http-allow` | ✓ | HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-deny` 互斥 |
+| `--sandbox-http-deny` | ✓ | HTTP 请求黑名单，屏蔽匹配的 HTTP/HTTPS 请求（格式：`"METHOD host/path"`），可多次使用，与 `--sandbox-http-allow` 互斥 |
+| `--sandbox-max-memory` | ✓ | 内存上限，限制进程最大内存用量，支持 `M`（兆字节）和 `G`（吉字节）单位（不区分大小写） |
+| `--sandbox-clear-env` | | 清空环境变量，移除所有继承的环境变量（仅保留最小系统路径），可配合 `--sandbox-env` 补充注入 |
+| `--sandbox-env` | ✓ | 注入环境变量，向进程追加自定义环境变量（`KEY=VALUE`），可多次使用 |
+| `--sandbox-allow-env-whitelist` | ✓ | 环境变量白名单，仅保留逗号分隔的指定变量（隐式启用清空），与 `--sandbox-clear-env` 互斥 |
+| `--sandbox-allow-env-blacklist` | ✓ | 环境变量黑名单，排除逗号分隔的指定变量（其余正常继承），与 `--sandbox-clear-env`、`--sandbox-allow-env-whitelist` 互斥 |
+| `--sandbox-allow-read` | ✓ | 允许只读访问，在预设挂载之外追加只读目录，可多次使用 |
+| `--sandbox-allow-write` | ✓ | 允许读写访问，在预设挂载之外追加读写目录，可多次使用 |
+| `--sandbox-opts` | ✓ | 透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用 |
 
 ### 使用示例 [!toc]
 
@@ -112,7 +112,7 @@ arcadia run <name/path/url> --sandbox
     arcadia run example.js --sandbox --sandbox-net-deny-all
     ```
 
-    ```bash title="显式声明屏蔽局域网与云元数据（预设默认已启用）"
+    ```bash title="显式声明屏蔽局域网与云元数据"
     arcadia run example.js --sandbox --sandbox-net-deny-local
     ```
 

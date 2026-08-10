@@ -53,27 +53,27 @@ arcadia run <name/path/url> [--options]
 
 | 选项 | 用途 | 选项值 | 描述 |
 | :-: | :-: | :-: | ----- |
-| `-l`, `--loop`                 | 循环运行 | 是 | 连续多次运行代码文件，选项后需跟 _循环次数(正整数)_，该选项与 **等待执行** 和 **延迟执行** 参数同时使用时仍然有效互不干涉 |
-| `-s`, `--silent`               | 静默运行 | 否 | 静默运行任务不推送任何通知消息 |
-| `-w`, `--wait`                 | 推迟执行 | 是 | 等待指定时间后再运行代码文件，选项后需跟 _等待时间单位_ 作为参数值，具体参照 [sleep](https://www.runoob.com/linux/linux-comm-sleep.html) 命令的用法 |
-| `-D`, `--delay`                | 延迟执行 | 否 | 随机倒数一定秒数后再运行代码文件，该秒数上限可以在配置文件中定义 |
-| `-a`, `--agent`                | 网络代理 | 否 | 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，使用方法详见下方说明  |
-| `-T`, `--timeout`              | 运行超时 | 是 | 设置运行任务超时机制，选项后需跟 [timeout](https://www.coonote.com/linux/linux-cmd-timeout.html) 指令的参数作为选项值 |
-| `-N`, `--no-log`               | 禁用日志 | 否 | 不记录代码运行日志 |
-| `-p`, `--proxy`                | 启用下载代理 | 否 | 仅适用于执行位于 GitHub 仓库的代码文件，该代理固定为 [jsDelivr](https://www.jsdelivr.com/?docs=gh) 公共 CDN 加速代理 |
-| `-c`, `--concurrent`           | 并发运行 | 否 | 默认运行1个任务，若想增加运行任务数量那么请传参 `任务数量(正整数)` |
-| `-t`, `--thread`               | 指定并发线程 | 是 | 指定同时运行的最大任务数量，选项后需跟正整数，需与并发运行同时使用 |
-| `-b`, `--background`           | 后台运行 | 否 | 不在前台输出代码执行进度，不占用终端命令行 |
-| `-r`, `--recombine-env`        | 变量重组 | 是 | 按照指定顺序重新组合复合变量的成员值，选项后需跟变量名称、分隔符、重组表达式。表达式语法：多个值用 `,` 隔开，值区间用 `-` 连接，可以用 `%` 表示值的总数 |
-| `-R`, `--recombine-env-group`  | 分组运行 | 是 | 基于变量重组功能上的扩展应用，为每组变量单独运行代码文件，传参与变量重组功能基本一致，其中重组表达式内用 `@` 来区分不同组 |
-| `-S`, `--split-env`            | 拆分运行 | 是 | 将复合变量的成员值拆分后为每个值声明变量并单独运行代码文件，选项后需跟需要拆分的变量名称、分隔符 |
-| `-E`, `--exec-args`            | 执行参数 | 是 | 将该选项后面的内容作为参数传递给代码执行器 |
-| `--`                           | 传递选项 | 是 | 将该选项后面的所有内容都作为选项参数传递给代码文件 |
-| `--deno`, `--use-deno`         | [Deno](https://deno.com) | 否 | 使用 Deno 运行时 |
-| `--bun`, `--use-bun`           | [Bun](https://bun.sh) | 否 | 使用 Bun 运行时 |
-| `--node`, `--use-node`         | [Node.js](https://nodejs.org) | 否 | 使用 Node.js 运行时 |
-| `--tsx`, `--use-tsx`         | [TypeScript Execute (tsx)](https://tsx.is) | 否 | 使用 tsx 执行 |
-| `--ts-node`, `--use-ts-node`   | [ts-node](https://typestrong.org/ts-node) | 否 | 使用 ts-node 执行 |
+| `-l`, `--loop`                 | 循环运行 | ✓ | 连续多次运行代码文件，选项后需跟 _循环次数(正整数)_，该选项与 **等待执行** 和 **延迟执行** 参数同时使用时仍然有效互不干涉 |
+| `-s`, `--silent`               | 静默运行 | | 静默运行任务不推送任何通知消息 |
+| `-w`, `--wait`                 | 推迟执行 | ✓ | 等待指定时间后再运行代码文件，选项后需跟 _等待时间单位_ 作为参数值，具体参照 [sleep](https://www.runoob.com/linux/linux-comm-sleep.html) 命令的用法 |
+| `-D`, `--delay`                | 延迟执行 | | 随机倒数一定秒数后再运行代码文件，该秒数上限可以在配置文件中定义 |
+| `-a`, `--agent`                | 网络代理 | | 为 JavaScript 和 TypeScript 代码文件启用全局 HTTP/HTTPS 代理，使用方法详见下方说明  |
+| `-T`, `--timeout`              | 运行超时 | ✓ | 设置运行任务超时机制，选项后需跟 [timeout](https://www.coonote.com/linux/linux-cmd-timeout.html) 指令的参数作为选项值 |
+| `-N`, `--no-log`               | 禁用日志 | | 不记录代码运行日志 |
+| `-p`, `--proxy`                | 启用下载代理 | | 仅适用于执行位于 GitHub 仓库的代码文件，该代理固定为 [jsDelivr](https://www.jsdelivr.com/?docs=gh) 公共 CDN 加速代理 |
+| `-c`, `--concurrent`           | 并发运行 | | 默认运行1个任务，若想增加运行任务数量那么请传参 `任务数量(正整数)` |
+| `-t`, `--thread`               | 指定并发线程 | ✓ | 指定同时运行的最大任务数量，选项后需跟正整数，需与并发运行同时使用 |
+| `-b`, `--background`           | 后台运行 | | 不在前台输出代码执行进度，不占用终端命令行 |
+| `-r`, `--recombine-env`        | 变量重组 | ✓ | 按照指定顺序重新组合复合变量的成员值，选项后需跟变量名称、分隔符、重组表达式。表达式语法：多个值用 `,` 隔开，值区间用 `-` 连接，可以用 `%` 表示值的总数 |
+| `-R`, `--recombine-env-group`  | 分组运行 | ✓ | 基于变量重组功能上的扩展应用，为每组变量单独运行代码文件，传参与变量重组功能基本一致，其中重组表达式内用 `@` 来区分不同组 |
+| `-S`, `--split-env`            | 拆分运行 | ✓ | 将复合变量的成员值拆分后为每个值声明变量并单独运行代码文件，选项后需跟需要拆分的变量名称、分隔符 |
+| `-E`, `--exec-args`            | 执行参数 | ✓ | 将该选项后面的内容作为参数传递给代码执行器 |
+| `--`                           | 传递选项 | ✓ | 将该选项后面的所有内容都作为选项参数传递给代码文件 |
+| `--deno`, `--use-deno`         | [Deno](https://deno.com) | | 使用 Deno 运行时 |
+| `--bun`, `--use-bun`           | [Bun](https://bun.sh) | | 使用 Bun 运行时 |
+| `--node`, `--use-node`         | [Node.js](https://nodejs.org) | | 使用 Node.js 运行时 |
+| `--tsx`, `--use-tsx`         | [TypeScript Execute (tsx)](https://tsx.is) | | 使用 tsx 执行 |
+| `--ts-node`, `--use-ts-node`   | [ts-node](https://typestrong.org/ts-node) | | 使用 ts-node 执行 |
 
 
 <Accordions type="multiple">

@@ -49,7 +49,7 @@ description: 运行代码
     --sandbox-net-allow <spec>                出站白名单，仅放行匹配的出站连接，可多次使用，与黑名单选项互斥
     --sandbox-net-deny <spec>                 出站黑名单，屏蔽匹配的出站连接，可多次使用，与白名单选项互斥
     --sandbox-net-deny-all                    完全断网，阻断所有出站连接，与其它出站控制选项互斥
-    --sandbox-net-deny-local                  屏蔽局域网，可与黑名单选项叠加使用，与白名单选项、完全断网选项互斥
+    --sandbox-net-deny-local                  屏蔽局域网与本机，可与黑名单选项叠加使用，与白名单选项、完全断网选项互斥
     --sandbox-net-allow-bind <port>           允许绑定指定端口，放行 TCP 服务端监听，可多次使用
     --sandbox-net-allow-bind-all              允许绑定任意端口，放行 TCP 服务端监听
     --sandbox-http-allow <rule>               HTTP 请求白名单，仅放行匹配的 HTTP/HTTPS 请求，可多次使用，与黑名单选项互斥
