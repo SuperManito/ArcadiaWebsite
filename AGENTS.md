@@ -1,4 +1,4 @@
-# Arcadia Website Copilot Instructions
+# Arcadia Website Instructions
 
 适用范围：`src/`、`docs/`、`public/` 以及官网与文档站相关配置。
 
