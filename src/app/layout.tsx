@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { NextProvider } from 'fumadocs-core/framework/next'
 import { Inter } from 'next/font/google'
 import Banner from '@/components/Banner'
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
       <GoogleAnalytics gaId="G-P076XXL2MH" />
+      <SpeedInsights />
       <body className="flex flex-col min-h-screen">
         <NextProvider>
           <Banner>{releaseNotice}</Banner>
