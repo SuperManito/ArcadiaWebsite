@@ -13,59 +13,13 @@ arcadia run <name/path/url> --sandbox
   沙箱模式仍支持使用 `arcadia stop` 终止运行中的代码文件，但不支持守护进程 `arcadia rund` 模式。
 </Callout>
 
-### 什么是沙箱？ [!toc]
+### 什么是沙箱？
 
 沙箱是一种将代码进程放入受限独立环境中运行的隔离机制。启用后，代码只能访问自身文件目录和必要的系统运行库，除这些路径外无法读取其它目录中的文件，也无法调试其它进程。特别适合运行来自不可信来源的代码文件。
 
 此功能由 [Sandlock](https://github.com/multikernel/sandlock) 驱动，Arcadia CLI 仅作为 Sandlock 的包装器，沙箱已成为 AI Agent 运行的默认环境配置。
 
-- Sandlock 更新命令
-
-  ```bash tab="GitHub"
-  download_url="https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
-  query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
-  target_dir="${ARCADIA_DIR}/src/shell/sandbox"
-  sandlock_path="${target_dir}/sandlock"
-  [ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
-
-  [[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
-      echo "Sandlock 已是最新版本 ${current_version}" ||
-      {
-          git -C "${target_dir}" ls-files --others --exclude-standard -z |
-              tr '\0' '\n' |
-              sed "s|^|${target_dir}/|" |
-              tr '\n' ' ' |
-              xargs -r rm -f
-          wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
-          chmod a+x "${target_dir}/sandlock"
-          echo "Sandlock 已安装"
-      }
-  ```
-
-  ```bash tab="GitHub Proxy 代理"
-  download_url="https://ghfast.top/https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
-  query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
-  target_dir="${ARCADIA_DIR}/src/shell/sandbox"
-  sandlock_path="${target_dir}/sandlock"
-  [ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
-
-  [[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
-      echo "Sandlock 已是最新版本 ${current_version}" ||
-      {
-          git -C "${target_dir}" ls-files --others --exclude-standard -z |
-              tr '\0' '\n' |
-              sed "s|^|${target_dir}/|" |
-              tr '\n' ' ' |
-              xargs -r rm -f
-          wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
-          chmod a+x "${target_dir}/sandlock"
-          echo "Sandlock 已安装"
-      }
-  ```
-
-  Arcadia CLI 会在首次使用沙箱功能时自动下载并安装 Sandlock，但不会自动检查新版本。若长期使用沙箱功能，建议定期手动更新，后续可能会调整安装策略。
-
-### 预设配置 [!toc]
+### 预设配置
 
 启用沙箱功能后，代码进程将按以下预设配置运行，这是沙箱的基准隔离状态，可通过下方的自定义配置选项进一步调整：
 
@@ -75,7 +29,7 @@ arcadia run <name/path/url> --sandbox
 - **环境变量**：全量继承当前运行环境的所有变量，与正常运行一致
 - **进程可见性**：与宿主共享 PID 命名空间，`/proc` 中仍可见宿主进程；沙箱通过 seccomp 阻断对其它进程的调试等危险操作
 
-### 自定义配置项 [!toc]
+### 自定义配置项
 
 > 以下选项均需配合 `--sandbox` 使用，用于在预设配置基础上进行自定义调整。
 
@@ -98,7 +52,7 @@ arcadia run <name/path/url> --sandbox
 | `--sandbox-allow-write` | ✓ | 允许读写访问，在预设挂载之外追加读写目录，可多次使用 |
 | `--sandbox-opts` | ✓ | 透传底层参数，将原始参数直接传递给 sandlock（选项名与值写在同一字符串内），可多次使用 |
 
-### 使用示例 [!toc]
+### 使用示例
 
 <Accordions type="multiple">
   <Accordion title="基础沙箱用法" id="基础沙箱用法">
@@ -444,3 +398,51 @@ arcadia run <name/path/url> --sandbox
     </Callout>
   </Accordion>
 </Accordions>
+
+### 更新沙箱引擎
+
+Arcadia CLI 会在首次使用沙箱功能时自动下载并安装 Sandlock，但不会自动检查新版本。如若首次下载失败，可尝试使用该命令进行安装。
+
+```bash tab="GitHub"
+download_url="https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
+query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
+target_dir="${ARCADIA_DIR}/src/shell/sandbox"
+sandlock_path="${target_dir}/sandlock"
+[ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
+
+[[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
+    echo "Sandlock 已是最新版本 ${current_version}" ||
+    {
+        git -C "${target_dir}" ls-files --others --exclude-standard -z |
+            tr '\0' '\n' |
+            sed "s|^|${target_dir}/|" |
+            tr '\n' ' ' |
+            xargs -r rm -f
+        wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
+        chmod a+x "${target_dir}/sandlock"
+        echo "Sandlock 已安装"
+    }
+```
+
+```bash tab="GitHub Proxy 代理"
+download_url="https://ghfast.top/https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
+query_url="https://api.github.com/repos/multikernel/sandlock/releases/latest"
+target_dir="${ARCADIA_DIR}/src/shell/sandbox"
+sandlock_path="${target_dir}/sandlock"
+[ -x "${sandlock_path}" ] && current_version="$(${sandlock_path} --version | awk -F ' ' '{print$NF}')" || current_version=""
+
+[[ -x "${sandlock_path}" && "$(curl -s "${query_url}" | jq -r ".tag_name" | sed 's|^v||g')" == "${current_version}" ]] &&
+    echo "Sandlock 已是最新版本 ${current_version}" ||
+    {
+        git -C "${target_dir}" ls-files --others --exclude-standard -z |
+            tr '\0' '\n' |
+            sed "s|^|${target_dir}/|" |
+            tr '\n' ' ' |
+            xargs -r rm -f
+        wget -q --show-progress -O - "${download_url}" | tar -xzf - -C "${target_dir}"
+        chmod a+x "${target_dir}/sandlock"
+        echo "Sandlock 已安装"
+    }
+```
+
+若频繁使用沙箱功能，建议定期手动更新，后续可能会调整安装策略。
