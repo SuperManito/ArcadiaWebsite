@@ -19,7 +19,7 @@ arcadia run <name/path/url> --sandbox
 
 此功能由 [Sandlock](https://github.com/multikernel/sandlock) 驱动，Arcadia CLI 仅作为 Sandlock 的包装器，沙箱已成为 AI Agent 运行的默认环境配置。
 
-- 更新 Sandlock
+- Sandlock 更新命令
 
   ```bash tab="GitHub"
   download_url="https://github.com/multikernel/sandlock/releases/latest/download/sandlock-$(arch)-unknown-linux-gnu.tar.gz"
@@ -63,7 +63,7 @@ arcadia run <name/path/url> --sandbox
       }
   ```
 
-  Arcadia CLI 会在首次启用沙箱功能时自动下载 Sandlock，但不会自动检查新版本；若长期使用沙箱功能，建议定期手动更新。
+  Arcadia CLI 会在首次使用沙箱功能时自动下载并安装 Sandlock，但不会自动检查新版本。若长期使用沙箱功能，建议定期手动更新，后续可能会调整安装策略。
 
 ### 预设配置 [!toc]
 
@@ -184,6 +184,8 @@ arcadia run <name/path/url> --sandbox
       | `icmp://*` | ICMP（如 ping，仅 `--sandbox-net-allow`） |
 
       注意：主机名仅 `--sandbox-net-allow` 支持（启动时解析并锁定）；`--sandbox-net-deny` 仅接受 IP/CIDR（可带端口与协议前缀），不支持主机名。
+
+      可以查看官方文档的使用示例 [《Network Policy》](https://sandlock.io/docs/network)
     </Callout>
   </Accordion>
 
@@ -210,6 +212,8 @@ arcadia run <name/path/url> --sandbox
       - `host/path`：目标主机 + 路径模式（`*` 为通配符）
 
       `--sandbox-http-allow` 与 `--sandbox-http-deny` 互斥，不可同时使用。
+
+      可以查看官方文档的使用示例 [《HTTP ACL and Credential Injection》](https://sandlock.io/docs/http-acl)
     </Callout>
 
     使用 HTTPS 过滤时默认不需要配置证书，Arcadia CLI 会根据运行文件的语言环境自动配置；需要自定义证书加载方式时，请参考下方对应语言和请求库的示例。
