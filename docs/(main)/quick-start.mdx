@@ -18,7 +18,7 @@ import { InstallCommand } from '@/components/InstallCommand';
   1. 点击右侧的 “高级配置” 可以自定义参数配置，建议优先通过该组件修改命令以防出错
   2. 提示 `-bash: docker：Command not found/未找到命令` ? 请阅读下方 _“如何安装 Docker”_
   3. 不可以更改参数中 `:` 右边的内容，否则会导致后端服务无法正常访问
-  4. 不建议部署在 `host` 网络模式下因为会暴露内部服务存在安全隐患，除非你能够始终隔离在受控局域网内使用
+  4. 不建议部署在 `host` 网络模式下（会暴露内部服务且不需要鉴权），除非你能够始终隔离在受控局域网内使用，严禁公网转发
 </Callout>
 
 <Accordions type="multiple">
@@ -57,6 +57,11 @@ import { InstallCommand } from '@/components/InstallCommand';
   </Accordion>
   <Accordion title="挂载目录的作用是什么？" id="挂载目录的作用">
     容器挂载目录的作用是将宿主机的文件系统目录或文件挂载到容器内部。挂载后，容器内的程序可以像访问本地文件一样访问这些文件或目录，同时宿主机上的应用也可直接对其进行操作。这种机制实现了容器与宿主机之间的文件共享，使得数据持久化成为可能——即使容器被删除，挂载的数据仍保留在宿主机上，便于后续迁移或复用。
+  </Accordion>
+  <Accordion title="关于命令中的 --cap-add" id="关于命令中的cap-add">
+    命令中的 `--cap-add SYS_PTRACE` 是[沙箱功能](/docs/cli/script/run/sandbox)的必要配置项，使沙箱能够获得进程追踪的能力。
+
+    该参数不会影响宿主机安全性，如果不使用沙箱功能可从命令中将其移除。
   </Accordion>
   <Accordion title="关于 Arcadia 平台的占用空间" id="关于 Arcadia 平台的占用空间">
     当前底层镜像基于 `GNU/Linux Debian` 构建，因此 Arcadia 平台镜像的占用空间达到了 1.1GB。在不更换底层构建镜像的前提下，已对镜像大小进行了最大程度的压缩。考虑到实际使用环境的生态多样性，这是权衡利弊后的决策选择。实际使用过程中会安装较多依赖内容，届时镜像大小的差异与容器总体占用空间的差异相比，影响已相对有限，建议预留 2GB 的空间以供使用。

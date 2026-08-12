@@ -275,6 +275,7 @@ function CliInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) {
 --hostname ${hostname} \\
 --network ${network} \\
 --restart always \\
+--cap-add SYS_PTRACE \\
 -p ${port}:5678 \\${getRunMountLines()}
 ${mirror}supermanito/arcadia:beta`
 
@@ -282,6 +283,7 @@ ${mirror}supermanito/arcadia:beta`
 --name ${containerName} \\
 --hostname ${hostname} \\
 --network ${network} \\
+--cap-add SYS_PTRACE \\
 -p ${port}:5678 \\${getRunMountLines()}
 ${mirror || 'docker.io/'}supermanito/arcadia:beta`
 
@@ -320,8 +322,8 @@ function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
 
   const composeFileName = type === 'podman-compose' ? 'podman-compose.yaml' : 'docker-compose.yaml'
   const composeFileContent = type === 'podman-compose'
-    ? `services:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
-    : `${type === 'docker-compose-v1' ? 'version: \'2.0\'\n' : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
+    ? `services:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    cap_add:\n      - SYS_PTRACE\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
+    : `${type === 'docker-compose-v1' ? 'version: \'2.0\'\n' : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia:beta\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    cap_add:\n      - SYS_PTRACE\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
 
   return (
     <div>
