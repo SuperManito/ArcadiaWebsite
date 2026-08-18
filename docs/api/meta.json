@@ -17,7 +17,7 @@
     "token",
     "log",
     "update",
-    "captcha/index",
-    "websocket"
+    "websocket",
+    "captcha/index"
   ]
 }

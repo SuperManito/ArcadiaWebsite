@@ -111,7 +111,7 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
 
       <TabsContent id="tsx" value="tsx">
 
-        TypeScript Execute (tsx) 是 CLI 运行 TypeScript 代码文件的默认执行器，它基于 esbuild 驱动，运行速度非常快。
+        TypeScript Execute (tsx) 是 Arcadia 平台关于运行 TypeScript 代码文件的默认执行器，它基于 esbuild 驱动，运行速度非常快。
 
         ```npm title="安装命令"
         npm install -g tsx
@@ -123,7 +123,11 @@ import { Icon, NodejsIcon, DenoIcon, BunIcon, TSXIcon, TSNodeIcon } from '@/comp
 
       <TabsContent id="ts-node" value="ts-node">
 
-        ts-node 是一个运行 TypeScript 代码文件的执行器，诞生较早且已长期未更新，相比 tsx 它的兼容性会更高，不过性能会差很多。
+        ts-node 是一个运行 TypeScript 代码文件的执行器，相比 tsx 它的兼容性可能会更高，不过性能会差很多。
+
+        <Callout type="warn">
+          该工具已经过时且长期未更新，不推荐使用，请优先使用 tsx
+        </Callout>
 
         ```npm title="安装命令"
         npm install -g typescript ts-node

@@ -38,22 +38,42 @@ export default function FeatureGrid() {
   }
 
   return (
-    <div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3 text-left max-w-7xl mx-auto relative group/grid"
-    >
-      {features.map((feature, index) => {
-        return (
-          <FeatureCard
-            key={index}
-            feature={feature}
-            index={index}
-          />
-        )
-      })}
-    </div>
+    <section id="capabilities" className="relative overflow-hidden bg-white dark:bg-neutral-950 py-16 sm:py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-neutral-700/70 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(58%_42%_at_50%_20%,rgba(37,99,235,0.06),transparent_70%)]"
+      />
+      <div className="relative container mx-auto px-4 max-w-7xl">
+        <div className="mb-10 text-center sm:mb-14">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white md:text-4xl">
+            能力全景
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400 sm:text-base">
+            从脚本编写到定时调度，从守护进程到消息聚合，Arcadia 覆盖代码运维的每一个环节
+          </p>
+        </div>
+        <div
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="mt-6 sm:mt-10 grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3 text-left max-w-7xl mx-auto relative group/grid"
+        >
+          {features.map((feature, index) => {
+            return (
+              <FeatureCard
+                key={index}
+                feature={feature}
+                index={index}
+              />
+            )
+          })}
+        </div>
+      </div>
+    </section>
   )
 }
 

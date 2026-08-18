@@ -7,7 +7,6 @@ import {
   NavbarMenuTrigger,
 } from 'fumadocs-ui/layouts/home/navbar'
 import { BookOpen, Plug, Shapes, Terminal } from 'lucide-react'
-import { ThemeToggle } from '@/components/ThemeToggle'
 import { gitConfig, Logo, socialLinks } from '@/lib/layout.shared'
 
 export default function Layout({ children }: LayoutProps<'/'>) {
@@ -18,7 +17,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
         transparentMode: 'always',
       }}
       themeSwitch={{
-        component: <ThemeToggle />,
+        enabled: false,
       }}
       githubUrl={gitConfig.url}
       links={[
@@ -55,7 +54,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           on: 'nav',
           children: (
             <NavbarMenu>
-              <NavbarMenuTrigger className="mt-1 px-2 py-1">
+              <NavbarMenuTrigger>
                 <Link href="/docs">文档</Link>
               </NavbarMenuTrigger>
               <NavbarMenuContent>
@@ -63,7 +62,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
                   <BookOpen className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
                   <p className="font-medium">入门指引</p>
                   <p className="text-fd-muted-foreground text-sm">
-                    了解如何完整部署并使用 Arcadia 平台
+                    了解如何部署并使用 Arcadia 平台
                   </p>
                 </NavbarMenuLink>
 
@@ -94,8 +93,19 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             </NavbarMenu>
           ),
         },
+        {
+          type: 'main',
+          text: '更新日志',
+          url: '/docs/changelog',
+        },
+        {
+          type: 'main',
+          text: '社区',
+          url: 'https://t.me/ArcadiaPanelGroup',
+          external: true,
+        },
       ]}
-      className="theme-blue dark:bg-neutral-950 dark:[--color-fd-background:var(--color-neutral-950)]"
+      className="dark theme-blue bg-neutral-950 scheme-dark [--color-fd-background:var(--color-neutral-950)]"
     >
       {children}
     </HomeLayout>

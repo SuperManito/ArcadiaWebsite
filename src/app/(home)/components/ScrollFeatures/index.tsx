@@ -8,7 +8,7 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
   const imgDark = feature.imgUrlDark
 
   return (
-    <div className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-20 mb-24 md:mb-64 last:mb-0 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
+    <div className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-20 mb-20 md:mb-40 last:mb-0 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
       <motion.div
         className="w-full lg:w-1/2 flex flex-col items-center lg:items-start"
         initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
@@ -34,7 +34,7 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
         transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
         viewport={{ once: true, margin: '-100px' }}
       >
-        <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-neutral-200/50 dark:border-neutral-800/80 bg-neutral-100 dark:bg-neutral-900">
+        <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_24px_70px_-36px_rgba(0,0,0,0.9)] border border-neutral-200/50 dark:border-neutral-800/80 bg-neutral-100 dark:bg-neutral-900 transition-colors duration-300 hover:border-neutral-300 dark:hover:border-neutral-700">
           <div className="absolute inset-0 bg-linear-to-t from-black/5 to-transparent dark:from-black/40 pointer-events-none mix-blend-overlay"></div>
           <img src={imgLight} alt={feature.title} className="w-full h-auto object-cover block dark:hidden select-none" loading="lazy" draggable={false} />
           <img src={imgDark} alt={feature.title} className="w-full h-auto object-cover hidden dark:block select-none" loading="lazy" draggable={false} />
@@ -46,7 +46,7 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
 
 export default function ScrollFeaturesSection() {
   return (
-    <div className="py-16 sm:py-24 bg-white dark:bg-neutral-950 overflow-hidden border-neutral-100 dark:border-neutral-900">
+    <div className="py-16 sm:py-24 bg-white dark:bg-neutral-950 overflow-hidden">
       <div className="container mx-auto px-4 max-w-7xl">
         {scrollFeatures.map((feature, index) => (
           <ScrollFeature key={index} feature={feature} index={index} />

@@ -188,8 +188,12 @@ export default function LanguageShowcase() {
   ]
 
   return (
-    <div className="py-12 sm:py-24 bg-white dark:bg-neutral-950">
-      <section className="container mx-auto px-4">
+    <div className="relative overflow-hidden py-12 sm:py-24 bg-white dark:bg-neutral-950">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(48%_42%_at_50%_46%,rgba(37,99,235,0.07),transparent_70%)]"
+      />
+      <section className="relative container mx-auto px-4">
         <div className="flex flex-col items-center justify-center h-64 lg:h-full rounded-2xl">
           <div className="mt-8 md:mt-16 md:mb-16 text-neutral-500 dark:text-neutral-400 text-center">
             <BlurFade delay={0.25} inView>

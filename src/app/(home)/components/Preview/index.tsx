@@ -3,28 +3,14 @@ import { ConfigProvider, Image, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
-import { useEffect, useMemo, useState } from 'react'
-import { useTheme } from '../../hooks/useTheme'
+import { useState } from 'react'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import BlurFade from '../BlurFade'
 import styles from './index.module.css'
 import { Safari } from './Safari'
 import ThreeDMarquee from './TreeDMarquee'
 
-// 静态资源路径（相对于 /static 目录）
-const LIGHT_IMAGE_PATHS = [
-  '/images/preview/code-edit-light.png',
-  '/images/preview/cron-dashboard-light.png',
-  '/images/preview/cron-config-light.png',
-  '/images/preview/daemon-light.png',
-  '/images/preview/log-light.png',
-  '/images/preview/config-env-light.png',
-  '/images/preview/config-dep-light.png',
-  '/images/preview/file-light.png',
-  '/images/preview/terminal-light.png',
-  '/images/preview/login-light.png',
-]
-
+// 着陆页已固定为深色主题，预览图统一使用深色版本。
 const DARK_IMAGE_PATHS = [
   '/images/preview/code-edit-dark.png',
   '/images/preview/cron-dashboard-dark.png',
@@ -40,24 +26,17 @@ const DARK_IMAGE_PATHS = [
 
 const marqueeIndices = [9, 1, 2, 4, 5, 7, 0, 6, 5, 4, 2, 1, 9, 3, 0, 4, 1, 5, 0, 7, 0, 8, 6, 2, 8, 1, 9, 1, 9, 2, 4, 5, 0, 7]
 
-const lightMarqueeImgs = marqueeIndices.map(i => LIGHT_IMAGE_PATHS[i])
 const darkMarqueeImgs = marqueeIndices.map(i => DARK_IMAGE_PATHS[i])
 
 const previewTitle = '兼具美感与现代化的管理面板'
 
 function ThreeDMarqueeComponents({ onClick }: { onClick?: () => void }) {
-  const { isDark } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  const images = mounted && isDark ? darkMarqueeImgs : lightMarqueeImgs
   return (
     <div
-      className="mx-auto my-10 max-w-7xl rounded-3xl border-4 border-neutral-200 dark:border-neutral-800 bg-transparent p-2 ring-1 ring-neutral-700/10 cursor-pointer"
+      className="mx-auto my-10 max-w-7xl rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-transparent p-2 ring-1 ring-neutral-700/10 cursor-pointer"
       onClick={onClick}
     >
-      <ThreeDMarquee images={images} />
+      <ThreeDMarquee images={darkMarqueeImgs} />
     </div>
   )
 }
@@ -67,41 +46,25 @@ function PreviewImageContainer({
 }: {
   children: React.ReactNode
 }) {
-  const { theme: currentTheme } = useTheme()
-  const algorithm = useMemo(() => {
-    return currentTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
-  }, [currentTheme])
   return (
-    <ConfigProvider theme={{ algorithm }} locale={zhCN}>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }} locale={zhCN}>
       {children}
     </ConfigProvider>
   )
 }
 
 function PreviewImagesGroup() {
-  const { isDark } = useTheme()
-  const [previewImg, setPreviewImg] = useState(LIGHT_IMAGE_PATHS[0])
-  const [previewImgs, setPreviewImgs] = useState<string[]>(LIGHT_IMAGE_PATHS)
-  useEffect(() => {
-    setPreviewImg(isDark ? DARK_IMAGE_PATHS[0] : LIGHT_IMAGE_PATHS[0])
-    setPreviewImgs(isDark ? DARK_IMAGE_PATHS : LIGHT_IMAGE_PATHS)
-  }, [isDark])
   return (
     <Image.PreviewGroup
-      items={previewImgs}
+      items={DARK_IMAGE_PATHS}
     >
-      <Image src={previewImg} />
+      <Image src={DARK_IMAGE_PATHS[0]} />
     </Image.PreviewGroup>
   )
 }
 
 function PreviewContentDefault() {
-  const { isDark } = useTheme()
-  const [previewImgs, setPreviewImgs] = useState<string[]>(LIGHT_IMAGE_PATHS)
   const [current, setCurrent] = useState(0)
-  useEffect(() => {
-    setPreviewImgs(isDark ? DARK_IMAGE_PATHS : LIGHT_IMAGE_PATHS)
-  }, [isDark])
   const [visible, setVisible] = useState(false)
   return (
     <div className="w-full">
@@ -123,7 +86,7 @@ function PreviewContentDefault() {
                 onOpenChange: (vis) => { setVisible(vis) },
                 onChange: (curr) => { setCurrent(curr) },
               }}
-              items={previewImgs}
+              items={DARK_IMAGE_PATHS}
             />
           </div>
         </PreviewImageContainer>

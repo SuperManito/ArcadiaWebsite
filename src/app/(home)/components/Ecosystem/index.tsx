@@ -4,7 +4,15 @@ import { languageIcons } from './data'
 
 export default function EcosystemSection() {
   return (
-    <div className="md:mt-24 py-10 md:py-24 bg-white dark:bg-neutral-950 relative overflow-hidden border-neutral-100 dark:border-neutral-900">
+    <div className="md:mt-24 py-10 md:py-24 bg-white dark:bg-neutral-900/40 relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-neutral-700/70 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-neutral-700/70 to-transparent"
+      />
       <div className="container mx-auto px-4 relative z-10 max-w-7xl">
         <div className="flex flex-col lg:flex-row items-center gap-0 md:gap-16">
           {/* 左侧文字介绍 */}
@@ -37,7 +45,7 @@ export default function EcosystemSection() {
             <div className="w-full relative max-w-162.5 flex items-center justify-center py-6 sm:p-6">
               <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
                 <div className="absolute w-50 md:w-87.5 h-12.5 md:h-50 bg-blue-500/20 dark:bg-blue-600/30 rounded-full blur-[60px] sm:blur-[100px]"></div>
-                <div className="absolute w-37.5 md:w-75 h-6.25 md:h-37.5 bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[60px] sm:blur-[100px] translate-x-10 translate-y-10"></div>
+                <div className="absolute w-37.5 md:w-75 h-6.25 md:h-37.5 bg-blue-500/15 dark:bg-blue-600/15 rounded-full blur-[60px] sm:blur-[100px] translate-x-10 translate-y-10"></div>
               </div>
               <div
                 className="flex flex-wrap justify-center gap-6 sm:gap-5 relative z-10 w-full"
