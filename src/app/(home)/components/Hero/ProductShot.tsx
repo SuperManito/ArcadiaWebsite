@@ -14,7 +14,7 @@ export default function ProductShot() {
       >
         <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#111111] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_40px_80px_-40px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 ease-out hover:border-white/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_0_72px_-24px_rgba(59,130,246,0.32),0_40px_80px_-40px_rgba(0,0,0,0.9)]">
           <ImageZoom
-            src="/images/home.png"
+            src="/images/feature/home.png"
             rmiz={{ zoomMargin: 24 } as any}
             zoomInProps={{
               alt: 'Arcadia 沉浸式代码编辑器界面',
@@ -22,7 +22,7 @@ export default function ProductShot() {
             }}
           >
             <img
-              src="/images/home.png"
+              src="/images/feature/home.png"
               alt="Arcadia 沉浸式代码编辑器界面"
               width={1920}
               height={1080}
