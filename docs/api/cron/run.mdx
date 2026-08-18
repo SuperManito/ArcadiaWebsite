@@ -18,3 +18,7 @@ import { POST } from '@/components/RequestTag';
 />
 
 支持批量操作
+
+## 完成通知
+
+接口仅负责触发任务并立即返回。任务运行结束后，服务端会通过 WebSocket 推送 `manual: true` 的 `task:completed` 事件，详见 [定时任务状态推送](/docs/api/websocket/cron-tasks)。

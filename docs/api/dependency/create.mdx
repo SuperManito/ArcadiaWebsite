@@ -10,8 +10,8 @@ import { POST } from '@/components/RequestTag';
 <TypeTable
   type={{
     name: {
-      description: '包名，可携带版本表达式，如 axios@1.7.0、requests>=2.0',
-      type: 'string',
+      description: '包名，可携带版本表达式，如 axios@1.7.0、requests>=2.0；传字符串数组时批量新增',
+      type: 'string | string[]',
       required: true,
     },
     ecosystem: {
@@ -20,7 +20,7 @@ import { POST } from '@/components/RequestTag';
       required: true,
     },
     remark: {
-      description: '备注（可选）',
+      description: '备注（可选），批量新增时应用到所有记录',
       type: 'string',
     },
   }}
@@ -28,4 +28,18 @@ import { POST } from '@/components/RequestTag';
 
 ## 响应
 
-返回新创建的依赖记录，字段同 [数据关系模型](./schema)。
+单个字符串时返回新创建的依赖记录，字段同 [数据关系模型](./schema)；字符串数组时返回批量创建结果：
+
+<TypeTable
+  type={{
+    count: {
+      description: '成功创建的记录数（仅字符串数组时返回）',
+      type: 'number',
+    },
+  }}
+/>
+
+<Callout>
+  单个与批量统一走同一套逐项校验：包名非空、非平台保留依赖、不与已有记录重复，
+  任一不合法则整体报错；批次内重复项自动去重。批量新增仅创建记录，不会自动触发安装。
+</Callout>

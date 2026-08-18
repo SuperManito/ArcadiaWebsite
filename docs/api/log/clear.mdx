@@ -1,0 +1,44 @@
+---
+title: 清空指定类型日志
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/api/log/clear</DELETE>
+
+清空指定类型的系统日志全部记录。
+
+## 请求
+
+<TypeTable
+  type={{
+    type: {
+      description: '日志类型',
+      type: "string<'server' | 'login' | 'openapi'>",
+      typeDescription: 'server=操作日志，login=登录日志，openapi=开放接口日志',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    count: {
+      description: '被清空的日志条数',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "count": 128
+}
+```
+
+<Callout type="warning">
+  该操作会删除对应类型的全部日志，且不可恢复。
+</Callout>

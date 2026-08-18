@@ -5,6 +5,7 @@
     "server",
     "login",
     "openapi",
-    "cleanup"
+    "cleanup",
+    "clear"
   ]
 }

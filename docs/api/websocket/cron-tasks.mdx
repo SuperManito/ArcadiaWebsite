@@ -4,8 +4,6 @@ title: 定时任务状态推送
 
 当定时任务开始或结束时，服务端会主动向所有已连接的客户端广播任务状态变更事件。
 
-目前用于控制面板《定时任务 - 仪表盘》中 “当前运行” 指标的详情面板中
-
 ## 执行开始
 
 定时任务开始执行时触发，在任务运行前推送。
@@ -32,6 +30,11 @@ title: 定时任务状态推送
     taskType: {
       description: '任务类型',
       type: "'system' | 'user'",
+      required: true,
+    },
+    manual: {
+      description: '是否由用户通过“立即运行”手动触发',
+      type: 'boolean',
       required: true,
     },
     startTime: {
@@ -68,6 +71,11 @@ title: 定时任务状态推送
     taskType: {
       description: '任务类型',
       type: "'system' | 'user'",
+      required: true,
+    },
+    manual: {
+      description: '是否由用户通过“立即运行”手动触发',
+      type: 'boolean',
       required: true,
     },
     completedTime: {
