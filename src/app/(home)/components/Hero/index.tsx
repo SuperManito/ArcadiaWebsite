@@ -29,14 +29,14 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative isolate min-h-screen w-full overflow-hidden">
+    <section className="relative isolate  min-h-[calc(100vh+57px)] w-full overflow-hidden">
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 bg-[radial-gradient(72%_58%_at_34%_-12%,rgba(37,99,235,0.09),transparent_64%),radial-gradient(56%_48%_at_88%_108%,rgba(37,99,235,0.05),transparent_66%)] mask-[linear-gradient(to_bottom,black_55%,transparent_92%)] [-webkit-mask-image:linear-gradient(to_bottom,black_55%,transparent_92%)]"
       />
       <PixelGrid className="z-1" />
 
-      <div className="relative z-2 mx-auto grid min-h-screen w-full max-w-360 grid-cols-1 items-center px-6 py-12 lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-x-10 lg:px-10 lg:py-20">
+      <div className="relative z-2 mx-auto grid min-h-[calc(100vh-57px-4rem)] w-full max-w-360 grid-cols-1 items-center px-6 py-12 lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-x-16 lg:px-10 lg:py-20">
         <motion.div
           variants={container}
           initial="hidden"

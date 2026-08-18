@@ -6,7 +6,7 @@ export default function ProductShot() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <div className="relative w-full pb-60 md:pb-0">
+    <div className="relative w-full pb-24 md:pb-0">
       <motion.div
         initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
         animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
