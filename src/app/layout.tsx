@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://arcadia.cool',
     siteName: 'Arcadia',
     images: [
-      { url: '/og-home.png', width: 1200, height: 230, alt: 'Arcadia 首页' },
+      { url: '/og-home.png', width: 1200, height: 230, alt: 'Arcadia 一站式代码自动化运维平台' },
     ],
   },
 }
