@@ -15,7 +15,7 @@ import { OpenAPIPage } from '@/components/APIPage'
 import ClientFade from '@/components/ClientFade'
 import { gitConfig } from '@/lib/layout.shared'
 import { openapi } from '@/lib/openapi'
-import { getPageImage, source } from '@/lib/source'
+import { getPageImageUrl, source } from '@/lib/source'
 import { getMDXComponents } from '@/mdx-components'
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
@@ -114,7 +114,7 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
     title: `${page.data.title} | Arcadia`,
     description: page.data.description,
     openGraph: {
-      images: getPageImage(page).url,
+      images: getPageImageUrl(page).url,
     },
   }
 }

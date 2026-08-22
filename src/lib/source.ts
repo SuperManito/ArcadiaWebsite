@@ -11,12 +11,11 @@ export const source = loader({
   plugins: [lucideIconsPlugin(), openapiPlugin()],
 })
 
-export function getPageImage(page: InferPageType<typeof source>) {
-  const segments = [...page.slugs, 'image.webp']
-
+export function getPageImageUrl(page: (typeof source)['$inferPage']) {
+  const segments = [...page.slugs, 'image.png']
   return {
     segments,
-    url: `/og/docs/${segments.join('/')}`,
+    url: `/${[page.locale, 'og', 'docs', ...segments].filter(Boolean).join('/')}`,
   }
 }
 
