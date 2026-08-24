@@ -53,7 +53,7 @@ export default function FeatureGrid() {
             能力全景
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400 sm:text-base">
-            从脚本编写到定时调度，从守护进程到消息聚合，Arcadia 覆盖代码运维的每一个环节
+            从脚本编写到定时调度，从守护进程到消息聚合，Arcadia 覆盖代码自动化运维的核心环节
           </p>
         </div>
         <div

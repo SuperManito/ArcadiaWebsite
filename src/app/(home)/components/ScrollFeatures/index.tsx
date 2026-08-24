@@ -16,7 +16,8 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
         transition={{ duration: 0.6, ease: 'easeOut' }}
         viewport={{ once: true, margin: '-100px' }}
       >
-        <div className="inline-block px-3 py-1 mb-3 lg:mb-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs lg:text-sm font-semibold tracking-wider uppercase">
+        <div className="mb-3 flex items-center gap-2 text-xs font-medium tracking-wide text-blue-600 lg:mb-4 dark:text-blue-400">
+          <span aria-hidden="true" className="size-1.5 rounded-full bg-blue-500" />
           {feature.badge}
         </div>
         <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-900 dark:text-white mb-4 lg:mb-6 text-center lg:text-left">

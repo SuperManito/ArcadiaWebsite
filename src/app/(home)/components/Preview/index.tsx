@@ -121,7 +121,7 @@ export default function Preview() {
   const { isMobile } = useWindowSize()
 
   return (
-    <div className="sm:py-12 bg-white dark:bg-neutral-950 border-neutral-100 dark:border-neutral-900 overflow-hidden">
+    <div className="py-12 sm:py-16 bg-white dark:bg-neutral-950 border-neutral-100 dark:border-neutral-900 overflow-hidden">
       <div className="container mx-auto px-2 sm:px-4 max-w-350">
         <motion.div
           initial={{ opacity: 0, y: 40 }}

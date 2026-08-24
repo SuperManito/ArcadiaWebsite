@@ -4,7 +4,7 @@ import { languageIcons } from './data'
 
 export default function EcosystemSection() {
   return (
-    <div className="md:mt-24 py-10 md:py-24 bg-white dark:bg-neutral-900/40 relative overflow-hidden">
+    <div className="py-12 md:py-24 bg-white dark:bg-neutral-900/40 relative overflow-hidden">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-neutral-700/70 to-transparent"
@@ -23,14 +23,15 @@ export default function EcosystemSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <div className="inline-block px-3 py-1 mb-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-semibold tracking-wider uppercase">
-              Language Ecosystem
+            <div className="mb-4 flex items-center justify-center gap-2 text-xs font-medium tracking-wide text-blue-600 lg:justify-start dark:text-blue-400">
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-blue-500" />
+              语言生态
             </div>
             <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 dark:text-white mb-6 leading-tight">
               广泛的文件格式生态
             </div>
             <div className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 md:mb-8 leading-relaxed text-justify">
-              平台支持各种主流编程语言与文件类型，并配有强大的语法高亮和流行的文件图标。抛弃繁杂的本地环境配置文件，凭借若隐若现的无界拓展能力，让您始终专注于代码本身，而非工具的切换与适配。
+              全面支持主流编程语言与文件类型，内置语法高亮与流行文件图标。无需维护繁杂的本地环境配置，开箱即用，专注于代码本身。
             </div>
           </motion.div>
 

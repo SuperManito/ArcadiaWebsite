@@ -6,7 +6,7 @@ export default function Footer() {
   const logoLight = '/images/logo/arcadia-light-sub.png'
 
   return (
-    <footer className="relative mt-12 md:mt-24 py-12 sm:py-16 bg-white dark:bg-neutral-950 overflow-hidden">
+    <footer className="relative py-12 sm:py-16 bg-white dark:bg-neutral-950 overflow-hidden">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-neutral-700/70 to-transparent"

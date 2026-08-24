@@ -1,10 +1,10 @@
 'use client'
 import { useEffect } from 'react'
+import CliShowcase from './CliShowcase'
 import EcosystemSection from './Ecosystem'
 import FeatureGrid from './FeatureGrid'
 import Footer from './Footer'
 import HeroSection from './Hero'
-import LanguageShowcase from './LanguageShowcase'
 import PreviewSection from './Preview'
 import ScrollFeaturesSection from './ScrollFeatures'
 
@@ -28,9 +28,9 @@ export default function HomePageContent() {
     <div className="flex flex-col min-h-screen bg-white dark:bg-neutral-950">
       <HeroSection />
       <ScrollFeaturesSection />
-      <EcosystemSection />
-      <LanguageShowcase />
       <PreviewSection />
+      <EcosystemSection />
+      <CliShowcase />
       <FeatureGrid />
       <Footer />
     </div>
