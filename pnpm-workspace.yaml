@@ -1,17 +1,18 @@
+minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@fumadocs/*'
   - 'fumadocs-*'
   - '@fuma-*'
   - '@fumari/image-size'
-shellEmulator: true
 
 trustPolicy: no-downgrade
+shellEmulator: true
+
+allowBuilds:
+  esbuild: true
+  sharp: true
 
 onlyBuiltDependencies:
   - esbuild
   - sharp
   - unrs-resolver
-
-allowBuilds:
-  esbuild: true
-  sharp: true

@@ -1,5 +1,5 @@
 import type { InferPageType } from 'fumadocs-core/source'
-import { loader } from 'fumadocs-core/source'
+import { llms, loader } from 'fumadocs-core/source'
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons'
 import { docs } from 'fumadocs-mdx:collections/server'
 import { openapiPlugin } from 'fumadocs-openapi/server'
@@ -26,3 +26,9 @@ export async function getLLMText(page: InferPageType<typeof source>) {
 
 ${processed}`
 }
+
+export const docsLlms = llms(source, {
+  renderPage: async page => `# ${page.data.title} (${page.url})
+
+${await page.data.getText('processed')}`,
+})

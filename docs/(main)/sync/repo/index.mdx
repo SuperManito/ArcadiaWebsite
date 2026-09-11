@@ -12,19 +12,19 @@ icon: Warehouse
     name: {
       description: '代码仓库名称',
       type: 'string',
-      default: '""',
+      default: '无',
       required: true,
     },
     url: {
       description: '代码仓库地址',
       type: 'string',
-      default: '""',
+      default: '无',
       required: true,
     },
     branch: {
       description: '分支名称',
       type: 'string',
-      default: '""',
+      default: '无',
       required: true,
     },
     enable: {
@@ -67,7 +67,7 @@ icon: Warehouse
         scriptsPath: {
           description: '定时文件路径，默认为空代表仓库根目录',
           type: 'string',
-          default: '""',
+          default: '无',
           required: false,
         },
         scriptsType: {
@@ -79,13 +79,13 @@ icon: Warehouse
         whiteList: {
           description: '定时文件匹配白名单，默认为空即所有文件',
           type: 'string',
-          default: '""',
+          default: '无',
           required: false,
         },
         blackList: {
           description: '定时文件匹配黑名单，默认为空',
           type: 'string',
-          default: '""',
+          default: '无',
           required: false,
         },
         autoDisable: {
@@ -152,7 +152,7 @@ icon: Warehouse
           description: '认证方式，需填写固定值 ssh 或 http',
           type: "'ssh' | 'http'",
           typeDescription: '固定值 ssh 和 http 分别代表 sshConfig 和 httpAuth 两种认证方式',
-          default: '""',
+          default: '无',
           required: true,
         },
         sshConfig: {

@@ -17,15 +17,17 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     return null
   }
 
-  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '1em'
-  const verticalAlign = style?.verticalAlign ? style?.verticalAlign : '-0.125em'
+  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '16px'
+  const verticalAlign = style?.verticalAlign ? style?.verticalAlign : '-0.15em'
 
   const svgStyle: React.CSSProperties = {
     verticalAlign,
     display: 'inline-flex',
     alignItems: 'center',
-    width: '1em',
-    height: '1em',
+    width: '16px',
+    maxWidth: '16px',
+    height: '16px',
+    maxHeight: '16px',
     ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : {}),
     ...(height != null ? { height: typeof height === 'number' ? `${height}px` : height } : {}),
     ...(color != null ? { color } : {}),

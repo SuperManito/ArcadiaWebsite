@@ -1,7 +1,8 @@
-import { generate as DefaultImage } from 'fumadocs-ui/og'
+import { generateOGImage } from 'fumadocs-ui/og'
 import { notFound } from 'next/navigation'
-import { ImageResponse } from 'next/og'
 import { getPageImageUrl, source } from '@/lib/source'
+
+export const revalidate = false
 
 export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...slug]'>) {
   const { slug } = await params
@@ -9,22 +10,16 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...
   if (!page)
     notFound()
 
-  return new ImageResponse(
-    <DefaultImage
-      title={page.data.title}
-      primaryColor="#536dfe"
-      primaryTextColor="#000"
-      description={page.data.description}
-      icon={<img src="https://arcadia.cool/images/logo/arcadia-dark-sub.png" alt="Arcadia Logo" height={48} />}
-    />,
-    {
-      width: 1200,
-      height: 630,
-    },
-  )
+  return generateOGImage({
+    title: page.data.title,
+    primaryColor: '#536dfe',
+    primaryTextColor: '#000',
+    description: page.data.description,
+    icon: <img src="https://arcadia.cool/images/logo/arcadia-dark-sub.png" alt="Arcadia Logo" height={48} />,
+  })
 }
 
-export function generateStaticParams() {
+export function generateStaticParams(): { slug: string[] }[] {
   return source.getPages().map(page => ({
     lang: page.locale,
     slug: getPageImageUrl(page).segments,
