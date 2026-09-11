@@ -66,20 +66,20 @@ import { Download } from 'lucide-react';
 
 基准地址 `http://localhost:5678/api/open/extra`
 
-后端使用 [<Icon size={18}>logos-nodejs-icon</Icon> Node.js](https://nodejs.org) 搭建，所以如果你想使用这个功能则需要会写一些 JavaScript 代码
+后端使用 [<Icon>logos-nodejs-icon</Icon> Node.js](https://nodejs.org) 搭建，所以如果你想使用这个功能则需要会写一些 JavaScript 代码
 
 <Callout title="编写规范">
   将代码存放在 **config** 目录下的 `extra_server.js` 脚本中（自行创建），[重启服务](/docs/cli/server/service#开启重启服务)后生效，注意届时检查日志进行确认  
   脚本需要导出唯一函数名，已固定函数传参详见下方示例，接口服务框架采用 [Express v5](https://expressjs.com)，更多编写方法请查阅其文档
 </Callout>
 
-请参考下方的简单示例
+导出函数以及函数传参是固定的，请参考下方的简单示例
 
 <details>
 <summary>点此展开查看代码示例</summary>
 
 ```js title="extra_server.js" lineNumbers
-async function Main(api, resTemplate, logger) {
+export default async function main(api, resTemplate, logger) {
     // api express框架实例
     // resTemplate 接口响应内置模板（具体详见 src/backend/api/model.ts，也可以自定义）
     // logger 日志组件，支持分级（info、warn、debug、error、fatal），之后你可以在 server.log 中查看
@@ -105,9 +105,9 @@ async function Main(api, resTemplate, logger) {
         }
     })
 }
-
-module.exports = Main
 ```
+
+`/api/open/extra` 该系列接口仍需要通过鉴权才可以访问，但是目前没有实行权限细粒化管理，因此任何有效令牌都可以访问
 
 </details>
 
