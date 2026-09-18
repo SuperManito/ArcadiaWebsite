@@ -1,0 +1,12 @@
+{
+  "title": "消息记录",
+  "defaultOpen": false,
+  "pages": [
+    "schema",
+    "list",
+    "detail",
+    "unread-count",
+    "status",
+    "delete"
+  ]
+}

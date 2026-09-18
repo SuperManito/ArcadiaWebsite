@@ -1,0 +1,28 @@
+---
+title: 测试发送
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/channel/test</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '渠道名称，测试发送可省略，不做唯一性校验',
+      type: 'string',
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+    config: {
+      description: '渠道配置，支持对象或 JSON 字符串，字段结构与校验规则同[创建](/docs/api/channel/create)',
+      type: 'object | string',
+      required: true,
+    },
+  }}
+/>

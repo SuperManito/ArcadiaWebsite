@@ -15,8 +15,9 @@ import { POST } from '@/components/RequestTag';
       required: true,
     },
     ecosystem: {
-      description: '包管理生态，固定为 npm / pnpm / pip / apt / luarocks / gem 之一',
+      description: '包管理生态',
       type: 'string<Ecosystems>',
+      typeDescription: '取值 npm / pnpm / pip / apt / luarocks / gem',
       required: true,
     },
     remark: {
@@ -28,18 +29,76 @@ import { POST } from '@/components/RequestTag';
 
 ## 响应
 
-单个字符串时返回新创建的依赖记录，字段同 [数据关系模型](./schema)；字符串数组时返回批量创建结果：
-
 <TypeTable
+  noRequiredMark={true}
   type={{
-    count: {
-      description: '成功创建的记录数（仅字符串数组时返回）',
+    id: {
+      description: '唯一标识',
       type: 'number',
+      required: true,
+    },
+    name: {
+      description: '包名，可携带版本表达式，如 axios@1.7.0、requests>=2.0、curl',
+      type: 'string',
+      required: true,
+    },
+    ecosystem: {
+      description: '包管理生态，固定为 npm / pnpm / pip / apt / luarocks / gem 之一',
+      type: 'string',
+      required: true,
+    },
+    installed_ver: {
+      description: '安装成功后回写的实际版本号',
+      type: 'string',
+      required: true,
+    },
+    status: {
+      description: '状态',
+      typeDescription: '0 未安装，1 安装中，2 已安装，3 失败，4 卸载中',
+      type: 'number<0 | 1 | 2 | 3 | 4>',
+      required: true,
+    },
+    last_error: {
+      description: '最近一次失败时的命令输出（截取前 8000 字节）；安装成功时自动清空，从未失败则为空字符串',
+      type: 'string',
+      required: true,
+    },
+    remark: {
+      description: '用户备注',
+      type: 'string',
+      required: true,
+    },
+    create_time: {
+      description: '记录创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '记录最后更新时间',
+      type: 'string',
+      required: true,
     },
   }}
 />
 
+```json title="示例"
+{
+  "id": 3,
+  "name": "vue",
+  "ecosystem": "npm",
+  "installed_ver": "",
+  "status": 0,
+  "last_error": "",
+  "remark": "",
+  "create_time": "2024-01-01 00:00:00",
+  "update_time": "2024-01-01 00:00:00"
+}
+```
+
+批量创建时返回 `{ count: number }`
+
 <Callout>
-  单个与批量统一走同一套逐项校验：包名非空、非平台保留依赖、不与已有记录重复，
-  任一不合法则整体报错；批次内重复项自动去重。批量新增仅创建记录，不会自动触发安装。
+  单个与批量统一走同一套逐项校验：包名非空、非平台保留依赖、不与已有记录重复，任一不合法则整体报错，批次内重复项自动去重。
+
+  新增仅创建记录，不会自动触发安装。
 </Callout>

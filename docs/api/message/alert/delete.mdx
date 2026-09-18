@@ -1,0 +1,24 @@
+---
+title: 删除
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/message/alert/rule</DELETE>
+
+删除告警规则，事务内依次删除渠道关联、条件、规则。
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+成功返回标准成功结构。

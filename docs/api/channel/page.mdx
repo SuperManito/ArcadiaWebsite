@@ -1,0 +1,109 @@
+---
+title: 分页查询
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/channel/page</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    search: {
+      description: '名称模糊搜索',
+      type: 'string',
+    },
+    type: {
+      description: '渠道类型过滤',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+    },
+    order: {
+      description: '排序方向，0=升序，1=降序',
+      type: "string<'0' | '1'>",
+      default: 1,
+    },
+    orderBy: {
+      description: '排序字段，白名单：id / name / create_time / update_time',
+      type: 'string',
+      default: 'id',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'AlertChannel[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+- AlertChannel
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '渠道名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+    config: {
+      description: '渠道配置，JSON 字符串，字段结构见数据关系模型中的渠道配置',
+      type: 'string',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

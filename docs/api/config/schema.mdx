@@ -29,16 +29,18 @@ model config {
 
 | 字段 | 说明 | 用途 |
 |------|------|------|
-| `timezone` | IANA 时区标识符，默认 `Asia/Shanghai` | 《个人设置 - 通用》环境配置 |
-| `npmRegistry` | npm/pnpm 镜像源地址，留空使用官方源 | 《依赖管理》软件源配置 |
-| `pipIndexUrl` | pip index-url，留空使用 PyPI 官方源 | 《依赖管理》软件源配置 |
-| `aptMirrorUrl` | APT 镜像源根路径，留空使用官方源 | 《依赖管理》软件源配置 |
-| `gemRegistry` | RubyGems 镜像源地址，留空使用官方源 | 《依赖管理》软件源配置 |
-| `logRetentionDays` | 系统日志保留天数，默认 `7` | 《个人设置 - 通用》 历史数据清理 |
-| `messageRetentionDays` | 消息中心已读消息保留天数，默认 `7` | 《个人设置 - 通用》 历史数据清理 |
-| `taskHistoryRetentionDays` | 定时任务执行统计数据保留天数，默认 `7` | 《个人设置 - 通用》 历史数据清理 |
-| `cleanupCronExpression` | 定时清理任务 cron 表达式，为空时自动生成每日执行 | 《个人设置 - 通用》 历史数据清理 |
-| `cleanupCronEnabled` | 是否启用定时清理任务，`true` 启用 `false` 禁用，默认启用 | 《个人设置 - 通用》 历史数据清理 |
+| `timezone` | IANA 时区标识符，默认 `Asia/Shanghai` | ”个人设置 - 通用“环境配置 |
+| `npmRegistry` | npm/pnpm 镜像源地址，留空使用官方源 | ”环境配置 - 依赖管理“软件源配置 |
+| `pipIndexUrl` | pip index-url，留空使用 PyPI 官方源 | ”环境配置 - 依赖管理“软件源配置 |
+| `aptMirrorUrl` | APT 镜像源根路径，留空使用官方源 | ”环境配置 - 依赖管理“软件源配置 |
+| `gemRegistry` | RubyGems 镜像源地址，留空使用官方源 | ”环境配置 - 依赖管理“软件源配置 |
+| `serverLogRetentionDays` | 系统操作日志保留天数，默认 `7` | ”个人设置 - 通用“ 历史数据清理 |
+| `loginLogRetentionDays` | 系统登录日志保留天数，默认 `180` | ”个人设置 - 通用“ 历史数据清理 |
+| `openApiLogRetentionDays` | 开放接口日志保留天数，默认 `7` | ”个人设置 - 通用“ 历史数据清理 |
+| `messageRetentionDays` | 消息中心已读消息保留天数，默认 `7` | ”个人设置 - 通用“ 历史数据清理 |
+| `taskHistoryRetentionDays` | 定时任务执行统计数据保留天数，默认 `7` | ”个人设置 - 通用“ 历史数据清理 |
+| `cleanupCronExpression` | 定时清理任务 cron 表达式，为空时自动生成每日执行 | ”个人设置 - 通用“ 历史数据清理 |
+| `cleanupCronEnabled` | 是否启用定时清理任务，`true` 启用 `false` 禁用，默认启用 | ”个人设置 - 通用“ 历史数据清理 |
 
 ## CLI 配置（cli）
 
@@ -46,19 +48,18 @@ model config {
 
 | 字段 | 说明 | 用途 |
 |------|------|------|
-| `REMOVE_LOG_DAYS_AGO` | 代码文件运行日志保留天数（`arcadia rmlog`），默认 `7` | 《个人设置 - 通用》历史数据清理 |
-| `ENABLE_UPDATE_EXTRA` | 启用本地自定义更新脚本（`arcadia update`），`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `ENABLE_UPDATE_EXTRA_SYNC_FILE` | 启用远程自定义更新脚本（`arcadia update`），`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `UPDATE_EXTRA_SYNC_FILE_URL` | 远程自定义更新脚本地址（`arcadia update`） | 《个人设置 - 命令行》 |
-| `ENABLE_INIT_EXTRA` | 启用自定义初始化脚本（`arcadia init`），`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `ENABLE_TASK_BEFORE_EXTRA` | 启用运行代码文件运行前自定义脚本，`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `ENABLE_TASK_AFTER_EXTRA` | 启用运行代码文件运行后自定义脚本，`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `ENABLE_AUTO_DELETE_REMOTE_FILE` | 是否在运行代码文件后自动删除下载的远程文件（`arcadia run <url>`），`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `RUN_DELAY_MAX_SECONDS` | 自定义运行代码文件延迟执行命令选项的最大随机延迟（秒）（`arcadia run --delay`），默认 `300` | 《个人设置 - 命令行》 |
-| `ENABLE_CUSTOM_NOTIFY` | 启用自定义推送通知模块，`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
-| `DEFAULT_JS_RUNTIME` | 指定运行 JavaScript 脚本的默认运行时或执行器（`arcadia run`），默认 `node`，可选 `bun`、`deno` | 《个人设置 - 命令行》 |
-| `DEFAULT_TS_RUNTIME` | 指定运行 TypeScript 脚本的默认运行时或执行器（`arcadia run`），默认 `tsx`，可选 `bun`、`deno` 等 | 《个人设置 - 命令行》 |
-| `ENABLE_PYTHON_UV` | 启用 Python 脚本 uv 工具集成（`arcadia run`），`true` 启用，留空禁用 | 《个人设置 - 命令行》 |
+| `REMOVE_LOG_DAYS_AGO` | 代码文件运行日志保留天数（`arcadia rmlog`），默认 `7` | ”个人设置 - 通用“历史数据清理 |
+| `ENABLE_UPDATE_EXTRA` | 启用本地自定义更新脚本（`arcadia update`），`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `ENABLE_UPDATE_EXTRA_SYNC_FILE` | 启用远程自定义更新脚本（`arcadia update`），`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `UPDATE_EXTRA_SYNC_FILE_URL` | 远程自定义更新脚本地址（`arcadia update`） | ”个人设置 - CLI“ |
+| `ENABLE_INIT_EXTRA` | 启用自定义初始化脚本（`arcadia init`），`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `ENABLE_TASK_BEFORE_EXTRA` | 启用运行代码文件运行前自定义脚本，`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `ENABLE_TASK_AFTER_EXTRA` | 启用运行代码文件运行后自定义脚本，`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `ENABLE_AUTO_DELETE_REMOTE_FILE` | 是否在运行代码文件后自动删除下载的远程文件（`arcadia run <url>`），`true` 启用，留空禁用 | ”个人设置 - CLI“ |
+| `RUN_DELAY_MAX_SECONDS` | 自定义运行代码文件延迟执行命令选项的最大随机延迟（秒）（`arcadia run --delay`），默认 `300` | ”个人设置 - CLI“ |
+| `DEFAULT_JS_RUNTIME` | 指定运行 JavaScript 脚本的默认运行时或执行器（`arcadia run`），默认 `node`，可选 `bun`、`deno` | ”个人设置 - CLI“ |
+| `DEFAULT_TS_RUNTIME` | 指定运行 TypeScript 脚本的默认运行时或执行器（`arcadia run`），默认 `tsx`，可选 `bun`、`deno` 等 | ”个人设置 - CLI“ |
+| `ENABLE_PYTHON_UV` | 启用 Python 脚本 uv 工具集成（`arcadia run`），`true` 启用，留空禁用 | ”个人设置 - CLI“ |
 
 ## 用户配置（user）
 

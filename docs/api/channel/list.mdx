@@ -1,0 +1,38 @@
+---
+title: 获取列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/channel/list</GET>
+
+精简列表，按 `id` 升序，供告警规则表单选择关联渠道
+
+## 请求
+
+无参数
+
+## 响应
+
+返回数组对象
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '渠道唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '渠道名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+  }}
+/>

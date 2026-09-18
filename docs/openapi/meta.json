@@ -9,6 +9,7 @@
     "cron",
     "env",
     "exec",
-    "message"
+    "message",
+    "dependency"
   ]
 }

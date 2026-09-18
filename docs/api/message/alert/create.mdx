@@ -1,0 +1,72 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/rule</POST>
+
+新建告警规则。写入在事务内完成：创建规则 → 批量插入条件（`sort` = 数组下标）→ 批量插入渠道关联。
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '规则名称，必填、trim 后非空、≤ 50 字符、全局唯一',
+      type: 'string',
+      required: true,
+    },
+    logic: {
+      description: '条件组合逻辑，缺省 and',
+      type: "string<'and' | 'or'>",
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔字符串，逐项校验合法值，空允许（空=不限）',
+      type: 'string',
+    },
+    types: {
+      description: '消息级别多选，逗号分隔字符串，逐项校验合法值，空允许（空=不限）',
+      type: 'string',
+    },
+    conditions: {
+      description: '匹配条件数组，长度 ≥ 1；保存时忽略传入的 sort，统一按数组下标重排',
+      type: 'Condition[]',
+      required: true,
+    },
+    channelIds: {
+      description: '关联渠道 id 数组，逐项必须存在、自动去重，渠道间无顺序语义',
+      type: 'number[]',
+      required: true,
+    },
+  }}
+/>
+
+- Condition
+
+<TypeTable
+  type={{
+    mode: {
+      description: '匹配模式',
+      type: "string<'simple' | 'regex'>",
+      required: true,
+    },
+    field: {
+      description: '匹配字段',
+      type: "string<'title' | 'content'>",
+      required: true,
+    },
+    operator: {
+      description: '匹配运算符，文本模式 8 个 / 正则模式 2 个，见[数据关系模型](/docs/api/message/alert/schema)中的枚举取值',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '匹配值；除 empty / not_empty 外必填，两侧空白会被去除；正则模式需通过正则校验器（语法合法、≤ 512 字符），执行超时或异常按不命中处理',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+成功返回标准成功结构，`result` 为新建规则对象，结构同[分页查询](/docs/api/message/alert/page#响应)中的 MessageAlertRuleItem（不含 channelCount）。

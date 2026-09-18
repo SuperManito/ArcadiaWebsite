@@ -12,8 +12,9 @@
     "environment",
     "configuration",
     "sync",
+    "message",
+    "channel",
     "tgbot/index",
-    "notify",
     "---使用---",
     "panel",
     "update"

@@ -160,6 +160,11 @@ import { GET } from '@/components/RequestTag';
       type: 'number',
       required: true,
     },
+    error_alert: {
+      description: '运行失败告警关联的通知渠道 ID（逗号分隔），空字符串表示不告警',
+      type: 'string',
+      required: true,
+    },
     is_running: {
       description: '当前运行状态（任务是否正在运行）',
       type: 'boolean',
@@ -214,6 +219,7 @@ import { GET } from '@/components/RequestTag';
       "remark": "",
       "bind": "",
       "error_notify": 1,
+      "error_alert": "",
       "is_running": false
     },
     {
@@ -232,6 +238,7 @@ import { GET } from '@/components/RequestTag';
       "remark": "",
       "bind": "",
       "error_notify": 1,
+      "error_alert": "",
       "is_running": true
     },
     ...

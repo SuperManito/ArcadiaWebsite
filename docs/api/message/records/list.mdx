@@ -1,0 +1,125 @@
+---
+title: 分页查询
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/list</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    order: {
+      description: '排序方向，0=升序，1=降序',
+      type: "string<'0' | '1'>",
+      default: 1,
+    },
+    orderBy: {
+      description: '排序字段，目前仅支持 create_time',
+      type: 'string',
+      default: 'create_time',
+    },
+    category: {
+      description: '消息分类过滤，支持逗号分隔多值（如 system,cron）',
+      type: 'string',
+      typeDescription: 'system、cron、user，多个用逗号分隔',
+    },
+    type: {
+      description: '消息级别过滤，支持逗号分隔多值（如 info,error）',
+      type: 'string',
+      typeDescription: 'info、warn、error、success，多个用逗号分隔',
+    },
+    status: {
+      description: '已读状态过滤',
+      type: "string<'0' | '1'>",
+      typeDescription: '1 已读，0 未读',
+    },
+    search: {
+      description: '搜索内容过滤，仅涉及消息标题和消息内容',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'MessageData[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+- MessageData
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    category: {
+      description: '消息分类',
+      type: 'string',
+      typeDescription: 'system、cron、user',
+      required: true,
+    },
+    type: {
+      description: '消息级别',
+      type: "string<'info' | 'warn' | 'error' | 'success'>",
+      required: true,
+    },
+    title: {
+      description: '消息标题',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '消息内容',
+      type: 'string',
+      required: true,
+    },
+    status: {
+      description: '已读状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 已读，0 未读',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

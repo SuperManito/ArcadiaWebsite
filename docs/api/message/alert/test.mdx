@@ -1,0 +1,119 @@
+---
+title: 命中测试
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/rule/test</POST>
+
+用给定规则与模拟消息测试命中情况。规则载荷校验与保存共用（含正则校验器），非法正则返回错误而非未命中。不落库、不发送通知。
+
+## 请求
+
+<TypeTable
+  type={{
+    rule: {
+      description: '规则载荷，字段见下方 RulePayload',
+      type: 'RulePayload',
+      required: true,
+    },
+    message: {
+      description: '模拟消息，字段见下方 TestMessage',
+      type: 'TestMessage',
+      required: true,
+    },
+  }}
+/>
+
+- RulePayload
+
+<TypeTable
+  type={{
+    logic: {
+      description: '条件组合逻辑，缺省 and',
+      type: "string<'and' | 'or'>",
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔字符串，空允许（空=不限）',
+      type: 'string',
+    },
+    types: {
+      description: '消息级别多选，逗号分隔字符串，空允许（空=不限）',
+      type: 'string',
+    },
+    conditions: {
+      description: '匹配条件数组，长度 ≥ 1，单项结构同[创建](/docs/api/message/alert/create)中的 Condition',
+      type: 'Condition[]',
+      required: true,
+    },
+  }}
+/>
+
+- TestMessage
+
+<TypeTable
+  type={{
+    title: {
+      description: '模拟消息标题，与 content 至少一项非空',
+      type: 'string',
+    },
+    content: {
+      description: '模拟消息内容，与 title 至少一项非空',
+      type: 'string',
+    },
+    category: {
+      description: '模拟消息分类，可选',
+      type: "string<'system' | 'cron' | 'user'>",
+    },
+    type: {
+      description: '模拟消息级别，可选',
+      type: "string<'info' | 'warn' | 'error' | 'success'>",
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    matched: {
+      description: '规则整体是否命中（含分类/级别范围过滤与条件组合逻辑）',
+      type: 'boolean',
+      required: true,
+    },
+    conditions: {
+      description: '逐条条件命中明细，按条件序号排列',
+      type: 'ConditionResult[]',
+      required: true,
+    },
+  }}
+/>
+
+- ConditionResult
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    sort: {
+      description: '条件序号，0 起',
+      type: 'number',
+      required: true,
+    },
+    matched: {
+      description: '该条件是否命中',
+      type: 'boolean',
+      required: true,
+    },
+  }}
+/>
+
+响应示例：
+
+```json
+{
+  "matched": true,
+  "conditions": [
+    { "sort": 0, "matched": true }
+  ]
+}
+```

@@ -27,8 +27,8 @@ model dependencyManage {
 | 字段 | 说明 |
 |------|------|
 | `name` | 包名，可携带版本表达式，如 `axios@1.7.0`、`requests>=2.0`、`curl` |
-| `ecosystem` | 包管理生态，固定为 `npm`、`pnpm`、`pip`、`apt` 之一 |
-| `installed_ver` | 安装成功后回写的实际版本号；空字符串表示尚未安装 |
+| `ecosystem` | 包管理生态，固定为 `npm`、`pnpm`、`pip`、`apt`、`luarocks`、`gem` 之一 |
+| `installed_ver` | 安装成功后回写的实际版本号 |
 | `status` | 状态码，见下表 |
 | `last_error` | 最近一次失败时的命令输出（截取前 8000 字节）；安装成功时自动清空 |
 | `remark` | 用户备注 |

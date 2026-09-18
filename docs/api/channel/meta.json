@@ -1,0 +1,14 @@
+{
+  "title": "Channel 通知渠道",
+  "icon": "Send",
+  "pages": [
+    "schema",
+    "page",
+    "list",
+    "detail",
+    "create",
+    "update",
+    "delete",
+    "test"
+  ]
+}

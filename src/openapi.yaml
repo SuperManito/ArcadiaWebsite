@@ -11,13 +11,13 @@ info:
     | `code` | `number<0 \| 1 \| 4400 \| 4401 \| 4403 \| 4404 \| 4405>` | 业务代码，详见下方 |
     | `message` | `string` | 消息 |
     | `type` | `string` | 类型 |
-    | `result` | `boolean \| object \| string` | 结果 |
+    | `result` | `boolean \| object \| string` | 结果（仅请求成功时存在） |
 
     ## 业务代码说明
     |  状态码  |         含义           | 说明                             |
     | :-----: | :-------------------: | :-----------------------------: |
-    |  `0`    |          OK           | 请求成功                          |
-    |  `1`    |         FAIL          | 请求失败                          |
+    |  `1`    |          OK           | 请求成功                          |
+    |  `0`    |         FAIL          | 请求失败                          |
     |  `4400` |      BAD REQUEST      | 请求的地址不存在或者包含不支持的参数   |
     |  `4401` |     UNAUTHORIZED      | 未提供授权信息                     |
     |  `4403` |       FORBIDDEN       | 认证失败                          |
@@ -43,6 +43,7 @@ tags:
   - name: Cron 定时任务
   - name: Exec 命令执行
   - name: Message 消息中心
+  - name: Dependency 依赖管理
 
 components:
   securitySchemes:
@@ -71,9 +72,6 @@ components:
       description: 变量状态过滤，`1` 启用、`0` 禁用，多个用英文逗号分隔
       schema:
         type: string
-        enum:
-          - '0'
-          - '1'
     EnvPageTagsParam:
       name: tags
       in: query
@@ -122,9 +120,6 @@ components:
       description: 启用/禁用状态过滤，`1` 启用、`0` 禁用，多个用英文逗号分隔
       schema:
         type: string
-        enum:
-          - '0'
-          - '1'
     CronPageTagsParam:
       name: tags
       in: query
@@ -156,6 +151,54 @@ components:
       schema:
         type: string
     CronPageSizeParam:
+      name: size
+      in: query
+      description: 指定分页大小数量，默认20
+      schema:
+        type: string
+    DependencyPageEcosystemParam:
+      name: ecosystem
+      in: query
+      description: 包管理生态过滤
+      schema:
+        $ref: '#/components/schemas/DependencyEcosystem'
+    DependencyPageStatusParam:
+      name: status
+      in: query
+      description: 安装状态过滤，`0` 未安装、`1` 安装中、`2` 已安装、`3` 安装失败、`4` 卸载中
+      schema:
+        type: string
+        enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+    DependencyPageSearchParam:
+      name: search
+      in: query
+      description: 搜索内容过滤，涉及依赖名称、备注
+      schema:
+        type: string
+    DependencyPageOrderByParam:
+      name: orderBy
+      in: query
+      description: 指定排序字段，默认按 id 降序
+      schema:
+        $ref: '#/components/schemas/DependencyOrderBy'
+    DependencyPageOrderParam:
+      name: order
+      in: query
+      description: 指定排序方式 0 升序 | 1 降序，默认降序
+      schema:
+        $ref: '#/components/schemas/SortDirection'
+    DependencyPagePageParam:
+      name: page
+      in: query
+      description: 指定页数，默认1
+      schema:
+        type: string
+    DependencyPageSizeParam:
       name: size
       in: query
       description: 指定分页大小数量，默认20
@@ -214,7 +257,7 @@ components:
           description: 唯一标识
         group_id:
           type: integer
-          description: envsGroup 表 id 字段关联记录，为0时表示普通变量
+          description: 所属复合变量(组)的唯一标识（envsGroup 表 id 字段关联记录），`0` 表示普通变量
         type:
           type: string
           description: 变量名称
@@ -454,7 +497,7 @@ components:
           $ref: '#/components/schemas/BinaryStatus'
         config:
           type: string
-          description: 高级配置（值为 JSON 序列化后的字符串）
+          description: 高级配置（值为 JSON 序列化后的字符串，结构见 CronTaskConfig）
           x-typescript-type: CronTaskConfig
         tags:
           type: string
@@ -463,6 +506,7 @@ components:
           type:
             - string
             - 'null'
+          format: date-time
           description: 最后一次运行的时间
         last_run_use:
           type:
@@ -474,13 +518,14 @@ components:
           description: 在分页中的位置序号（正整数），默认按照先后顺序递增
         create_time:
           type: string
+          format: date-time
           description: 任务创建时间
         remark:
           type: string
           description: 备注
         bind:
           type: string
-          description: 后端用于关联底层内容的参数（仅系统任务使用）
+          description: 任务关联的内部标识（仅系统任务返回）
         error_notify:
           type: integer
           description: 任务执行失败时是否自动推送通知（1=启用，0=禁用）
@@ -508,7 +553,13 @@ components:
             - remark
             - bind
             - error_notify
+            - error_alert
             - is_running
+        - type: object
+          properties:
+            error_alert:
+              type: string
+              description: 运行失败告警关联的通知渠道 ID（逗号分隔），内部业务字段
     CronCreateRequest:
       description: 创建定时任务请求体（name、cron、shell 必填）
       allOf:
@@ -547,10 +598,10 @@ components:
           description: 任务运行后的执行命令
         log_directory:
           type: string
-          description: 日志目录路径（纯前端功能关联数据）
+          description: 任务日志目录路径（纯前端功能关联数据）
         source_file:
           type: string
-          description: 源码文件路径（纯前端功能关联数据）
+          description: 任务源码文件路径（纯前端功能关联数据）
         allow_concurrency:
           type: boolean
           description: 是否允许并发
@@ -617,9 +668,11 @@ components:
           $ref: '#/components/schemas/FileType'
         updated_at:
           type: string
+          format: date-time
           description: 最后修改时间
         created_at:
           type: string
+          format: date-time
           description: 创建时间
         count:
           type: integer
@@ -643,9 +696,11 @@ components:
           $ref: '#/components/schemas/FileType'
         updated_at:
           type: string
+          format: date-time
           description: 最后修改时间
         created_at:
           type: string
+          format: date-time
           description: 创建时间
         children:
           type: array
@@ -683,15 +738,19 @@ components:
           description: 格式化大小（带单位）
         modified_time:
           type: string
+          format: date-time
           description: 内容最后一次被修改的时间
         accessed_time:
           type: string
+          format: date-time
           description: 最后一次被访问的时间
         created_time:
           type: string
+          format: date-time
           description: 创建时间
         changed_time:
           type: string
+          format: date-time
           description: 属性（如权限或链接）最后一次被更改的时间
       required:
         - type
@@ -709,7 +768,7 @@ components:
       properties:
         path:
           type: string
-          description: 存储路径
+          description: 目标目录的绝对路径
         name:
           type: string
           description: 名称
@@ -785,6 +844,7 @@ components:
         startedAt:
           oneOf:
             - type: string
+              format: date-time
               description: 启动时间
             - type: 'null'
           description: 启动时间（仅 `running` 为 `true` 时存在）
@@ -814,6 +874,47 @@ components:
           description: 变量内容（可省略）
       required:
         - key
+    ExecStreamEvent:
+      type: object
+      description: |
+        SSE 流中每条 `data:` 消息的 JSON 结构，消息格式：`data:<JSON>\n\n`
+
+        ```ts title="数据格式"
+        interface StreamEvent {
+          type: 'start' | 'log' | 'exit' | 'error' // 事件类型
+          runId: string // 事件id，仅 `log` 和 `error` 事件存在
+          stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
+          log: string // 日志内容，仅 `log` 和 `error` 事件存在
+        }
+        ```
+      properties:
+        type:
+          type: string
+          enum:
+            - start
+            - log
+            - exit
+            - error
+          description: 事件类型
+        runId:
+          type: string
+          description: 事件 id，仅 `log` 和 `error` 事件存在
+        stream:
+          type: string
+          enum:
+            - stdout
+            - stderr
+          description: 输出流类型，仅 `log` 事件存在
+        log:
+          type: string
+          description: 日志内容，仅 `log` 和 `error` 事件存在
+    MessageCategory:
+      type: string
+      enum:
+        - system
+        - cron
+        - user
+      description: 消息分类
     MessageType:
       type: string
       enum:
@@ -845,8 +946,7 @@ components:
           type: integer
           description: 唯一标识
         category:
-          type: string
-          description: 消息类型
+          $ref: '#/components/schemas/MessageCategory'
         type:
           $ref: '#/components/schemas/MessageType'
         title:
@@ -860,6 +960,7 @@ components:
           description: 读取状态，`0` 未读、`1` 已读
         create_time:
           type: string
+          format: date-time
           description: 创建时间
       required:
         - id
@@ -869,28 +970,6 @@ components:
         - content
         - status
         - create_time
-    MessageListParams:
-      type: object
-      properties:
-        page:
-          type: integer
-          default: 1
-        size:
-          type: integer
-          default: 20
-        status:
-          type: string
-          description: 状态筛选（0=未读，1=已读）
-        search:
-          type: string
-          description: 搜索关键词
-        order:
-          type: string
-          enum: ['0', '1']
-          description: 指定排序方式 0 升序 | 1 降序，默认降序
-        orderBy:
-          type: string
-          default: create_time
     MessageListResult:
       description: 消息列表响应
       allOf:
@@ -905,7 +984,9 @@ components:
             - data
     MessageReadStatusRequest:
       type: object
-      required: [id, status]
+      required:
+        - id
+        - status
       properties:
         id:
           oneOf:
@@ -926,7 +1007,8 @@ components:
           description: 目标状态（1=已读，0=未读）
     MessageDeleteRequest:
       type: object
-      required: [id]
+      required:
+        - id
       properties:
         id:
           oneOf:
@@ -937,12 +1019,162 @@ components:
           description: 消息 ID（单个或数组）
     UnreadCountResponse:
       type: object
+      description: 未读消息数量统计
       properties:
         total:
           type: integer
+          description: 未读消息数量
+      required:
+        - total
+    DependencyEcosystem:
+      type: string
+      enum:
+        - npm
+        - pnpm
+        - pip
+        - apt
+        - luarocks
+        - gem
+      description: 包管理生态
+    DependencyStatus:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+      description: 安装状态，`0` 未安装、`1` 安装中、`2` 已安装、`3` 安装失败、`4` 卸载中
+    DependencyOrderBy:
+      type: string
+      enum:
+        - name
+        - ecosystem
+        - status
+        - installed_ver
+        - create_time
+        - update_time
+      description: 指定排序字段
+    DependencyData:
+      type: object
+      description: 依赖完整记录（响应数据）
+      properties:
+        id:
+          type: integer
+          description: 唯一标识
+        name:
+          type: string
+          description: 依赖名称
+        ecosystem:
+          $ref: '#/components/schemas/DependencyEcosystem'
+        installed_ver:
+          type: string
+          description: 已安装版本，未安装时为空字符串
+        status:
+          $ref: '#/components/schemas/DependencyStatus'
+        last_error:
+          type: string
+          description: 最近一次操作的错误信息，无错误时为空字符串
+        remark:
+          type: string
+          description: 备注
+        create_time:
+          type: string
+          format: date-time
+          description: 创建时间
+        update_time:
+          type: string
+          format: date-time
+          description: 更新时间
+      required:
+        - id
+        - name
+        - ecosystem
+        - installed_ver
+        - status
+        - last_error
+        - remark
+        - create_time
+        - update_time
+    DependencyPageResponse:
+      description: 依赖分页响应
+      allOf:
+        - $ref: '#/components/schemas/PageResponseBase'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/DependencyData'
+          required:
+            - data
+    DependencyErrorLog:
+      type: object
+      description: 依赖错误日志
+      properties:
+        id:
+          type: integer
+          description: 唯一标识
+        last_error:
+          type: string
+          description: 最近一次操作的错误信息，无错误时为空字符串
+      required:
+        - id
+        - last_error
+    DependencyIdOrIds:
+      oneOf:
+        - type: integer
+          description: 唯一标识
+        - type: array
+          items:
+            type: integer
+            description: 唯一标识
+    DependencyCreateRequest:
+      type: object
+      description: 添加依赖请求体
+      properties:
+        name:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: 依赖名称（单个或数组，支持批量添加，可包含版本表达式）
+        ecosystem:
+          $ref: '#/components/schemas/DependencyEcosystem'
+        remark:
+          type: string
+          description: 备注
+      required:
+        - name
+        - ecosystem
+    DependencyBatchCreateResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: 批量添加时成功添加的数量
+      required:
+        - count
+    DependencyActionRequest:
+      type: object
+      description: 依赖操作请求体
+      properties:
+        action:
+          type: string
+          enum: [install, uninstall, sync]
+          description: 操作类型，`install` 安装、`uninstall` 卸载、`sync` 同步安装状态
+        ids:
+          type: array
+          description: 依赖 ID 列表，`action` 为 install / uninstall 时必填，sync 时可省略
+          items:
+            type: integer
+      required:
+        - action
 paths:
   /file/v1/list:
     get:
+      operationId: fileList
       summary: 获取文件列表
       tags:
         - File 文件系统
@@ -957,13 +1189,14 @@ paths:
           description: 是否返回目录子项数量，`1` 返回、`0` 不返回，默认 `0`
       responses:
         '200':
-          description: 响应
+          description: 返回目标路径的目录信息与子项列表
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileListResponse'
   /file/v1/content:
     get:
+      operationId: fileGetContent
       summary: 获取文件内容
       tags:
         - File 文件系统
@@ -971,16 +1204,18 @@ paths:
         - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
-          description: 响应
+          description: 返回文件文本内容（`text/plain`，非 JSON 包装）
           content:
             text/plain:
               schema:
                 type: string
     post:
+      operationId: fileSaveContent
       summary: 保存文件内容
       tags:
         - File 文件系统
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -997,30 +1232,33 @@ paths:
                 - content
       responses:
         '200':
-          description: 响应
+          description: 返回保存结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /file/v1/delete:
     post:
+      operationId: fileDelete
       summary: 删除
       tags:
         - File 文件系统
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/FileDeleteRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回删除结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /file/v1/info:
     get:
+      operationId: fileInfo
       summary: 查询属性
       tags:
         - File 文件系统
@@ -1028,64 +1266,71 @@ paths:
         - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
-          description: 响应
+          description: 返回文件属性信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileInfoResponse'
   /file/v1/create:
     post:
+      operationId: fileCreate
       summary: 创建
       tags:
         - File 文件系统
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/FileCreateRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回创建结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /file/v1/move:
     post:
+      operationId: fileMove
       summary: 移动
       tags:
         - File 文件系统
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/FileMoveRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回移动结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /file/v1/rename:
     post:
+      operationId: fileRename
       summary: 重命名
       tags:
         - File 文件系统
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/FileRenameRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回重命名结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /file/v1/download:
     get:
+      operationId: fileDownload
       summary: 下载
       description: 下载目录时会压缩成 `zip` 文件
       tags:
@@ -1094,29 +1339,55 @@ paths:
         - $ref: '#/components/parameters/FilePathParam'
       responses:
         '200':
-          description: 响应
+          description: 返回文件内容，以附件形式下载；下载目录时为打包后的 `zip` 文件
           content:
-            application/json:
+            application/octet-stream:
               schema:
-                type: boolean
+                type: string
+                format: binary
   /file/v1/upload:
     post:
+      operationId: fileUpload
       summary: 上传
-      description: 接口特殊，使用 `query` 即 `URLParams` 传参，暂不支持上传目录
+      description: 目标目录通过 `path` 查询参数指定，暂不支持上传目录
       tags:
         - File 文件系统
       parameters:
         - $ref: '#/components/parameters/FilePathParam'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 要上传的文件
       responses:
         '200':
-          description: 响应
+          description: 返回保存后的文件名与完整路径
           content:
             application/json:
               schema:
-                type: boolean
+                type: object
+                properties:
+                  fileName:
+                    type: string
+                    description: 保存后的文件名
+                  filePath:
+                    type: string
+                    description: 保存后的完整路径
+                required:
+                  - fileName
+                  - filePath
 
   /env/v1/page:
     get:
+      operationId: envPageList
       summary: 分页查询
       tags:
         - Env 环境变量
@@ -1132,13 +1403,14 @@ paths:
         - $ref: '#/components/parameters/EnvPageSizeParam'
       responses:
         '200':
-          description: 响应
+          description: 返回环境变量分页数据
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EnvPageResponse'
   /env/v1/query:
     get:
+      operationId: envQuery
       summary: 全局查询
       description: 至少需要提供 `name`、`description` 的其中一个参数
       tags:
@@ -1156,7 +1428,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 响应
+          description: 返回匹配的变量列表
           content:
             application/json:
               schema:
@@ -1165,6 +1437,7 @@ paths:
                   $ref: '#/components/schemas/EnvQueryResult'
   /env/v1/queryMember:
     get:
+      operationId: envQueryMember
       summary: 查询复合变量(组)的成员
       description: 查询会区分大小写，另外如果查询条件包含特殊字符 % 等情况可能会存在不符合预期的结果。至少需要提供 `value`、`remark` 的其中一个参数
       tags:
@@ -1188,7 +1461,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 响应
+          description: 返回匹配的复合变量成员列表
           content:
             application/json:
               schema:
@@ -1197,8 +1470,9 @@ paths:
                   $ref: '#/components/schemas/EnvsData'
   /env/v1/queryById:
     get:
+      operationId: envQueryById
       summary: 精准查询
-      description: '`ordinary` 和 `composite_value` 在这里实际上是等价的，因为普通变量和复合变量的成员(值)都存储在同一张数据表中，为了不给开发者造成困惑故保留此设计'
+      description: '`ordinary` 和 `composite_value` 查询等价：普通变量和复合变量的成员(值)返回相同的记录结构'
       tags:
         - Env 环境变量
       parameters:
@@ -1216,7 +1490,7 @@ paths:
             type: string
       responses:
         '200':
-          description: 响应
+          description: 返回变量或变量组的完整信息
           content:
             application/json:
               schema:
@@ -1225,6 +1499,7 @@ paths:
                   - $ref: '#/components/schemas/EnvsGroupData'
   /env/v1/tags:
     get:
+      operationId: envGetTags
       summary: 获取所有标签
       tags:
         - Env 环境变量
@@ -1233,7 +1508,7 @@ paths:
         - $ref: '#/components/parameters/EnvCompositeIdParam'
       responses:
         '200':
-          description: 响应
+          description: 返回标签列表
           content:
             application/json:
               schema:
@@ -1242,6 +1517,7 @@ paths:
                   $ref: '#/components/schemas/EnvTagItem'
   /env/v1/create:
     post:
+      operationId: envCreate
       summary: 创建
       tags:
         - Env 环境变量
@@ -1272,7 +1548,7 @@ paths:
                 - data
       responses:
         '200':
-          description: 响应
+          description: 返回创建后的变量或变量组信息，批量创建时返回成功创建的数量
           content:
             application/json:
               schema:
@@ -1282,11 +1558,13 @@ paths:
                   - $ref: '#/components/schemas/EnvBatchCreateResult'
   /env/v1/update:
     post:
+      operationId: envUpdate
       summary: 更新
-      description: 如果是批量更新则返回数组对象
+      description: 更新变量或变量组，批量更新时返回数组
       tags:
         - Env 环境变量
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1309,7 +1587,7 @@ paths:
                 - data
       responses:
         '200':
-          description: 响应
+          description: 返回更新后的变量或变量组信息，批量更新时返回数组
           content:
             application/json:
               schema:
@@ -1324,48 +1602,54 @@ paths:
                   - $ref: '#/components/schemas/EnvsGroupData'
   /env/v1/changeStatus:
     post:
+      operationId: envChangeStatus
       summary: 更改状态
       tags:
         - Env 环境变量
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EnvChangeStatusRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回操作结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /env/v1/order:
     post:
+      operationId: envOrder
       summary: 调整排序
       tags:
         - Env 环境变量
       requestBody:
+        required: true
         description: |
-          至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。另外只有复合变量值的排序有实际意义，并且在前端设计中只有管理复合变量值的表格中加上了正向排序的功能。
+          至少需要提供 `order` 或 `moveToEnd` 其中一个：提供 `moveToEnd` 时记录移到最后，`order` 的值会被覆盖为所有记录 `sort` 字段中的最大值；与其相反的置顶操作是将 `order` 设置为 `1`。
 
-          除复合变量值以外对于其它变量记录的排序无实际意义且操作方向相反，因为分页数据是倒序返回的，即最近添加的变量靠前展示。
+          注意分页数据默认按 `sort` 降序返回，即最近添加的记录排在最前，因此除复合变量成员外，其它变量记录的排序调整在展示上是反向的，置顶/置底需结合展示视角区分使用；只有复合变量成员的排序有实际展示意义。
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EnvOrderRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回操作结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /env/v1/delete:
     post:
+      operationId: envDelete
       summary: 删除
       tags:
         - Env 环境变量
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -1380,7 +1664,7 @@ paths:
                 - id
       responses:
         '200':
-          description: 响应
+          description: 返回删除结果，成功为 `true`
           content:
             application/json:
               schema:
@@ -1388,6 +1672,7 @@ paths:
 
   /cron/v1/page:
     get:
+      operationId: cronPageList
       summary: 分页查询
       tags:
         - Cron 定时任务
@@ -1402,13 +1687,14 @@ paths:
         - $ref: '#/components/parameters/CronPageSizeParam'
       responses:
         '200':
-          description: 响应
+          description: 返回定时任务分页数据
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronPageResponse'
   /cron/v1/query:
     get:
+      operationId: cronQuery
       summary: 查询
       description: 查询定时任务
       tags:
@@ -1422,119 +1708,54 @@ paths:
             type: string
       responses:
         '200':
-          description: 响应
+          description: 返回任务完整信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronData'
   /cron/v1/create:
     post:
+      operationId: cronCreate
       summary: 创建
       description: 根据项目功能设计，开放接口目前只允许创建用户任务。
       tags:
         - Cron 定时任务
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CronCreateRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回创建后的任务完整信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronData'
   /cron/v1/update:
     post:
+      operationId: cronUpdate
       summary: 更新
       tags:
         - Cron 定时任务
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CronUpdateRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回更新后的任务完整信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronData'
   /cron/v1/delete:
     post:
+      operationId: cronDelete
       summary: 删除
-      tags:
-        - Cron 定时任务
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  $ref: '#/components/schemas/CronIdOrIds'
-              required:
-                - id
-      responses:
-        '200':
-          description: 响应
-          content:
-            application/json:
-              schema:
-                type: boolean
-  /cron/v1/order:
-    post:
-      summary: 调整排序
-      tags:
-        - Cron 定时任务
-      requestBody:
-        description: 至少需要提供 `order` 或 `moveToEnd` 其中一个，设置 `moveToEnd` 时 `order` 参数的值会被覆盖为所有记录 `sort` 字段中的最大值，与其相反的操作是将 `order` 参数的值设置为 `1`。关于置顶或置底操作应建立在可视角度上，后端分页数据默认均为倒序返回所以应注意区分使用场景。
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CronOrderRequest'
-      responses:
-        '200':
-          description: 响应
-          content:
-            application/json:
-              schema:
-                type: boolean
-  /cron/v1/tagsList:
-    get:
-      summary: 获取标签列表
-      description: 目前用于系统定时任务类型过滤，使用分页接口的 `tags` 参数，具体取自 `bind` 记录值的中间字段。
-      tags:
-        - Cron 定时任务
-      responses:
-        '200':
-          description: 响应
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CronTagItem'
-  /cron/v1/runningTasks:
-    get:
-      summary: 查询运行中的任务
-      tags:
-        - Cron 定时任务
-      responses:
-        '200':
-          description: 响应
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CronData'
-  /cron/v1/run:
-    post:
-      summary: 运行任务
-      description: 主动运行和按照定时计划自动触发运行的过程大致相同，不过要注意区分后台管理面板设计的调试功能，该调试仅执行定时任务记录项所存储的 `shell` 字段命令，在运行完毕后不会更新定时任务的运行状态、最后运行时间等关键信息。
       tags:
         - Cron 定时任务
       requestBody:
@@ -1550,13 +1771,90 @@ paths:
                 - id
       responses:
         '200':
-          description: 响应
+          description: 返回删除结果，成功为 `true`
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /cron/v1/order:
+    post:
+      operationId: cronOrder
+      summary: 调整排序
+      tags:
+        - Cron 定时任务
+      requestBody:
+        required: true
+        description: 至少需要提供 `order` 或 `moveToEnd` 其中一个：提供 `moveToEnd` 时记录移到最后，`order` 的值会被覆盖为所有记录 `sort` 字段中的最大值；与其相反的置顶操作是将 `order` 设置为 `1`。注意分页数据默认按 `sort` 降序返回，置顶/置底需结合展示视角区分使用。
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CronOrderRequest'
+      responses:
+        '200':
+          description: 返回操作结果，成功为 `true`
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /cron/v1/tagsList:
+    get:
+      operationId: cronGetTagsList
+      summary: 获取标签列表
+      description: 获取系统任务的标签列表，可用于分页查询接口的 `tags` 过滤参数。
+      tags:
+        - Cron 定时任务
+      responses:
+        '200':
+          description: 返回系统任务标签列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CronTagItem'
+  /cron/v1/runningTasks:
+    get:
+      operationId: cronGetRunningTasks
+      summary: 查询运行中的任务
+      tags:
+        - Cron 定时任务
+      responses:
+        '200':
+          description: 返回正在运行的任务列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CronData'
+  /cron/v1/run:
+    post:
+      operationId: cronRun
+      summary: 运行任务
+      description: 主动触发任务执行一次，行为与按定时计划自动触发一致：运行结束后会更新任务的运行状态、最后运行时间等信息。
+      tags:
+        - Cron 定时任务
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  $ref: '#/components/schemas/CronIdOrIds'
+              required:
+                - id
+      responses:
+        '200':
+          description: 返回触发结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /cron/v1/terminate:
     post:
+      operationId: cronTerminate
       summary: 终止任务
       description: 无法有效判断操作结果，因为存在少数任务进程没有被终止的异常情况，`is_running` 字段的值在任务被终止后或正常运行完毕后才会更新。
       tags:
@@ -1574,7 +1872,7 @@ paths:
                 - id
       responses:
         '200':
-          description: 响应
+          description: 返回终止结果，成功为 `true`
           content:
             application/json:
               schema:
@@ -1582,6 +1880,7 @@ paths:
 
   /exec/v1/status:
     get:
+      operationId: execGetStatus
       summary: 查询运行状态
       description: 任务结束后记录自动清除，`running` 为 `false` 表示已结束或未找到，可轮询此接口实现队列管理。
       tags:
@@ -1590,15 +1889,16 @@ paths:
         - $ref: '#/components/parameters/ExecRunIdParam'
       responses:
         '200':
-          description: 响应
+          description: 返回任务运行状态
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExecStatusResponse'
   /exec/v1/cmd:
     post:
+      operationId: execRunCommand
       summary: 执行 Shell 命令
-      description: 立即返回事件id，无法查看实时日志
+      description: 立即返回 runId，无法查看实时日志；可通过 `/exec/v1/status` 查询运行状态。
       tags:
         - Exec 命令执行
       requestBody:
@@ -1609,17 +1909,18 @@ paths:
               $ref: '#/components/schemas/ExecCommandRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回 runId（事件 id）
           content:
             application/json:
               schema:
                 type: string
-                description: runId 事件id
+                description: runId，可用于 `/exec/v1/status` 查询运行状态
   /exec/v1/cmd/stream:
     post:
+      operationId: execRunCommandStream
       summary: 执行 Shell 命令（Stream）
       description: |
-        通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后命令仍继续执行。
+        通过 SSE（Server-Sent Events）流式返回实时日志，连接断开后命令仍继续执行。
       tags:
         - Exec 命令执行
       requestBody:
@@ -1630,43 +1931,20 @@ paths:
               $ref: '#/components/schemas/ExecCommandRequest'
       responses:
         '200':
-          description: SSE 文本流
+          description: SSE 文本流，每条消息格式为 `data:<JSON>\n\n`，JSON 结构见 ExecStreamEvent
           content:
             text/event-stream:
               schema:
-                type: string
-                description: |
-                  SSE 流，消息格式：`data:<JSON>\n\n`
-
-                  ```ts title="数据格式"
-                  interface StreamEvent {
-                    type: 'start' | 'log' | 'exit' | 'error' // 事件类型
-                    runId: string // 事件id，仅 `log` 和 `error` 事件存在
-                    stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
-                    log: string // 日志内容，仅 `log` 和 `error` 事件存在
-                  }
-                  ```
-                properties:
-                  type:
-                    type: "'start' | 'log' | 'exit' | 'error'"
-                    description: 事件类型
-                  runId:
-                    type: string
-                    description: 事件id，仅 `log` 和 `error` 事件存在
-                  stream:
-                    type: "'stdout' | 'stderr'"
-                    description: 输出流类型，仅 `log` 事件存在
-                  log:
-                    type: string
-                    description: 日志内容，仅 `log` 和 `error` 事件存在
+                $ref: '#/components/schemas/ExecStreamEvent'
             application/json:
               schema:
                 type: object
                 description: 请求失败或出错时返回全局通用 JSON 格式
   /exec/v1/file:
     post:
+      operationId: execRunFile
       summary: 运行代码文件
-      description: 立即返回事件id，无法查看实时日志
+      description: 立即返回 runId，无法查看实时日志；可通过 `/exec/v1/status` 查询运行状态。
       tags:
         - Exec 命令执行
       requestBody:
@@ -1677,16 +1955,17 @@ paths:
               $ref: '#/components/schemas/ExecRunRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回 runId（事件 id）
           content:
             application/json:
               schema:
                 type: string
-                description: runId
+                description: runId，可用于 `/exec/v1/status` 查询运行状态
   /exec/v1/file/stream:
     post:
+      operationId: execRunFileStream
       summary: 运行代码文件（Stream）
-      description: 通过 SSE(Server-Sent Events) 流式返回实时日志，连接断开后任务仍继续运行。
+      description: 通过 SSE（Server-Sent Events）流式返回实时日志，连接断开后任务仍继续运行。
       tags:
         - Exec 命令执行
       requestBody:
@@ -1697,28 +1976,18 @@ paths:
               $ref: '#/components/schemas/ExecRunRequest'
       responses:
         '200':
-          description: SSE 文本流
+          description: SSE 文本流，每条消息格式为 `data:<JSON>\n\n`，JSON 结构见 ExecStreamEvent
           content:
             text/event-stream:
               schema:
-                type: string
-                description: |
-                  SSE 流，消息格式：`data:<JSON>\n\n`
-
-                  ```ts title="数据格式"
-                  interface StreamEvent {
-                    type: 'start' | 'log' | 'exit' | 'error' // 事件类型
-                    runId: string // 事件id，仅 `log` 和 `error` 事件存在
-                    stream: 'stdout' | 'stderr' // 输出流类型，仅 `log` 事件存在
-                    log: string // 日志内容，仅 `log` 和 `error` 事件存在
-                  }
-                  ```
+                $ref: '#/components/schemas/ExecStreamEvent'
             application/json:
               schema:
                 type: object
                 description: 请求失败或出错时返回全局通用 JSON 格式
   /exec/v1/file/stop:
     post:
+      operationId: execStopRunFile
       summary: 终止运行代码文件
       description: 仅适用于代码文件，不适用于自定义 Shell 命令。
       tags:
@@ -1737,7 +2006,7 @@ paths:
                 - path
       responses:
         '200':
-          description: 响应
+          description: 返回执行结果信息
           content:
             application/json:
               schema:
@@ -1746,6 +2015,7 @@ paths:
 
   /message/v1/create:
     post:
+      operationId: messageCreate
       summary: 推送消息
       tags:
         - Message 消息中心
@@ -1759,13 +2029,14 @@ paths:
               $ref: '#/components/schemas/MessageCreateRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回创建后的消息完整信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageData'
   /message/v1/list:
     get:
+      operationId: messagePageList
       summary: 分页查询
       tags:
         - Message 消息中心
@@ -1813,13 +2084,14 @@ paths:
             default: create_time
       responses:
         '200':
-          description: 响应
+          description: 返回分页消息列表
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageListResult'
   /message/v1/unreadCount:
     get:
+      operationId: messageGetUnreadCount
       summary: 获取未读消息计数
       tags:
         - Message 消息中心
@@ -1827,13 +2099,14 @@ paths:
         - Token: []
       responses:
         '200':
-          description: 响应
+          description: 返回未读消息数量
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnreadCountResponse'
   /message/v1/detail:
     get:
+      operationId: messageGetDetail
       summary: 获取消息详情
       tags:
         - Message 消息中心
@@ -1848,13 +2121,14 @@ paths:
             type: integer
       responses:
         '200':
-          description: 响应
+          description: 返回消息完整信息
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageData'
   /message/v1/readStatus:
     post:
+      operationId: messageUpdateReadStatus
       summary: 更新消息已读状态
       tags:
         - Message 消息中心
@@ -1868,13 +2142,14 @@ paths:
               $ref: '#/components/schemas/MessageReadStatusRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回操作结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /message/v1/readAll:
     post:
+      operationId: messageUpdateAllReadStatus
       summary: 更新全部消息已读状态
       tags:
         - Message 消息中心
@@ -1887,13 +2162,14 @@ paths:
               $ref: '#/components/schemas/MessageReadAllRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回操作结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
   /message/v1/delete:
     post:
+      operationId: messageDelete
       summary: 删除消息
       tags:
         - Message 消息中心
@@ -1907,8 +2183,154 @@ paths:
               $ref: '#/components/schemas/MessageDeleteRequest'
       responses:
         '200':
-          description: 响应
+          description: 返回删除结果，成功为 `true`
           content:
             application/json:
               schema:
                 type: boolean
+
+  /dependency/v1/page:
+    get:
+      operationId: dependencyPageList
+      summary: 分页查询
+      tags:
+        - Dependency 依赖管理
+      parameters:
+        - $ref: '#/components/parameters/DependencyPageEcosystemParam'
+        - $ref: '#/components/parameters/DependencyPageStatusParam'
+        - $ref: '#/components/parameters/DependencyPageSearchParam'
+        - $ref: '#/components/parameters/DependencyPageOrderByParam'
+        - $ref: '#/components/parameters/DependencyPageOrderParam'
+        - $ref: '#/components/parameters/DependencyPagePageParam'
+        - $ref: '#/components/parameters/DependencyPageSizeParam'
+      responses:
+        '200':
+          description: 返回依赖分页数据
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DependencyPageResponse'
+  /dependency/v1/query:
+    get:
+      operationId: dependencyQuery
+      summary: 查询依赖
+      tags:
+        - Dependency 依赖管理
+      parameters:
+        - name: id
+          in: query
+          description: 唯一标识
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 返回依赖完整信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DependencyData'
+  /dependency/v1/error:
+    get:
+      operationId: dependencyGetErrorLog
+      summary: 获取错误日志
+      description: 获取指定依赖最近一次失败时的错误信息。
+      tags:
+        - Dependency 依赖管理
+      parameters:
+        - name: id
+          in: query
+          description: 唯一标识
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 返回最近一次操作的错误信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DependencyErrorLog'
+  /dependency/v1/create:
+    post:
+      operationId: dependencyCreate
+      summary: 添加依赖
+      description: 支持单个或批量添加，名称与已有依赖重复或为平台保留依赖时添加失败，添加成功的依赖处于未安装状态。
+      tags:
+        - Dependency 依赖管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DependencyCreateRequest'
+      responses:
+        '200':
+          description: 返回添加后的依赖信息，批量添加时返回成功添加的数量
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DependencyData'
+                  - $ref: '#/components/schemas/DependencyBatchCreateResult'
+  /dependency/v1/delete:
+    post:
+      operationId: dependencyDelete
+      summary: 删除依赖
+      description: 安装中 / 卸载中的依赖不允许删除。
+      tags:
+        - Dependency 依赖管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  $ref: '#/components/schemas/DependencyIdOrIds'
+      responses:
+        '200':
+          description: 返回删除结果，成功为 `true`
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /dependency/v1/operate:
+    post:
+      operationId: dependencyOperate
+      summary: 依赖操作
+      description: 对依赖执行安装、卸载或同步安装状态操作。安装与卸载按队列依次执行，返回本次提交的数量；任一依赖状态不允许安装或卸载时整体失败，不会提交任何任务。`sync` 用于同步全部依赖的安装状态，已有同步任务执行中时会返回失败。
+      tags:
+        - Dependency 依赖管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DependencyActionRequest'
+      responses:
+        '200':
+          description: 返回本次操作结果：安装 / 卸载时为入队数量，同步状态时为发生状态变更的记录数量
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: 安装 / 卸载时的响应
+                    properties:
+                      total:
+                        type: integer
+                        description: 本次入队操作的依赖数量
+                    required:
+                      - total
+                  - type: object
+                    description: 同步状态时的响应
+                    properties:
+                      updated:
+                        type: integer
+                        description: 本次发生状态变更的记录数量
+                    required:
+                      - updated

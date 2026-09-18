@@ -1,0 +1,449 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/channel</POST>
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '渠道名称，必填、去首尾空格、≤ 50 字符、全局唯一',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+    config: {
+      description: '渠道配置，支持对象或 JSON 字符串，后端按渠道类型白名单清洗（未声明字段丢弃，跨渠道通用配置 general 除外）后以 JSON 字符串落库；字段结构见下方说明',
+      type: 'object | string',
+      required: true,
+    },
+  }}
+/>
+
+### config 字段
+
+<Tabs items={['apprise', 'bark', 'dingding', 'discord', 'feishu', 'googlechat', 'gotify', 'kook', 'pushplus', 'serverchan', 'telegram', 'webhook', 'wecomapp', 'wecombot', 'wpush', 'wxpusher']}>
+
+  <Tab value="apprise">
+    <TypeTable
+      type={{
+        serverUrl: {
+          description: 'Apprise 服务地址',
+          type: 'string',
+          required: true,
+        },
+        token: {
+          description: '应用 token',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="bark">
+    <TypeTable
+      type={{
+        deviceKey: {
+          description: 'Bark 设备 key',
+          type: 'string',
+          required: true,
+        },
+        server: {
+          description: '自建服务端地址，默认 `https://api.day.app`',
+          type: 'string',
+        },
+        url: {
+          description: '点击通知跳转链接',
+          type: 'string',
+        },
+        group: {
+          description: '通知分组',
+          type: 'string',
+        },
+        sound: {
+          description: '提示音名称',
+          type: 'string',
+        },
+        icon: {
+          description: '通知图标 URL',
+          type: 'string',
+        },
+        level: {
+          description: '推送级别',
+          type: 'string',
+          typeDescription: '取值 active、timeSensitive、passive、critical',
+        },
+        call: {
+          description: '重复响铃',
+          type: 'boolean',
+        },
+        badge: {
+          description: '角标数字',
+          type: 'number',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="dingding">
+    <TypeTable
+      type={{
+        webhookUrl: {
+          description: '机器人 Webhook 地址',
+          type: 'string',
+          required: true,
+        },
+        secret: {
+          description: '机器人安全设置为“加签”时填写的密钥',
+          type: 'string',
+        },
+        mentionType: {
+          description: '\\@ 方式',
+          type: "string<'none' | 'all' | 'mobiles' | 'users'>",
+        },
+        mobiles: {
+          description: '\\@ 的手机号列表（mentionType 为 mobiles）',
+          type: 'string[]',
+        },
+        users: {
+          description: '\\@ 的用户 ID 列表（mentionType 为 users）',
+          type: 'string[]',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="discord">
+    <TypeTable
+      type={{
+        webhookUrl: {
+          description: 'Webhook 地址',
+          type: 'string',
+          required: true,
+        },
+        username: {
+          description: '机器人显示名',
+          type: 'string',
+        },
+        channelType: {
+          description: '发送目标类型',
+          type: 'string',
+          typeDescription: '取值 channel、createNewForumPost、postToThread',
+        },
+        postName: {
+          description: '新建论坛帖标题（channelType 为 createNewForumPost）',
+          type: 'string',
+        },
+        threadId: {
+          description: '线程 / 帖子 ID（channelType 为 postToThread）',
+          type: 'string',
+        },
+        suppressNotifications: {
+          description: '抑制推送通知',
+          type: 'boolean',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="feishu">
+    <TypeTable
+      type={{
+        webhookUrl: {
+          description: '群机器人 Webhook 地址',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="googlechat">
+    <TypeTable
+      type={{
+        webhookUrl: {
+          description: 'Webhook 地址',
+          type: 'string',
+          required: true,
+        },
+        maxRetries: {
+          description: '限流（429）时的最大重试次数，1-10',
+          type: 'number',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="gotify">
+    <TypeTable
+      type={{
+        serverUrl: {
+          description: 'Gotify 服务地址',
+          type: 'string',
+          required: true,
+        },
+        token: {
+          description: '应用 token',
+          type: 'string',
+          required: true,
+        },
+        priority: {
+          description: '消息优先级，0-10',
+          type: 'number',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="kook">
+    <TypeTable
+      type={{
+        botToken: {
+          description: '机器人 token',
+          type: 'string',
+          required: true,
+        },
+        guildId: {
+          description: '服务器（频道）ID',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="pushplus">
+    <TypeTable
+      type={{
+        token: {
+          description: '用户 token',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="serverchan">
+    <TypeTable
+      type={{
+        sendKey: {
+          description: 'SendKey',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="telegram">
+    <TypeTable
+      type={{
+        botToken: {
+          description: 'Bot token',
+          type: 'string',
+          required: true,
+        },
+        chatId: {
+          description: '会话 ID',
+          type: 'string',
+          required: true,
+        },
+        messageThreadId: {
+          description: '话题 ID（超级群话题）',
+          type: 'string',
+        },
+        serverUrl: {
+          description: 'Bot API 服务地址，默认 `https://api.telegram.org`',
+          type: 'string',
+        },
+        sendSilently: {
+          description: '静默发送',
+          type: 'boolean',
+        },
+        protectContent: {
+          description: '保护内容（禁止转发 / 保存）',
+          type: 'boolean',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="webhook">
+    <TypeTable
+      type={{
+        url: {
+          description: 'Webhook 目标地址',
+          type: 'string',
+          required: true,
+        },
+        method: {
+          description: '请求方法，缺省 `POST`',
+          type: "string<'POST' | 'GET' | 'PUT'>",
+        },
+        contentType: {
+          description: '请求体格式，缺省 `json`',
+          type: "string<'json' | 'form'>",
+        },
+        headers: {
+          description: '自定义请求头，JSON 文本',
+          type: 'string',
+        },
+        body: {
+          description: '请求体模板，占位符 `{{title}}`、`{{content}}`',
+          type: 'string',
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="wecomapp">
+    <TypeTable
+      type={{
+        corpId: {
+          description: '企业 ID（CorpID）',
+          type: 'string',
+          required: true,
+        },
+        corpSecret: {
+          description: '应用密钥（Secret）',
+          type: 'string',
+          required: true,
+        },
+        agentId: {
+          description: '应用 AgentId',
+          type: 'number',
+          required: true,
+        },
+        toUser: {
+          description: '接收成员 userid 列表，`\\@all` 表示全体成员',
+          type: 'string[]',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="wecombot">
+    <TypeTable
+      type={{
+        webhookUrl: {
+          description: '群机器人 Webhook 地址',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="wpush">
+    <TypeTable
+      type={{
+        apiKey: {
+          description: 'API Key',
+          type: 'string',
+          required: true,
+        },
+        channel: {
+          description: '推送通道',
+          type: 'string',
+          typeDescription: '取值 wechat、sms、mail、feishu、dingtalk、wechat_work',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="wxpusher">
+    <TypeTable
+      type={{
+        appToken: {
+          description: 'WxPusher 应用 token',
+          type: 'string',
+          required: true,
+        },
+        uids: {
+          description: '单发用户 uid 列表，与 topicIds 至少提供一组',
+          type: 'string[]',
+        },
+        topicIds: {
+          description: '群发主题 id 列表，与 uids 至少提供一组',
+          type: '(string | number)[]',
+        },
+        url: {
+          description: '点击通知跳转链接',
+          type: 'string',
+        },
+      }}
+    />
+  </Tab>
+</Tabs>
+
+### 通用配置 general
+
+每个渠道的 `config` 都可携带一个可选的 `general` 对象（跨渠道通用配置），后端保存时统一清洗（`footer`、`messageTemplate`、`proxy` 一律 trim、缺省空字符串）。完整说明见[数据关系模型](/docs/api/channel/schema)。
+
+<TypeTable
+  type={{
+    footer: {
+      description: '自定义通知尾，非空时追加到通知正文末尾（与正文空一行分隔），全部渠道生效',
+      type: 'string',
+    },
+    proxy: {
+      description: 'HTTP 代理地址，格式 `host:port` 或 `http://host:port`（协议可省略，默认 `http`），仅 HTTP 类渠道生效（`apprise` 走 CLI 不适用）',
+      type: 'string',
+    },
+    messageTemplate: {
+      description: '消息模板，占位符 `{{title}}`、`{{content}}`，换行用 `\\n`；仅无独立标题字段的渠道生效（`discord`、`feishu`、`googlechat`、`kook`、`telegram`、`wecombot`、`wecomapp`、`wxpusher`）。渲染后为空则跳过该渠道推送',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '渠道名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+    config: {
+      description: '渠道配置，JSON 字符串，字段结构见数据关系模型中的渠道配置',
+      type: 'string',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

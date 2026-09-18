@@ -52,6 +52,10 @@ import { POST } from '@/components/RequestTag';
       type: 'number',
       default: '1',
     },
+    error_alert: {
+      description: '运行失败告警关联的通知渠道 ID（多个用逗号分隔，空表示不告警）',
+      type: 'string',
+    },
   }}
 />
 

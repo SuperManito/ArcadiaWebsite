@@ -1,0 +1,20 @@
+---
+title: 删除
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/channel</DELETE>
+
+被消息中心监控告警规则引用时会拒绝删除
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '渠道唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>

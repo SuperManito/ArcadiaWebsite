@@ -58,12 +58,6 @@ import { GET, POST } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
-    ENABLE_CUSTOM_NOTIFY: {
-      description: '是否使用 config 目录下用户自定义的 sendNotify.js 替代内置推送通知模块',
-      typeDescription: '"true" 启用，"" 禁用',
-      type: 'string',
-      required: true,
-    },
     RUN_DELAY_MAX_SECONDS: {
       description: '随机延迟最大秒数，对应 --delay 运行选项，0 表示不延迟',
       type: 'string<number>',
@@ -100,7 +94,6 @@ import { GET, POST } from '@/components/RequestTag';
   "ENABLE_TASK_BEFORE_EXTRA": "",
   "ENABLE_TASK_AFTER_EXTRA": "",
   "ENABLE_AUTO_DELETE_REMOTE_FILE": "",
-  "ENABLE_CUSTOM_NOTIFY": "",
   "RUN_DELAY_MAX_SECONDS": "300",
   "DEFAULT_JS_RUNTIME": "node",
   "DEFAULT_TS_RUNTIME": "tsx",
@@ -121,7 +114,7 @@ import { GET, POST } from '@/components/RequestTag';
 <TypeTable
   type={{
     REMOVE_LOG_DAYS_AGO: {
-      description: '代码文件运行日志保留天数（正整数字符串），该配置项可在控制面板《个人设置 - 通用》中修改',
+      description: '代码文件运行日志保留天数（正整数字符串），该配置项可在控制面板”个人设置 - 通用“中修改',
       type: 'string<number>',
     },
     ENABLE_UPDATE_EXTRA: {
@@ -155,11 +148,6 @@ import { GET, POST } from '@/components/RequestTag';
     },
     ENABLE_AUTO_DELETE_REMOTE_FILE: {
       description: '是否自动删除远程执行后的本地脚本文件',
-      typeDescription: '"true" 启用，"" 禁用',
-      type: 'string',
-    },
-    ENABLE_CUSTOM_NOTIFY: {
-      description: '是否启用自定义推送通知模块',
       typeDescription: '"true" 启用，"" 禁用',
       type: 'string',
     },

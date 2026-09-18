@@ -7,38 +7,40 @@ import { GET } from '@/components/RequestTag';
 
 ## 请求
 
-Query 参数：
-
 <TypeTable
   type={{
     page: {
-      description: '页码，默认 1',
+      description: '指定页数',
       type: 'string',
       default: '1',
     },
     size: {
-      description: '每页条数，默认 20',
+      description: '指定分页大小数量',
       type: 'string',
-      default: '20',
+      default: 20,
     },
     ecosystem: {
-      description: '生态过滤，可选值 npm / pnpm / pip / apt / luarocks / gem；不传则返回全部',
+      description: '生态过滤，可选值 npm / pnpm / pip / apt / luarocks / gem',
       type: 'string',
     },
     status: {
-      description: '状态过滤，值为状态码字符串（如 `0`）；不传则返回全部',
-      type: 'string',
+      description: '安装状态过滤',
+      typeDescription: '0 未安装，1 安装中，2 已安装，3 失败，4 卸载中',
+      type: "string<'0' | '1' | '2' | '3' | '4'>",
     },
     search: {
-      description: '关键字搜索，匹配 name 或 remark',
+      description: '搜索内容过滤，涉及依赖名称、备注',
       type: 'string',
     },
     orderBy: {
-      description: '排序字段，可选 id / name / ecosystem / status / create_time / update_time',
+      description: '指定排序字段',
+      typeDescription: 'id / name / ecosystem / status / create_time / update_time',
       type: 'string',
+      default: 'id',
     },
     order: {
-      description: '排序方向，`0` 升序，`1` 降序',
+      description: '指定排序方式',
+      typeDescription: '0 升序，1 降序',
       type: "string<'0' | '1'>",
     },
   }}
@@ -47,24 +49,116 @@ Query 参数：
 ## 响应
 
 <TypeTable
+  noRequiredMark={true}
   type={{
     data: {
-      description: '依赖列表',
+      description: '数据项',
       type: 'DepItem[]',
-    },
-    total: {
-      description: '符合条件的总记录数',
-      type: 'number',
+      required: true,
     },
     page: {
       description: '当前页码',
       type: 'number',
+      required: true,
     },
     size: {
-      description: '每页条数',
+      description: '每页数据量',
       type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
     },
   }}
 />
 
-`DepItem` 结构同 [数据关系模型](./schema) 中的字段。
+- DepItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '包名，可携带版本表达式，如 axios@1.7.0、requests>=2.0、curl',
+      type: 'string',
+      required: true,
+    },
+    ecosystem: {
+      description: '包管理生态',
+      type: 'string<Ecosystems>',
+      typeDescription: '取值 npm / pnpm / pip / apt / luarocks / gem',
+      required: true,
+    },
+    installed_ver: {
+      description: '安装成功后回写的实际版本号',
+      type: 'string',
+      required: true,
+    },
+    status: {
+      description: '状态',
+      typeDescription: '0 未安装，1 安装中，2 已安装，3 失败，4 卸载中',
+      type: 'number<0 | 1 | 2 | 3 | 4>',
+      required: true,
+    },
+    last_error: {
+      description: '最近一次失败时的命令输出（截取前 8000 字节）；安装成功时自动清空，从未失败则为空字符串',
+      type: 'string',
+      required: true,
+    },
+    remark: {
+      description: '用户备注',
+      type: 'string',
+      required: true,
+    },
+    create_time: {
+      description: '记录创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '记录最后更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+```json title="示例"
+{
+  "data": [
+    {
+      "id": 2,
+      "name": "requests>=2.0",
+      "ecosystem": "pip",
+      "installed_ver": "",
+      "status": 0,
+      "last_error": "",
+      "remark": "爬虫示例依赖",
+      "create_time": "2024-01-01 00:00:00",
+      "update_time": "2024-01-01 00:00:00"
+    },
+    {
+      "id": 1,
+      "name": "axios",
+      "ecosystem": "npm",
+      "installed_ver": "1.7.0",
+      "status": 2,
+      "last_error": "",
+      "remark": "",
+      "create_time": "2024-01-01 00:00:00",
+      "update_time": "2024-01-01 00:00:00"
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "size": 20
+}
+```
+
+默认按 id 倒序返回

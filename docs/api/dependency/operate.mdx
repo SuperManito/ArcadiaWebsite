@@ -6,7 +6,7 @@ import { POST } from '@/components/RequestTag';
 <POST>/dependency/operate</POST>
 
 对依赖执行安装、卸载或状态同步操作。安装和卸载任务通过串行队列执行，不会并发。  
-每个任务完成后通过 WebSocket `depOperateResult` 事件实时推送结果。
+每个任务完成后通过 WebSocket `dep:operate` 事件实时推送结果，具体详见 [依赖管理操作结果](/docs/api/websocket/dependency)。
 
 ## 请求
 

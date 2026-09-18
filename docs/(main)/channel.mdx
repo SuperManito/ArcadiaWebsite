@@ -1,0 +1,52 @@
+---
+title: 通知渠道
+icon: Send
+---
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+在控制面板”个人设置 - 通知渠道“中创建与管理通知渠道，关于渠道配置详见控制面板**表单内容**或《[通知渠道 API 文档](http://localhost:3000/docs/api/channel/schema#渠道配置)》。
+
+目前已适配的渠道：
+
+- [Apprise](https://github.com/caronc/apprise)
+- [Bark](https://bark.day.app)
+- [钉钉](https://open.dingtalk.com)
+- [Discord](https://discord.com)
+- [飞书](https://open.feishu.cn)
+- [Google Chat](https://developers.google.com/chat)
+- [Gotify](https://gotify.net)
+- [KOOK](https://www.kookapp.cn)
+- [pushplus](https://www.pushplus.plus)
+- [Server 酱](https://sct.ftqq.com)
+- [Telegram](https://telegram.org)
+- [企业微信应用](https://developer.work.weixin.qq.com)
+- [企业微信机器人](https://developer.work.weixin.qq.com)
+- [WPush](https://wpush.cn)
+- [WxPusher](https://wxpusher.zjiecode.com)
+- Webhook
+
+<ul>
+<li>
+<details>
+
+<summary>适配新的通知渠道（开发者）</summary>
+
+<Steps>
+<Step>
+Fork 仓库并克隆 **dev** 分支到本地，然后配置开发环境
+
+1. 在根目录执行 `npm install`
+2. 在 `backend/` 目录下执行 `npm install`，安装成功后再执行 `npm run generate` 命令生成数据库类型
+
+</Step>
+<Step>
+开发适配
+
+1. 具体方法详见 [适配指南](https://github.com/SuperManito/Arcadia/blob/dev/backend/core/channel/README.md)
+2. 提交 PR 前需要运行完成前检查 `npm run lint:fix` 与 `npm run tsc`，确保代码没有错误后再进行提交。
+</Step>
+</Steps>
+
+</details>
+</li>
+</ul>

@@ -29,6 +29,7 @@ model tasks {
   remark        String    @default("")
   bind          String    @default("")
   error_notify  Int       @default(1)
+  error_alert   String    @default("")
 }
 
 model tasksExecutionStats {
@@ -80,4 +81,4 @@ graph TD
 | cleanupRunningTaskState | 清理运行中任务的状态缓存 |
 | emitTaskCompleted | 通过 WebSocket 推送任务完成事件 |
 | persistTaskExecution | 持久化任务执行记录到数据库 |
-| notifyTaskFailure | 任务失败时发送通知（需开启 error_notify） |
+| notifyTaskFailure | 任务失败时发送消息中心通知（需开启 error_notify），并向 error_alert 绑定的通知渠道推送同一份失败文案 |

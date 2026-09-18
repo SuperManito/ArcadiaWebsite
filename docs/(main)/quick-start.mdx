@@ -6,9 +6,14 @@ icon: Rocket
 import { File, Folder, Files } from 'fumadocs-ui/components/files';
 import { GithubInfo } from 'fumadocs-ui/components/github-info';
 import { InstallCommand } from '@/components/InstallCommand';
+import { StoreCards } from '@/components/StoreCards';
 
 本项目依托容器技术需要安装相关容器服务才可以部署，由于运行环境复杂程度较高目前没有计划适配更多部署方式  
 关于部署 Arcadia 平台所需要的最低配置：`2GB` 磁盘空闲、`512MB` 内存，支持 ARM 64 处理器架构。
+
+Arcadia 已在下列操作系统或应用软件的官方应用商店上架
+
+<StoreCards />
 
 ## 启动容器 [step]
 
@@ -93,11 +98,11 @@ import { InstallCommand } from '@/components/InstallCommand';
     具体请详见[《代码同步》](/docs/sync)，代码同步功能是 Arcadia 平台用于导入代码（文件）的统称，目前支持 “代码仓库” 与 “代码文件” 两种类型并提供丰富的功能性配置。
 
     <Callout type="info">
-      如果你想**自动更新**代码同步功能中订阅的仓库以及代码文件（脚本），请在控制面板《定时任务》页面创建 `arcadia update` 个人任务
+      如果你想**自动更新**代码同步功能中订阅的仓库以及代码文件（脚本），请在控制面板”定时任务 - 任务配置“页面创建 `arcadia update` 个人任务
     </Callout>
   </Accordion>
   <Accordion title="关于如何清理日志" id="关于如何清理日志">
-    系统内置了一个自动清理历史数据的定时任务，你可以在控制面板《个人设置 - 通用》页面进行自定义配置。该任务属于内置定时任务，独立于用户定时任务管理体系，因此你无法在控制面板《定时任务》页面看到它。
+    系统内置了一个自动清理历史数据的定时任务，你可以在控制面板”个人设置 - 通用“页面进行自定义配置。该任务属于内置定时任务，独立于用户定时任务管理体系，因此你无法在控制面板”定时任务 - 任务配置“页面看到它。
 
     如果你想了解的是如何清理代码文件运行日志，详见[《CLI - 清理日志》](/docs/cli/sundry/rmlog)，清理代码文件运行日志是上方所提到的自动清理历史数据的一部分，因此不用手动操作。
   </Accordion>

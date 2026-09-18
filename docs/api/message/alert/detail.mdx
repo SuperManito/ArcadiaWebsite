@@ -1,0 +1,115 @@
+---
+title: 详情
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/alert/rule</GET>
+
+规则详情，返回规则主体 + 有序 `conditions` + 关联渠道 `channels`。规则不存在时返回“规则不存在”。
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+规则主体字段同[分页查询](/docs/api/message/alert/page#响应)中的 MessageAlertRuleItem（不含 channelCount），另含：
+
+- conditions：匹配条件数组，按 `sort` 升序，单项结构：
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '条件唯一标识',
+      type: 'number',
+      required: true,
+    },
+    messageAlertRuleId: {
+      description: '所属规则 id',
+      type: 'number',
+      required: true,
+    },
+    mode: {
+      description: '匹配模式',
+      type: "string<'simple' | 'regex'>",
+      required: true,
+    },
+    field: {
+      description: '匹配字段',
+      type: "string<'title' | 'content'>",
+      required: true,
+    },
+    operator: {
+      description: '匹配运算符，取值见[数据关系模型](/docs/api/message/alert/schema)中的枚举取值',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '匹配值，运算符为 empty / not_empty 时为空串',
+      type: 'string',
+      required: true,
+    },
+    sort: {
+      description: '条件序号，0 起',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+- channels：关联渠道数组（无顺序语义），单项结构：
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '关联记录唯一标识',
+      type: 'number',
+      required: true,
+    },
+    channelId: {
+      description: '渠道唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '渠道名称',
+      type: 'string',
+      required: true,
+    },
+    type: {
+      description: '渠道类型',
+      type: 'string',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      required: true,
+    },
+  }}
+/>
+
+响应示例：
+
+```json
+{
+  "id": 1,
+  "name": "定时任务失败告警",
+  "enabled": 1,
+  "logic": "and",
+  "categories": "cron",
+  "types": "error",
+  "conditions": [
+    { "id": 1, "messageAlertRuleId": 1, "mode": "simple", "field": "title", "operator": "include", "value": "失败", "sort": 0 }
+  ],
+  "channels": [
+    { "id": 2, "channelId": 3, "name": "我的微信推送", "type": "wxpusher" }
+  ]
+}
+```

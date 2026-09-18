@@ -1,0 +1,91 @@
+---
+title: 数据关系模型
+---
+
+消息中心监控告警规则定义什么消息需要告警以及告警到哪里，在控制面板“消息中心”页面监控告警规则设置中管理。规则作用于消息中心的每条入库消息：落库后非阻塞触发规则求值，命中的规则并发推送其全部关联渠道；单渠道失败只记错误日志并写入站内失败消息，不影响其余渠道。告警能力不提供手动触发端点，也不暴露 OpenAPI，测试能力由[命中测试](/docs/api/message/alert/test)提供；通知渠道的配置与管理独立成域，见[《Channel 通知渠道》](/docs/api/channel)。
+
+## 工作原理
+
+<Mermaid
+  chart="
+graph TD
+  A[消息入库] --> B[非阻塞触发规则求值]
+  B --> C[查询启用规则及条件与关联渠道]
+  C --> D{分类与级别过滤}
+  D -->|不匹配| X[跳过]
+  D -->|匹配| E[条件组求值]
+  E -->|未命中| X
+  E -->|命中| F[并发推送全部关联渠道]
+  F --> G{推送失败}
+  G -->|是| H[记错误日志并写入站内失败消息]
+  G -->|否| I[结束]
+  H --> I"
+/>
+
+### 流程说明
+
+| 阶段 | 说明 |
+|------|------|
+| 消息入库 | 消息写入消息中心后非阻塞触发告警处理，不阻塞消息写入路径 |
+| 查询规则 | 一次查询取出全部启用规则，连同匹配条件与关联渠道配置 |
+| 分类与级别过滤 | 规则的消息分类、消息级别范围与消息不匹配则跳过，空表示不限 |
+| 条件组求值 | 按组合逻辑 `and` / `or` 求值全部匹配条件，命中才进入推送 |
+| 并发推送 | 命中规则的关联渠道并发推送，渠道间无顺序语义 |
+| 失败处理 | 单渠道失败不重试、不影响其余渠道，错误记录日志并写入站内失败消息 |
+
+## 数据模型
+
+```prisma
+// 告警规则：描述“什么消息需要告警”以及“告警到哪里”
+model messageAlertRule {
+  id          Int                  @id @default(autoincrement())
+  name        String // 规则名称，后端保证唯一（DB 不设 unique）
+  enabled     Int                  @default(1) // 1 启用 / 0 禁用
+  logic       String               @default("and") // 条件组合逻辑："and" | "or"
+  categories  String               @default("") // 消息分类多选，逗号分隔，空=全部
+  types       String               @default("") // 消息级别多选，逗号分隔，空=全部
+  create_time DateTime             @default(now())
+  update_time DateTime             @default(now()) @updatedAt
+
+  @@index([enabled])
+  @@index([name])
+}
+
+// 匹配条件：一条规则可包含多条，按 sort 排序展示与求值
+model messageAlertRuleCondition {
+  id          Int       @id @default(autoincrement())
+  messageAlertRuleId Int
+  mode        String    @default("simple") // "simple" 文本 | "regex" 正则
+  field       String // 匹配字段："title" | "content"
+  operator    String // 匹配运算符
+  value       String    @default("") // 匹配值；empty / not_empty 时忽略
+  sort        Int       @default(0) // 数组下标，0 起
+
+  @@index([messageAlertRuleId])
+}
+
+// 规则与渠道的关联
+model messageAlertRuleChannel {
+  id          Int       @id @default(autoincrement())
+  messageAlertRuleId Int
+  channelId   Int
+
+  @@unique([messageAlertRuleId, channelId]) // 同一规则不能重复挂同一渠道
+  @@index([messageAlertRuleId])
+  @@index([channelId])
+}
+```
+
+规则的关联渠道只存渠道 ID（`channelId` 外键），渠道配置唯一存放在 [Channel 通知渠道](/docs/api/channel) 的 `notificationChannel` 表中，触发时实时关联查询，渠道配置修改即时生效。
+
+### 枚举取值
+
+| 枚举 | 取值 |
+| --- | --- |
+| 消息分类 `categories` | `system`、`cron`、`user`（逗号分隔多选，空 = 不限） |
+| 消息级别 `types` | `info`、`warn`、`error`、`success`（逗号分隔多选，空 = 不限） |
+| 条件字段 `field` | `title`、`content` |
+| 条件模式 `mode` | `simple`、`regex` |
+| 文本运算符 | `include`、`not_include`、`equal`、`not_equal`、`starts_with`、`ends_with`、`empty`、`not_empty` |
+| 正则运算符 | `regex`、`not_regex` |
+| 组合逻辑 `logic` | `and`、`or` |

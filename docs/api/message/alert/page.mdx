@@ -3,7 +3,9 @@ title: 分页查询
 ---
 import { GET } from '@/components/RequestTag';
 
-<GET>/message/list</GET>
+<GET>/message/alert/rule/page</GET>
+
+告警规则分页列表
 
 ## 请求
 
@@ -19,34 +21,24 @@ import { GET } from '@/components/RequestTag';
       type: 'string',
       default: 20,
     },
+    search: {
+      description: '名称模糊搜索',
+      type: 'string',
+    },
+    enabled: {
+      description: '启用状态过滤',
+      type: "string<'0' | '1'>",
+      typeDescription: '1 启用，0 停用',
+    },
     order: {
       description: '排序方向，0=升序，1=降序',
       type: "string<'0' | '1'>",
       default: 1,
     },
     orderBy: {
-      description: '排序字段，目前仅支持 create_time',
+      description: '排序字段，白名单：id / name / create_time / update_time',
       type: 'string',
-      default: 'create_time',
-    },
-    category: {
-      description: '消息来源过滤，支持逗号分隔多值（如 system,cron）',
-      type: 'string',
-      typeDescription: 'user、system、cron 等，多个用逗号分隔',
-    },
-    type: {
-      description: '消息级别过滤，支持逗号分隔多值（如 info,error）',
-      type: 'string',
-      typeDescription: 'info、warn、error、success，多个用逗号分隔',
-    },
-    status: {
-      description: '已读状态过滤',
-      type: "string<'0' | '1'>",
-      typeDescription: '1 已读，0 未读',
-    },
-    search: {
-      description: '搜索内容过滤，仅涉及消息标题和消息内容',
-      type: 'string',
+      default: 'id',
     },
   }}
 />
@@ -58,7 +50,7 @@ import { GET } from '@/components/RequestTag';
   type={{
     data: {
       description: '数据项',
-      type: 'MessageData[]',
+      type: 'MessageAlertRuleItem[]',
       required: true,
     },
     page: {
@@ -79,7 +71,7 @@ import { GET } from '@/components/RequestTag';
   }}
 />
 
-- MessageData
+- MessageAlertRuleItem
 
 <TypeTable
   noRequiredMark={true}
@@ -89,35 +81,44 @@ import { GET } from '@/components/RequestTag';
       type: 'number',
       required: true,
     },
-    category: {
-      description: '消息类型',
-      type: 'string',
-      typeDescription: 'user、system、cron 等',
-      required: true,
-    },
-    type: {
-      description: '消息级别',
-      type: "string<'info' | 'warn' | 'error' | 'success'>",
-      required: true,
-    },
-    title: {
-      description: '消息标题',
+    name: {
+      description: '规则名称',
       type: 'string',
       required: true,
     },
-    content: {
-      description: '消息内容',
-      type: 'string',
-      required: true,
-    },
-    status: {
-      description: '已读状态',
+    enabled: {
+      description: '启用状态',
       type: 'number<1 | 0>',
-      typeDescription: '1 已读，0 未读',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    logic: {
+      description: '条件组合逻辑',
+      type: "string<'and' | 'or'>",
+      required: true,
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    types: {
+      description: '消息级别多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    channelCount: {
+      description: '关联渠道计数',
+      type: 'number',
       required: true,
     },
     create_time: {
       description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
       type: 'string',
       required: true,
     },

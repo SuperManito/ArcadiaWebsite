@@ -1,0 +1,33 @@
+---
+title: 更新
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/message/alert/rule</PUT>
+
+更新告警规则。参数与[创建](/docs/api/message/alert/create)一致，`id` 必填，名称唯一检查排除自身。事务内整体替换：更新规则主体 → 删除并重插全部条件与渠道关联。
+
+仅传 `id` 与 `enabled` 时为快速启停：只更新启用状态，不触碰条件与关联；全量编辑时携带 `enabled` 则一并生效。
+
+## 请求
+
+在[创建](/docs/api/message/alert/create)参数基础上增加：
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态。仅传 id 与 enabled 时为快速启停（其余参数一律不传）；全量编辑时携带则一并更新',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+    },
+  }}
+/>
+
+## 响应
+
+成功返回标准成功结构，`result` 为更新后的规则对象，结构同[分页查询](/docs/api/message/alert/page#响应)中的 MessageAlertRuleItem（不含 channelCount）。

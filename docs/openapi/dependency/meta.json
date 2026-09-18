@@ -1,0 +1,12 @@
+{
+  "title": "Dependency 依赖管理",
+  "icon": "Package",
+  "pages": [
+    "v1-page-get",
+    "v1-query-get",
+    "v1-error-get",
+    "v1-create-post",
+    "v1-delete-post",
+    "v1-operate-post"
+  ]
+}

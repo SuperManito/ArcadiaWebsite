@@ -66,7 +66,8 @@ import { POST } from '@/components/RequestTag';
 {
   "log": {
     "serverLog": 120,
-    "loginLog": 45
+    "loginLog": 45,
+    "openApiLog": 10
   },
   "message": {
     "count": 30
@@ -78,6 +79,6 @@ import { POST } from '@/components/RequestTag';
 ```
 
 <Callout type="info">
-  各类型的保留天数分别由《个人设置 - 通用》中的 “数据与日志清理” 配置控制，默认均为 7 天。  
+  各类型的保留天数分别由”个人设置 - 通用“中的 “数据与日志清理” 配置控制，操作日志、开放接口日志默认 7 天，登录日志默认 180 天。  
   系统日志 `log` 类型总共包含系统操作日志、登录日志、开放接口日志、代码文件运行日志。
 </Callout>
