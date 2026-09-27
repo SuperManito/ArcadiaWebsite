@@ -32,8 +32,9 @@ export TEST_ENV="Hello World!"
 
 在配置文件中声明全局环境变量是一种更加直接的底层配置方式，因为由数据库存储的另一种配置方式最终也会转换成这种形式
 
-<Callout type="info" title="你需要知道的设计细节">
-  Arcadia CLI 先加载数据库生成的环境变量批量加载脚本 `env.sh` 再加载配置文件 `config.sh`，这意味着若存在相同变量那么会被 `config.sh` 中定义的变量覆盖
+<Callout type="info" title="你需要知道的平台机制">
+  控制面板”环境配置 - 环境变量“的变量数据存储在平台数据库中，会在每次更改后由后端自动生成适用于 CLI 的批量声明（环境变量）脚本 `env.sh`。  
+  Arcadia CLI 会先加载 `env.sh` 脚本再加载配置文件 `config.sh`，这意味着若存在相同名称的变量则其变量值会被 `config.sh` 中定义的变量覆盖。
 </Callout>
 
 ## 命令行配置
