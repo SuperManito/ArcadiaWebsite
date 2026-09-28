@@ -314,6 +314,10 @@ model notificationChannel {
       type: 'number',
       required: true,
     },
+    mediaId: {
+      description: '封面图 media_id，填写后推送以 mpnews 图文卡片发送（标题与正文保留）。须为通过素材上传接口上传图片获取的永久素材，临时素材 3 天过期会导致推送失败',
+      type: 'string',
+    },
     toUser: {
       description: '接收成员 userid 列表，`@all` 表示全体成员',
       type: 'string[]',
@@ -392,11 +396,11 @@ model notificationChannel {
       type: 'string',
     },
     proxy: {
-      description: 'HTTP 代理地址，格式 `host:port` 或 `http://host:port`（协议可省略，默认 `http`），仅 HTTP 类渠道生效（`apprise` 走 CLI 不适用）',
+      description: 'HTTP 代理地址，格式 `host:port` 或 `http://host:port`（协议可省略，默认 `http`），仅 HTTP 类渠道生效（`apprise` 走 CLI 不适用）。不填则直连',
       type: 'string',
     },
     messageTemplate: {
-      description: '消息模板，占位符 `{{title}}`、`{{content}}`，换行用 `\\n`；仅无独立标题字段的渠道生效（`discord`、`feishu`、`googlechat`、`kook`、`telegram`、`wecombot`、`wecomapp`、`wxpusher`）。渲染后为空则跳过该渠道推送',
+      description: '消息模板，占位符 `{{title}}`、`{{content}}`，换行用 `\\n`；仅无独立标题字段的渠道生效（`discord`、`feishu`、`googlechat`、`kook`、`telegram`、`wecombot`、`wecomapp`、`wxpusher`）。不填则默认标题与正文空行分隔，渲染后为空则跳过该渠道推送',
       type: 'string',
     },
   }}
