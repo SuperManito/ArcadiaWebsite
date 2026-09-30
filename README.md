@@ -1,25 +1,11 @@
-<p align="center">
-    <a href="https://arcadia.cool">
-        <picture>
-            <source media="(prefers-color-scheme: dark)" srcset="brand/arcadia-dark-sub.png" width="320">
-            <img src="brand/arcadia-light-sub.png" alt="Arcadia" width="320">
-        </picture>
-    </a>
-</p>
-
-<p align="center">
-    <strong>
-        一站式代码自动化运维平台
-    </strong>
-</p>
-
-<p align="center">
-    <strong>
-        <a href="https://arcadia.cool" style="text-decoration: none;">官方网站</a> |
-        <a href="https://arcadia.cool/docs/changelog" style="text-decoration: none;">更新日志</a> |
-        <a href="https://github.com/SuperManito/Arcadia" style="text-decoration: none;">源代码仓库</a>
-    </strong>
-</p>
+<div align="center">
+<a href="https://arcadia.cool" target="_blank">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./brand/arcadia-dark-sub.png" width="240">
+        <img src="./brand/arcadia-light-sub.png" alt="Arcadia" width="240">
+    </picture>
+</a>
+</div>
 
 # 文档
 
@@ -37,17 +23,22 @@ pnpm i
 pnpm dev
 ```
 
+### 代码检查
+
+```bash
+pnpm lint:fix
+pnpm check
+```
+
+### 生成 OpenAPI 文档
+
+```bash
+pnpm generate:openapi
+```
+> 从 `openapi.yaml` 生成对应的 MDX 文档页面，输出至 `docs/openapi/`
+
 ### 构建
 
 ```bash
 pnpm build
 ```
-
-### 生成 OpenAPI 文档
-
-从 `openapi.yaml` 生成对应的 MDX 文档页面，输出至 `docs/openapi/`
-
-```bash
-pnpm generate:openapi
-```
-> 注意文件目录结构变化，该命令不会自动删除已经生成的文档文件
