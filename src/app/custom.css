@@ -85,3 +85,12 @@ h6 {
   background-color: var(--color-fd-primary);
   color: var(--color-fd-primary-foreground);
 }
+
+.prose :where(a:not([data-card])):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--color-fd-primary);
+  text-decoration: unset;
+}
+
+.prose :where(a:hover:not([data-card])):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  opacity: 0.8;
+}
