@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'fumadocs-core/link'
 import { findSiblings } from 'fumadocs-core/page-tree'
+import { PathUtils } from 'fumadocs-core/source'
 import { Card, Cards } from 'fumadocs-ui/components/card'
 import {
   DocsBody,
@@ -8,11 +10,11 @@ import {
   DocsTitle,
   EditOnGitHub,
 } from 'fumadocs-ui/layouts/notebook/page'
-import { createRelativeLink } from 'fumadocs-ui/mdx'
 import { notFound } from 'next/navigation'
 import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions'
 import { OpenAPIPage } from '@/components/APIPage'
 import ClientFade from '@/components/ClientFade'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/HoverCard'
 import { gitConfig } from '@/lib/layout.shared'
 import { openapi } from '@/lib/openapi'
 import { getPageImageUrl, source } from '@/lib/source'
@@ -49,8 +51,27 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         <ClientFade>
           <MdxContent
             components={getMDXComponents({
-              // this allows you to link to other pages with relative file paths
-              a: createRelativeLink(source, page),
+              a({ href, ...props }) {
+                const found = source.getPageByHref(href ?? '', {
+                  dir: PathUtils.dirname(page.path),
+                })
+                if (!found)
+                  return <Link href={href} {...props} />
+                return (
+                  <HoverCard>
+                    <HoverCardTrigger
+                      href={found.hash ? `${found.page.url}#${found.hash}` : found.page.url}
+                      {...props}
+                    >
+                      {props.children}
+                    </HoverCardTrigger>
+                    <HoverCardContent className="text-sm">
+                      <p className="font-medium">{found.page.data.title}</p>
+                      <p className="text-fd-muted-foreground">{found.page.data.description}</p>
+                    </HoverCardContent>
+                  </HoverCard>
+                )
+              },
               DocsCategory: ({ url }) => {
                 return <DocsCategory url={url ?? page.url} />
               },
