@@ -13,7 +13,7 @@ import {
   BlogTitle,
 } from '@/components/blog'
 import { findPost, getPosts } from '@/lib/blog'
-import { blogAuthors, blogSource } from '@/lib/source'
+import { blogAuthors, blogSource, getBlogImageUrl } from '@/lib/source'
 import { getMDXComponents } from '@/mdx-components'
 
 export default async function Page(props: PageProps<'/blog/[slug]'>) {
@@ -67,5 +67,8 @@ export async function generateMetadata(props: PageProps<'/blog/[slug]'>): Promis
   return {
     title: `${page.data.title} | Arcadia`,
     description: page.data.description,
+    openGraph: {
+      images: getBlogImageUrl(page).url,
+    },
   }
 }

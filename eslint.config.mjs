@@ -11,6 +11,7 @@ export default antfu(
       'next-env.d.ts',
       '.source/**',
       'docs/**',
+      'blog/**',
       'README.md',
     ],
     rules: {

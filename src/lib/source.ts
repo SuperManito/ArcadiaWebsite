@@ -47,6 +47,14 @@ export const blogSource = loader({
   source: blog.toFumadocsSource(),
 })
 
+export function getBlogImageUrl(page: (typeof blogSource)['$inferPage']) {
+  const segments = [...page.slugs, 'image.png']
+  return {
+    segments,
+    url: `/${[page.locale, 'og', 'blog', ...segments].filter(Boolean).join('/')}`,
+  }
+}
+
 export const blogAuthors: Record<string, BlogAuthor> = {
   SuperManito: {
     name: 'SuperManito',
