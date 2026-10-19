@@ -37,6 +37,19 @@
     --color-fd-primary-rgba: rgba(125, 211, 252, 0.1);
   }
 
+  .theme-blue {
+    --color-fd-primary: #3b82f6; /* blue-500 */
+    --color-fd-primary-foreground: #ffffff;
+    --color-fd-primary-rgba: rgba(59, 130, 246, 0.1);
+  }
+  /* 着陆页的 dark 与 theme-blue 挂在同一节点上，后代选择器命中不了自身 */
+  .dark .theme-blue,
+  .theme-blue.dark {
+    --color-fd-primary: #93c5fd; /* blue-300 */
+    --color-fd-primary-foreground: #0a0a0a;
+    --color-fd-primary-rgba: rgba(147, 197, 253, 0.1);
+  }
+
   .theme-amber {
     --color-fd-primary: #d97706; /* amber-600 */
     --color-fd-primary-foreground: #ffffff;

@@ -1,8 +1,11 @@
 import type { InferPageType } from 'fumadocs-core/source'
+import type { BlogAuthor } from '@/lib/blog'
 import { llms, loader } from 'fumadocs-core/source'
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons'
+import { defineCollections } from 'fumadocs-mdx/macro'
 import { docs } from 'fumadocs-mdx:collections/server'
 import { openapiPlugin } from 'fumadocs-openapi/server'
+import { blogPageSchema } from '@/lib/blog'
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
@@ -32,3 +35,23 @@ export const docsLlms = llms(source, {
 
 ${await page.data.getText('processed')}`,
 })
+
+const blog = defineCollections({
+  type: 'doc',
+  dir: 'blog',
+  schema: blogPageSchema,
+})
+
+export const blogSource = loader({
+  baseUrl: '/blog',
+  source: blog.toFumadocsSource(),
+})
+
+export const blogAuthors: Record<string, BlogAuthor> = {
+  SuperManito: {
+    name: 'SuperManito',
+    title: '维护者',
+    url: 'https://github.com/SuperManito',
+    image: 'https://avatars.githubusercontent.com/u/68613938',
+  },
+}

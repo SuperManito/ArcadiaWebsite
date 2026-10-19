@@ -1,4 +1,11 @@
 import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared'
+import Link from 'fumadocs-core/link'
+import {
+  NavbarMenu,
+  NavbarMenuContent,
+  NavbarMenuLink,
+  NavbarMenuTrigger,
+} from 'fumadocs-ui/layouts/home/navbar'
 import { BookOpen, Plug, Shapes, Terminal } from 'lucide-react'
 
 export const releaseNotice = '📢 Release 1.2.0（2026-10-19）现已推出'
@@ -81,6 +88,99 @@ export const DocsTabs = [
     icon: <TabIcon icon={<Shapes />} className="text-[#8b5cf6] dark:text-[#c4b5fd] max-md:bg-[#8b5cf6]/10 dark:max-md:bg-[#c4b5fd]/10" />,
   },
 ]
+
+export function homeLinks(): LinkItemType[] {
+  return [
+    {
+      type: 'menu',
+      on: 'menu',
+      text: '文档',
+      items: [
+        {
+          text: '入门指引',
+          url: '/docs',
+          icon: <BookOpen />,
+        },
+        {
+          text: 'Arcadia CLI',
+          url: '/docs/cli',
+          icon: <Terminal />,
+        },
+        {
+          text: 'Arcadia API',
+          url: '/docs/api',
+          icon: <Plug />,
+        },
+        {
+          text: 'Arcadia OpenAPI',
+          url: '/docs/openapi',
+          icon: <Shapes />,
+        },
+      ],
+    },
+    ...socialLinks,
+    {
+      type: 'custom',
+      on: 'nav',
+      children: (
+        <NavbarMenu>
+          <NavbarMenuTrigger>
+            <Link href="/docs">文档</Link>
+          </NavbarMenuTrigger>
+          <NavbarMenuContent>
+            <NavbarMenuLink href="/docs" className="md:row-span-2">
+              <BookOpen className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+              <p className="font-medium">入门指引</p>
+              <p className="text-fd-muted-foreground text-sm">
+                了解如何部署并使用 Arcadia 平台
+              </p>
+            </NavbarMenuLink>
+
+            <NavbarMenuLink href="/docs/cli" className="lg:col-start-2">
+              <Terminal className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+              <p className="font-medium">Arcadia CLI</p>
+              <p className="text-fd-muted-foreground text-sm">
+                命令行
+              </p>
+            </NavbarMenuLink>
+
+            <NavbarMenuLink href="/docs/api" className="lg:col-start-2">
+              <Plug className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+              <p className="font-medium">Arcadia API</p>
+              <p className="text-fd-muted-foreground text-sm">
+                应用程序接口
+              </p>
+            </NavbarMenuLink>
+
+            <NavbarMenuLink href="/docs/openapi" className="lg:col-start-3 lg:row-start-1 md:row-span-2">
+              <Shapes className="bg-fd-primary text-fd-primary-foreground p-1 mb-2 rounded-md" />
+              <p className="font-medium">Arcadia OpenAPI</p>
+              <p className="text-fd-muted-foreground text-sm">
+                开放应用程序接口
+              </p>
+            </NavbarMenuLink>
+          </NavbarMenuContent>
+        </NavbarMenu>
+      ),
+    },
+    {
+      type: 'main',
+      text: '博客',
+      url: '/blog',
+    },
+    {
+      type: 'main',
+      text: '更新日志',
+      url: '/docs/changelog',
+    },
+    {
+      type: 'main',
+      text: '社区',
+      url: 'https://t.me/ArcadiaPanelGroup',
+      external: true,
+    },
+  ]
+}
 
 export function baseOptions(): BaseLayoutProps {
   return {
