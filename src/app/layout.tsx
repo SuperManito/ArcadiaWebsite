@@ -13,7 +13,7 @@ import './global.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://arcadia.cool'),
-  title: 'Arcadia',
+  title: 'Arcadia 一站式代码自动化运维平台',
   description: '一站式代码自动化运维平台',
   applicationName: 'Arcadia',
   authors: {

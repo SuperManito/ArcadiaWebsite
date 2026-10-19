@@ -1,0 +1,24 @@
+---
+title: 删除
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/message/alert/rule</DELETE>
+
+被一对一规则绑定时拒绝删除，错误信息返回绑定数量，需先在对应一对一规则中解除绑定。
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+无

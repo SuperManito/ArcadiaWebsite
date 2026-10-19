@@ -1,0 +1,40 @@
+---
+title: 获取列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/alert/rule/list</GET>
+
+含停用规则，按 id 升序返回。
+
+## 请求
+
+无参数
+
+## 响应
+
+返回数组对象，元素为规则摘要
+
+- MessageAlertRuleBriefItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+  }}
+/>

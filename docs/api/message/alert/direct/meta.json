@@ -1,0 +1,13 @@
+{
+  "title": "一对一规则",
+  "defaultOpen": false,
+  "pages": [
+    "schema",
+    "page",
+    "detail",
+    "create",
+    "update",
+    "delete",
+    "receiver"
+  ]
+}

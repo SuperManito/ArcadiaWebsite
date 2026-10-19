@@ -1,0 +1,16 @@
+---
+title: 获取标签列表
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/channel/tags</GET>
+
+返回全部渠道使用的标签，按标签名去重后按字母序排列
+
+## 请求
+
+无参数
+
+## 响应
+
+返回字符串数组，元素为标签名

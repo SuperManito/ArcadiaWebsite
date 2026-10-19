@@ -1,0 +1,14 @@
+{
+  "title": "全局规则",
+  "defaultOpen": false,
+  "pages": [
+    "schema",
+    "page",
+    "list",
+    "detail",
+    "create",
+    "update",
+    "delete",
+    "test"
+  ]
+}

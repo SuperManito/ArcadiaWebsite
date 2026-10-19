@@ -1,0 +1,112 @@
+---
+title: 导出名单
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/alert/direct/rule/receiver/export</GET>
+
+导出项可直接作为[批量添加](/docs/api/message/alert/direct/receiver/batch)的 `receivers` 提交；不含渠道关联与启用状态，回导后一律禁用且需重新绑定渠道。
+
+## 请求
+
+<TypeTable
+  type={{
+    ruleId: {
+      description: '所属规则唯一标识，正整数字符串',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    receivers: {
+      description: '收信人数组，按 id 升序，名单为空时为空数组',
+      type: 'ReceiverExportItem[]',
+      required: true,
+    },
+  }}
+/>
+
+- ReceiverExportItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    receiver: {
+      description: '收信人标识',
+      type: 'string',
+      required: true,
+    },
+    overrides: {
+      description: '推送自定义，五个键全部返回，单项结构见下方 ReceiverOverrides',
+      type: 'ReceiverOverrides',
+      required: true,
+    },
+    remark: {
+      description: '备注，无备注时为空串',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- ReceiverOverrides
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '自定义收信人正则匹配，null = 未自定义（沿用规则正则匹配，规则也未设置时对收信人标识做包含匹配）',
+      type: 'string | null',
+      required: true,
+    },
+    title_mode: {
+      description: '自定义标题模式，null = 未自定义（沿用规则标题模式）',
+      type: "string<'original' | 'template'> | null",
+      required: true,
+    },
+    title_template: {
+      description: '自定义标题模板，仅 title_mode 为 template 时非 null',
+      type: 'string | null',
+      required: true,
+    },
+    title_merge: {
+      description: '自定义无标题渠道仅发正文，null = 未自定义（沿用规则配置）',
+      type: 'number<0 | 1> | null',
+      required: true,
+    },
+    post_replaces: {
+      description: '自定义告警内容替换(匹配后)，null = 未自定义（沿用规则配置），元素结构见下方 ReplacePair',
+      type: 'ReplacePair[] | null',
+      required: true,
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，按 JS 替换语义展开，支持 $1、$&、$$ 等；空串等价于删除命中内容',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>

@@ -1,0 +1,125 @@
+---
+title: 命中测试
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/rule/test</POST>
+
+不落库、不发送通知，正则语法错误直接报错而不按未命中处理
+
+## 请求
+
+<TypeTable
+  type={{
+    logic: {
+      description: '条件组合逻辑，缺省 and',
+      type: "string<'and' | 'or'>",
+    },
+    categories: {
+      description: '规则限定的消息分类范围，逗号分隔字符串（也接受字符串数组），空=不限；与模拟消息的 category 比对，范围外的消息不命中且不逐条求值',
+      type: 'string',
+    },
+    types: {
+      description: '规则限定的消息级别范围，逗号分隔字符串（也接受字符串数组），空=不限；与模拟消息的 type 比对，范围外的消息不命中且不逐条求值',
+      type: 'string',
+    },
+    conditions: {
+      description: '匹配条件数组，长度 1–20，数组下标即条件顺序，见下方 Condition',
+      type: 'Condition[]',
+      required: true,
+    },
+    message: {
+      description: '模拟消息，见下方 TestMessage',
+      type: 'TestMessage',
+      required: true,
+    },
+  }}
+/>
+
+- Condition
+
+<TypeTable
+  type={{
+    mode: {
+      description: '匹配模式',
+      type: "string<'simple' | 'regex'>",
+      required: true,
+    },
+    field: {
+      description: '匹配字段',
+      type: "string<'title' | 'content'>",
+      required: true,
+    },
+    operator: {
+      description: '匹配运算符，simple 模式取 include / not_include / equal / not_equal / starts_with / ends_with / empty / not_empty，regex 模式取 regex / not_regex',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '匹配值；empty / not_empty 时忽略该值，其余运算符去首尾空格后非空、≤ 512 字符；regex 模式不去首尾空格且需通过语法校验',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- TestMessage
+
+<TypeTable
+  type={{
+    title: {
+      description: '模拟消息标题，与 content 至少一项去空格后非空',
+      type: 'string',
+    },
+    content: {
+      description: '模拟消息内容，与 title 至少一项去空格后非空',
+      type: 'string',
+    },
+    category: {
+      description: '模拟消息分类，不校验取值；缺省按空串处理，此时规则若限定了分类则不命中',
+      type: 'string',
+      typeDescription: 'system / cron / user',
+    },
+    type: {
+      description: '模拟消息级别，不校验取值；缺省按空串处理，此时规则若限定了级别则不命中',
+      type: 'string',
+      typeDescription: 'info / warn / error / success',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    matched: {
+      description: '规则整体是否命中，已计入分类/级别范围过滤与条件组合逻辑',
+      type: 'boolean',
+      required: true,
+    },
+    conditions: {
+      description: '逐条条件命中明细，按条件数组下标排列；分类 / 级别过滤未通过时为空数组',
+      type: 'ConditionResult[]',
+      required: true,
+    },
+  }}
+/>
+
+- ConditionResult
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    sort: {
+      description: '条件数组下标，0 起',
+      type: 'number',
+      required: true,
+    },
+    matched: {
+      description: '该条件是否命中',
+      type: 'boolean',
+      required: true,
+    },
+  }}
+/>

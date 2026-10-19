@@ -22,13 +22,17 @@ import { PUT } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
     config: {
       description: '渠道配置，支持对象或 JSON 字符串，后端按渠道类型白名单清洗（未声明字段丢弃，跨渠道通用配置 general 除外）后以 JSON 字符串落库；字段结构见下方说明',
       type: 'object | string',
       required: true,
+    },
+    tags: {
+      description: '标签，字符串数组或逗号分隔字符串，去重去空、上限 10 个、单个 ≤ 50 字符且不得含逗号，缺省空',
+      type: 'string[]',
     },
   }}
 />
@@ -51,11 +55,16 @@ import { PUT } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
     config: {
       description: '渠道配置，JSON 字符串，字段结构见数据关系模型中的渠道配置',
+      type: 'string',
+      required: true,
+    },
+    tags: {
+      description: '标签列表，逗号分隔字符串（首尾各带一个逗号）',
       type: 'string',
       required: true,
     },

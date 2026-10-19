@@ -1,0 +1,162 @@
+---
+title: 创建
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/rule</POST>
+
+规则总数上限 50 条，名称与一对一规则共用命名空间，两域都不可重名。
+
+## 请求
+
+<TypeTable
+  type={{
+    name: {
+      description: '规则名称，去首尾空格后非空、≤ 50 字符、全局唯一',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    logic: {
+      description: '条件组合逻辑，缺省 and',
+      type: "string<'and' | 'or'>",
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔字符串，逐项校验合法值，空=不限',
+      type: 'string',
+    },
+    types: {
+      description: '消息级别多选，逗号分隔字符串，逐项校验合法值，空=不限',
+      type: 'string',
+    },
+    conditions: {
+      description: '匹配条件数组，长度 1–20，数组下标即条件顺序',
+      type: 'Condition[]',
+      required: true,
+    },
+    channelIds: {
+      description: '关联渠道 id 数组，逐项必须存在、自动去重、上限 50 个；渠道间无顺序语义，缺省=不关联渠道',
+      type: 'number[]',
+    },
+    replaces: {
+      description: '告警内容替换数组，按序链式执行并全量替换，按每条的 scope 作用于标题 / 内容，上限 20 条；缺省或空数组=不启用，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+    titleMerge: {
+      description: '无标题渠道仅发正文，缺省 1。为 0 时无独立标题概念的渠道（如 Telegram、Discord）不接收标题、只发正文',
+      type: "number<0 | 1>",
+    },
+  }}
+/>
+
+- Condition
+
+<TypeTable
+  type={{
+    mode: {
+      description: '匹配模式',
+      type: "string<'simple' | 'regex'>",
+      required: true,
+    },
+    field: {
+      description: '匹配字段',
+      type: "string<'title' | 'content'>",
+      required: true,
+    },
+    operator: {
+      description: '匹配运算符，simple 模式取 include / not_include / equal / not_equal / starts_with / ends_with / empty / not_empty，regex 模式取 regex / not_regex',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '匹配值；empty / not_empty 时忽略该值，其余运算符去首尾空格后非空、≤ 512 字符；regex 模式不去首尾空格且需通过语法校验',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；允许空串，等价于删除命中内容；需要换行时提交真实换行符',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容，执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    logic: {
+      description: '条件组合逻辑',
+      type: "string<'and' | 'or'>",
+      required: true,
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    types: {
+      description: '消息级别多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    replaces: {
+      description: '告警内容替换，JSON 数组串，元素结构见上方 ReplacePair',
+      type: 'string',
+      required: true,
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文：1 把标题并入无独立标题概念的渠道正文，0 时这些渠道只发正文',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

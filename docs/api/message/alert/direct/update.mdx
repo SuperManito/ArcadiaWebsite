@@ -1,0 +1,152 @@
+---
+title: 更新
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/message/alert/direct/rule</PUT>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称，去首尾空格后非空、≤ 50 字符、全局唯一',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态，不传保留原状态；只提交 id 与 enabled 时其余字段保持不变',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+    },
+    titleMode: {
+      description: '标题模式，缺省 original',
+      type: "string<'original' | 'template'>",
+      typeDescription: 'original 沿用原标题，template 使用标题模板',
+    },
+    titleTemplate: {
+      description: '标题模板，titleMode 为 template 时必填、≤ 256 字符，支持 {{title}} 原消息标题、{{rule}} 规则名称、{{receiver}} 收信人标识',
+      type: 'string',
+    },
+    commonPattern: {
+      description: '规则正则匹配，对本规则下未自定义正则的收信人生效，≤ 512 字符，必须包含 {{receiver}}（匹配时展开为该收信人标识的正则转义字面量），空=不启用',
+      type: 'string',
+    },
+    preReplaces: {
+      description: '告警内容替换(匹配前)数组，按序链式执行并全量替换，上限 20 条：both / content 条目在收信人匹配前作用于整条正文，both / title 条目作用于标题渲染结果，空数组=不启用，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+    postReplaces: {
+      description: '告警内容替换(匹配后)数组，上限 20 条，在命中后作用于推送行与标题、不影响匹配；查找内容与替换串支持 {{title}} / {{rule}} / {{receiver}} 变量，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+    titleMerge: {
+      description: '无标题渠道仅发正文，缺省 1。为 0 时无独立标题概念的渠道（如 Telegram、Discord）不接收标题、只发正文',
+      type: "number<0 | 1>",
+    },
+    channelMerge: {
+      description: '同渠道合并推送，缺省 0。为 1 时同渠道下有效标题形态（标题模式、标题模板、无标题渠道仅发正文、匹配后替换的标题侧条目）一致的收信人合并为一条推送，标题里的收信人标识以、分隔',
+      type: "number<0 | 1>",
+    },
+    alertRuleIds: {
+      description: '绑定的全局规则 id 数组，逐项必须存在、自动去重，上限 20 条，规则间无顺序语义；缺省=保留原绑定，清空需显式传空数组',
+      type: 'number[]',
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；允许空串，等价于删除命中内容；需要换行时提交真实换行符',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容，执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    title_mode: {
+      description: '标题模式',
+      type: "string<'original' | 'template'>",
+      required: true,
+    },
+    title_template: {
+      description: '标题模板，title_mode 为 template 时有效',
+      type: 'string',
+      required: true,
+    },
+    pre_replaces: {
+      description: '告警内容替换(匹配前)，JSON 数组串，元素结构见上方 ReplacePair',
+      type: 'string',
+      required: true,
+    },
+    post_replaces: {
+      description: '告警内容替换(匹配后)，JSON 数组串',
+      type: 'string',
+      required: true,
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文：1 把标题并入无独立标题概念的渠道正文，0 时这些渠道只发正文',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    common_pattern: {
+      description: '规则正则匹配，空=不启用',
+      type: 'string',
+      required: true,
+    },
+    channel_merge: {
+      description: '同渠道合并推送：1 合并推送，0 逐收信人逐渠道推送',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

@@ -1,0 +1,169 @@
+---
+title: 分页查询
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/alert/direct/rule/page</GET>
+
+收信人名单不随列表返回，见[收信人名单分页](/docs/api/message/alert/direct/receiver/page)。
+
+## 请求
+
+<TypeTable
+  type={{
+    page: {
+      description: '指定页数',
+      type: 'string',
+      default: 1,
+    },
+    size: {
+      description: '指定分页大小数量',
+      type: 'string',
+      default: 20,
+    },
+    search: {
+      description: '规则名称模糊搜索',
+      type: 'string',
+    },
+    enabled: {
+      description: '启用状态过滤',
+      type: "string<'0' | '1'>",
+      typeDescription: '1 启用，0 停用',
+    },
+    order: {
+      description: '排序方向，0=升序，1=降序',
+      type: "string<'0' | '1'>",
+      default: 1,
+    },
+    orderBy: {
+      description: '排序字段，白名单：create_time / update_time',
+      type: 'string',
+      default: 'id',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    data: {
+      description: '数据项',
+      type: 'MessageAlertDirectRuleItem[]',
+      required: true,
+    },
+    page: {
+      description: '当前页码',
+      type: 'number',
+      required: true,
+    },
+    size: {
+      description: '每页数据量',
+      type: 'number',
+      required: true,
+    },
+    total: {
+      description: '数据总量',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>
+
+- MessageAlertDirectRuleItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    title_mode: {
+      description: '标题模式',
+      type: "string<'original' | 'template'>",
+      required: true,
+    },
+    title_template: {
+      description: '标题模板，title_mode 为 template 时有效，支持 {{title}} / {{rule}} / {{receiver}} 占位符',
+      type: 'string',
+      required: true,
+    },
+    pre_replaces: {
+      description: '告警内容替换(匹配前)数组，按数组序链式执行并全量替换，both / content 条目在收信人匹配前作用于整条正文，both / title 条目作用于标题渲染结果，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+      required: true,
+    },
+    post_replaces: {
+      description: '告警内容替换(匹配后)数组，在命中后作用于推送行与标题，不影响匹配，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+      required: true,
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文：1 把标题并入无独立标题概念的渠道正文，0 时这些渠道只发正文',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    channel_merge: {
+      description: '同渠道合并推送：1 时同渠道下有效标题形态一致的收信人合并为一条推送，0 时每位收信人按其绑定的每个渠道各推一条',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    common_pattern: {
+      description: '规则正则匹配，对本规则下未自定义正则的收信人生效，必须含 {{receiver}}，空=不启用',
+      type: 'string',
+      required: true,
+    },
+    receiver_count: {
+      description: '收信人数量',
+      type: 'number',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，按 JS 替换语义展开，支持 $1、$&、$$ 等；空串等价于删除命中内容',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>

@@ -1,0 +1,88 @@
+---
+title: 数据关系模型
+---
+
+全局规则定义什么消息需要告警、告警到哪里：按消息分类与级别圈定范围，对标题 / 内容设置匹配条件，命中后推送给关联渠道，同时触发绑定它的一对一规则做二次告警。
+
+## 工作原理
+
+<Mermaid
+  chart="
+graph TD
+  A[消息入库] --> B[全局规则求值]
+  B --> C{分类与级别过滤}
+  C -->|不匹配| X[跳过]
+  C -->|匹配| D{条件组求值}
+  D -->|未命中| X
+  D -->|命中| E[推送副本发送给关联渠道]
+  E --> F{存在绑定的一对一规则}
+  F -->|是| G[一对一规则二次告警]
+  F -->|否| Z[结束]
+  G --> Z
+  E --> Z"
+/>
+
+### 流程说明
+
+| 阶段 | 说明 |
+|------|------|
+| 分类与级别过滤 | 消息分类、消息级别与规则设置不一致则跳过，空 = 不限 |
+| 条件组求值 | 条件按 `and` / `or` 组合，命中才进入推送。正则条件单次执行超过 500ms 或异常按该条件失败：`and` 中有条件为假即不命中，`or` 中有条件为真即命中 |
+| 告警内容替换 | 命中后对推送副本的标题与内容替换，规则求值始终使用原文，站内消息本体不变，见[告警内容替换](/docs/api/message/alert#告警内容替换) |
+| 渠道推送 | 推送给全部关联渠道，渠道允许为空（仅作为一对一规则触发源的规则不直接推送）；单个渠道失败不影响其余渠道 |
+| 一对一二次告警 | 命中同时触发绑定它的一对一规则，两组推送结果互不影响，见[一对一规则](/docs/api/message/alert/direct/schema) |
+
+推送队列、节流与失败汇总为两域共同行为，见[推送管线](/docs/api/message/alert#推送管线)。
+
+## 数据模型
+
+```prisma
+model messageAlertRule {
+  id             Int                             @id @default(autoincrement())
+  name           String // 规则名称，接口保证唯一（DB 不设 unique）
+  enabled        Int                             @default(1) // 1 启用 / 0 停用
+  logic          String                          @default("and") // 条件组合逻辑
+  categories     String                          @default("") // 消息分类多选，逗号分隔，空=不限
+  types          String                          @default("") // 消息级别多选，逗号分隔，空=不限
+  replaces       String                          @default("") // 告警内容替换，JSON 数组串，空=不启用
+  title_merge    Int                             @default(1) // 无标题渠道仅发正文
+  create_time    DateTime                        @default(now())
+  update_time    DateTime                        @default(now()) @updatedAt
+  conditions     messageAlertRuleCondition[]
+  channels       messageAlertRuleChannel[]
+  directBindings messageAlertDirectRuleBinding[]
+}
+
+// 一条规则可包含多条匹配条件，按 sort 升序展示与求值
+model messageAlertRuleCondition {
+  id                 Int              @id @default(autoincrement())
+  messageAlertRuleId Int
+  messageAlertRule   messageAlertRule @relation(fields: [messageAlertRuleId], references: [id])
+  mode               String           @default("simple") // simple 简易 | regex 正则
+  field              String // title 标题 | content 内容
+  operator           String
+  value              String           @default("") // empty / not_empty 时忽略
+  sort               Int              @default(0)
+}
+
+model messageAlertRuleChannel {
+  id                 Int                 @id @default(autoincrement())
+  messageAlertRuleId Int
+  messageAlertRule   messageAlertRule    @relation(fields: [messageAlertRuleId], references: [id])
+  channelId          Int
+  channel            notificationChannel @relation(fields: [channelId], references: [id])
+
+  @@unique([messageAlertRuleId, channelId]) // 同一规则不能重复挂同一渠道
+}
+```
+
+关联表只存渠道 ID，渠道配置存放在[通知渠道](/docs/api/channel)表里，触发时实时关联查询，渠道配置修改即时生效。
+
+告警规则与一对一规则多对多绑定，单条一对一规则最多绑定 20 条全局规则；绑定表与收信人表见[一对一规则](/docs/api/message/alert/direct/schema)。
+
+## 枚举取值
+
+| 枚举 | 取值 |
+| --- | --- |
+| 消息分类 `categories` | `system`、`cron`、`user`（逗号分隔多选，空 = 不限） |
+| 消息级别 `types` | `info`、`warn`、`error`、`success`（逗号分隔多选，空 = 不限） |

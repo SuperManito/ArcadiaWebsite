@@ -36,11 +36,16 @@ import { GET } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
     config: {
       description: '渠道配置，JSON 字符串，字段结构见数据关系模型中的渠道配置',
+      type: 'string',
+      required: true,
+    },
+    tags: {
+      description: '标签列表，逗号分隔字符串（首尾各带一个逗号）',
       type: 'string',
       required: true,
     },

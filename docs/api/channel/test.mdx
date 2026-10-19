@@ -5,24 +5,38 @@ import { POST } from '@/components/RequestTag';
 
 <POST>/channel/test</POST>
 
+用给定渠道配置发送一条测试消息，不落库。`title` / `content` 缺省或为空时使用固定默认文案；渠道配置中的通知尾仍按正常推送逻辑附加。测试发送绕过渠道类型级节流排队（手动单次调用，不占窗口名额），不会因该类型队列繁忙而长时间等待。
+
+两种调用方式二选一：提供 `id` 时按该渠道已保存的配置发送（列表页测试场景，名称与类型也取库内值）；不提供 `id` 时按提交的 `type` / `config` 发送（编辑表单未保存场景，`name` 可省略且不做唯一性校验）。
+
 ## 请求
 
 <TypeTable
   type={{
+    id: {
+      description: '已存渠道 id，提供时按库内配置发送，name / type / config 不再需要',
+      type: 'number',
+    },
     name: {
       description: '渠道名称，测试发送可省略，不做唯一性校验',
       type: 'string',
     },
     type: {
-      description: '渠道类型',
+      description: '渠道类型，未提供 id 时必填',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
-      required: true,
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
     },
     config: {
-      description: '渠道配置，支持对象或 JSON 字符串，字段结构与校验规则同[创建](/docs/api/channel/create)',
+      description: '渠道配置，支持对象或 JSON 字符串，字段结构与校验规则同渠道创建接口，未提供 id 时必填',
       type: 'object | string',
-      required: true,
+    },
+    title: {
+      description: '测试消息标题，缺省或为空时使用默认文案（“测试通知”）',
+      type: 'string',
+    },
+    content: {
+      description: '测试消息内容，缺省或为空时使用默认文案',
+      type: 'string',
     },
   }}
 />

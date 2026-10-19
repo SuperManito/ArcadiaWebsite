@@ -5,7 +5,7 @@ import { GET } from '@/components/RequestTag';
 
 <GET>/channel/list</GET>
 
-精简列表，按 `id` 升序，供告警规则表单选择关联渠道
+返回全部渠道的精简信息，不分页，按 `id` 升序
 
 ## 请求
 
@@ -13,7 +13,9 @@ import { GET } from '@/components/RequestTag';
 
 ## 响应
 
-返回数组对象
+返回数组对象，元素为渠道摘要
+
+### ChannelSimpleItem
 
 <TypeTable
   noRequiredMark={true}
@@ -31,8 +33,10 @@ import { GET } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
   }}
 />
+
+精简列表只返回渠道标识与展示字段，标签见[获取标签列表](/docs/api/channel/tags)。

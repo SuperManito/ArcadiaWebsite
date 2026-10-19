@@ -5,8 +5,6 @@ import { GET } from '@/components/RequestTag';
 
 <GET>/message/alert/rule/page</GET>
 
-告警规则分页列表
-
 ## 请求
 
 <TypeTable
@@ -22,7 +20,7 @@ import { GET } from '@/components/RequestTag';
       default: 20,
     },
     search: {
-      description: '名称模糊搜索',
+      description: '规则名称模糊搜索',
       type: 'string',
     },
     enabled: {
@@ -36,7 +34,7 @@ import { GET } from '@/components/RequestTag';
       default: 1,
     },
     orderBy: {
-      description: '排序字段，白名单：id / name / create_time / update_time',
+      description: '排序字段，白名单：create_time / update_time',
       type: 'string',
       default: 'id',
     },
@@ -107,9 +105,14 @@ import { GET } from '@/components/RequestTag';
       type: 'string',
       required: true,
     },
-    channelCount: {
-      description: '关联渠道计数',
-      type: 'number',
+    replaces: {
+      description: '告警内容替换数组，按数组序链式执行并全量替换，按每条的 scope 作用于标题 / 内容，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+      required: true,
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文：1 把标题并入无独立标题概念的渠道正文，0 时这些渠道只发正文',
+      type: 'number<1 | 0>',
       required: true,
     },
     create_time: {
@@ -120,6 +123,29 @@ import { GET } from '@/components/RequestTag';
     update_time: {
       description: '更新时间',
       type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，按 JS 替换语义展开，支持 $1、$&、$$ 等；空串等价于删除命中内容',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容',
+      type: "string<'both' | 'title' | 'content'>",
       required: true,
     },
   }}

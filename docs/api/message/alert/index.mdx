@@ -1,6 +1,94 @@
 ---
-title: 监控告警规则
+title: 监控告警
 icon: Bell
 ---
 
-<DocsCategory />
+监控告警对**消息中心**的每条入库消息进行实时监测，命中后自动通过你配置的通知渠道推送。功能由两个规则组构成：
+
+- **[全局规则](/docs/api/message/alert/rule/schema)**：定义**什么消息需要告警**以及**告警到哪里**——按消息分类与级别圈定范围，对标题 / 内容设置匹配条件（文本 / 正则，`and` / `or` 组合），命中后把消息推送给关联渠道。
+- **[一对一规则](/docs/api/message/alert/direct/schema)**：全局规则的二次告警拓展——关联全局告警规则，命中后按收信人逐行匹配消息正文，把命中的行推送给该收信人绑定的渠道，适用于同一消息分发给不同接收人的场景。
+
+测试能力由[全局命中测试](/docs/api/message/alert/rule/test)与[一对一命中测试](/docs/api/message/alert/direct/receiver/test)提供；通知渠道的配置与管理独立成域，见[《Channel 通知渠道》](/docs/api/channel)。
+
+## 接口约定
+
+- 时间字段（`create_time` / `update_time`）为 `yyyy-MM-dd hh:mm:ss` 字符串。
+- 分页参数与其它域一致：`page` / `size` 为正整数字符串（缺省 1 / 20，`size` 上限 9999），`order` 只有传 `'0'` 时升序，`orderBy` 只接受各接口列出的白名单字段。
+- 创建与更新接口的 `result` 是刚落库的数据行：字段名与分页项一致，但 JSON 列以字符串返回（`replaces`、`pre_replaces`、`post_replaces`、`overrides`），且不返回分页项的派生字段（`receiver_count`、`channels`）。详情与分页接口返回的是数组 / 对象形态。
+- 删除类接口不返回业务数据；批量启停返回实际更新条数。
+- 创建类接口的 `enabled`：规则接口必填，创建时即确定启用状态；收信人接口缺省为禁用。
+
+## 共同工作原理
+
+<Mermaid
+  chart="
+graph TD
+  A[消息入库] --> B[非阻塞触发告警处理]
+  B --> C[全局规则：分类/级别过滤 → 条件组求值]
+  B --> D[一对一规则：正文逐行匹配 → 命中行按推送单元推送]
+  C -->|命中| E[推送副本插入关联渠道类型队列队头]
+  D -->|命中| F[渲染后追加至渠道类型队列队尾]
+  E --> G[按渠道类型并行发送<br/>经滑动窗口节流]
+  F --> G
+  G --> H{发送成功}
+  H -->|是| Z[结束]
+  H -->|否| I[计入该消息的失败会话]
+  I --> K[会话销账完毕且有失败时<br/>写一条站内汇总消息]
+  K --> Z"
+/>
+
+两组规则独立求值、共享同一条推送管线；渠道推送结果不影响另一组。消息入库与告警处理解耦，渠道繁忙不会拖慢消息写入。
+
+## 推送管线
+
+| 主题 | 说明 |
+|------|------|
+| 类型队列 | 推送任务按**渠道类型**分桶，同类型共用一条 FIFO 队列、按该类型的节流并发上限并行发送，不同类型之间天然并行。同一条触发消息的全局规则推送插队头优先发送；并行消费下同一渠道的两条任务可能乱序送达，入队顺序不保证送达顺序 |
+| 滑动窗口节流 | 每个渠道类型按官方限流声明频率上限（可多层叠加，如飞书 5 次/秒 + 100 次/分钟），窗口内有名额时突发立即放行；未声明的渠道走默认值（每秒 10 次、并发 3）。渠道的测试发送不进队列、不等额度 |
+| 队列深度 | 队列不设深度上限，积压只延迟不丢弃；队列只保存在内存中，服务重启时未发送的任务丢失 |
+| 失败聚合 | 每条触发消息一个失败会话，任务落定逐个销账；存在失败时写**一条**站内汇总消息，一行一失败（`规则 · 渠道（类型）：原因`），不逐条上报 |
+| 不重试 | 发送失败一次落定，不做失败补发 |
+
+## 告警内容替换
+
+`replaces` 赋予规则按正则查找并改写推送标题与推送内容的能力，全局规则与一对一规则共用同一套成对值结构（请求与响应均为数组，落库为 JSON 数组串）；一对一规则的请求字段为 `preReplaces` / `postReplaces`（响应为 `pre_replaces` / `post_replaces`），分别作用于匹配前与匹配后。
+
+```json
+[
+  { "pattern": "^\\d+ ", "replacement": "", "scope": "both" },
+  { "pattern": "(任务|脚本)失败", "replacement": "[$1 失败]", "scope": "title" }
+]
+```
+
+- ReplacePair
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，必填、去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；需要换行时提交真实换行符（JSON 里写 \\n 转义）；允许为空串（等价于删除命中内容）',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容；执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+- 按数组序链式执行，每条全量替换（等价固定 `g` 标志，不暴露 flags）
+- 替换只作用于推送副本，站内消息本体不变
+- 替换的执行时机按域区分：全局规则先按原文求值命中，再在**命中后**对整条标题与内容替换；一对一规则的 `preReplaces` 在**收信人匹配前**对整条正文替换（匹配基于替换后的文本），`postReplaces` 在**命中后**对推送行与标题渲染结果替换（不影响匹配，查找内容与替换串支持 `{{title}}` / `{{rule}}` / `{{receiver}}` 变量），分别见[全局规则](/docs/api/message/alert/rule/schema)与[一对一规则](/docs/api/message/alert/direct/schema)
+
+保存校验：每组替换条数 ≤ 20 条。运行时单条执行超时（500ms）或异常则跳过该条并继续执行后续替换，不中断推送。
+
+## 无标题渠道仅发正文
+
+没有独立标题字段的渠道（`discord`、`feishu`、`googlechat`、`kook`、`qqbot`、`telegram`、`wecombot`、`wecomapp`、`wxpusher`）默认把标题以 `标题\n\n正文` 形式并入正文发送。`title_merge` 只作用于其中无独立标题概念的渠道（上述除 `wecomapp`、`wxpusher` 之外的 7 个）：`1`（默认）并入正文，`0` 时标题不再并入、只发正文。`wecomapp`、`wxpusher` 另把标题用作摘要 / 卡片标题，其余渠道有独立标题字段，两者都不受该开关影响。`title_merge` 是全局规则与一对一规则各自的字段，一对一规则还可按收信人在 `overrides.title_merge` 逐行覆盖，分别见[全局规则](/docs/api/message/alert/rule/schema)与[一对一规则](/docs/api/message/alert/direct/schema)。

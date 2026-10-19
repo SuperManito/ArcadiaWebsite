@@ -3,7 +3,7 @@ minimumReleaseAgeExclude:
   - '@fumadocs/*'
   - 'fumadocs-*'
   - '@fuma-*'
-  - '@fumari/image-size'
+  - '@fumari/*'
 
 trustPolicy: no-downgrade
 shellEmulator: true

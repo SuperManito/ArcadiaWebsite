@@ -1,0 +1,27 @@
+---
+title: 删除
+---
+import { DELETE } from '@/components/RequestTag';
+
+<DELETE>/message/alert/direct/rule/receiver</DELETE>
+
+## 请求
+
+<TypeTable
+  type={{
+    ruleId: {
+      description: '所属规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    ids: {
+      description: '收信人 id 数组，非空',
+      type: 'number[]',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+无

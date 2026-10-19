@@ -17,7 +17,7 @@ import { POST } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
     config: {
@@ -25,12 +25,16 @@ import { POST } from '@/components/RequestTag';
       type: 'object | string',
       required: true,
     },
+    tags: {
+      description: '标签，字符串数组或逗号分隔字符串，去重去空、上限 10 个、单个 ≤ 50 字符且不得含逗号，缺省空',
+      type: 'string[]',
+    },
   }}
 />
 
 ### config 字段
 
-<Tabs items={['apprise', 'bark', 'dingding', 'discord', 'feishu', 'googlechat', 'gotify', 'kook', 'pushplus', 'serverchan', 'telegram', 'webhook', 'wecomapp', 'wecombot', 'wpush', 'wxpusher']}>
+<Tabs items={['apprise', 'bark', 'dingding', 'discord', 'feishu', 'googlechat', 'gotify', 'kook', 'pushplus', 'qqbot', 'serverchan', 'telegram', 'webhook', 'wecomapp', 'wecombot', 'wpush', 'wxpusher']}>
 
   <Tab value="apprise">
     <TypeTable
@@ -212,8 +216,8 @@ import { POST } from '@/components/RequestTag';
           type: 'string',
           required: true,
         },
-        guildId: {
-          description: '服务器（频道）ID',
+        channelId: {
+          description: '目标频道 ID',
           type: 'string',
           required: true,
         },
@@ -226,6 +230,33 @@ import { POST } from '@/components/RequestTag';
       type={{
         token: {
           description: '用户 token',
+          type: 'string',
+          required: true,
+        },
+      }}
+    />
+  </Tab>
+
+  <Tab value="qqbot">
+    <TypeTable
+      type={{
+        appId: {
+          description: 'QQ 开放平台机器人 AppID',
+          type: 'string',
+          required: true,
+        },
+        clientSecret: {
+          description: 'QQ 开放平台机器人 AppSecret，用于换取 access_token',
+          type: 'string',
+          required: true,
+        },
+        targetType: {
+          description: '发送目标类型，缺省 group',
+          type: 'string',
+          typeDescription: '取值 group（群聊）、c2c（单聊）、channel（频道）',
+        },
+        targetId: {
+          description: '目标 ID：群聊为 group_openid，单聊为 user_openid，频道为子频道 channel_id；需先让目标与机器人交互一次，从机器人收到的消息事件中获取',
           type: 'string',
           required: true,
         },
@@ -399,7 +430,7 @@ import { POST } from '@/components/RequestTag';
 <TypeTable
   type={{
     footer: {
-      description: '自定义通知尾，非空时追加到通知正文末尾（与正文空一行分隔），全部渠道生效',
+      description: '自定义通知尾，非空时追加到通知正文末尾（与正文空一行分隔），支持占位符 `{{time}}`（推送时间）与 `\\n` 换行，全部渠道生效',
       type: 'string',
     },
     proxy: {
@@ -407,7 +438,7 @@ import { POST } from '@/components/RequestTag';
       type: 'string',
     },
     messageTemplate: {
-      description: '消息模板，占位符 `{{title}}`、`{{content}}`，换行用 `\\n`；仅无独立标题字段的渠道生效（`discord`、`feishu`、`googlechat`、`kook`、`telegram`、`wecombot`、`wecomapp`、`wxpusher`）。不填则默认标题与正文空行分隔，渲染后为空则跳过该渠道推送',
+      description: '消息模板，占位符 `{{title}}`、`{{content}}`、`{{time}}`（推送时间），换行用 `\\n`；全部渠道生效，渲染结果覆盖通知正文、原标题保留。不填则按渠道默认方式展示标题与正文，渲染后为空则跳过该渠道推送（不视为失败）',
       type: 'string',
     },
   }}
@@ -431,7 +462,7 @@ import { POST } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
     config: {

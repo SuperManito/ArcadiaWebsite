@@ -3,9 +3,9 @@ title: 删除
 ---
 import { DELETE } from '@/components/RequestTag';
 
-<DELETE>/message/alert/rule</DELETE>
+<DELETE>/message/alert/direct/rule</DELETE>
 
-删除告警规则，事务内依次删除渠道关联、条件、规则。
+仍有收信人时拒绝删除，需先通过[收信人删除](/docs/api/message/alert/direct/receiver/delete)删完名单；与全局规则的绑定关系随删除自动解除。
 
 ## 请求
 
@@ -21,4 +21,4 @@ import { DELETE } from '@/components/RequestTag';
 
 ## 响应
 
-成功返回标准成功结构。
+无

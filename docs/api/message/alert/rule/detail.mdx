@@ -1,0 +1,151 @@
+---
+title: 详情
+---
+import { GET } from '@/components/RequestTag';
+
+<GET>/message/alert/rule</GET>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '规则唯一标识',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    name: {
+      description: '规则名称',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    logic: {
+      description: '条件组合逻辑',
+      type: "string<'and' | 'or'>",
+      required: true,
+    },
+    categories: {
+      description: '消息分类多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    types: {
+      description: '消息级别多选，逗号分隔，空=不限',
+      type: 'string',
+      required: true,
+    },
+    replaces: {
+      description: '告警内容替换数组，按数组序链式执行并全量替换，按每条的 scope 作用于标题 / 内容，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+      required: true,
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文：1 把标题并入无独立标题概念的渠道正文，0 时这些渠道只发正文',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    create_time: {
+      description: '创建时间',
+      type: 'string',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+    conditions: {
+      description: '匹配条件数组，按保存顺序排列，单项见下方 MessageAlertRuleConditionItem',
+      type: 'MessageAlertRuleConditionItem[]',
+      required: true,
+    },
+    channels: {
+      description: '关联渠道数组，无顺序语义，单项见下方 MessageAlertRuleChannelItem',
+      type: 'MessageAlertRuleChannelItem[]',
+      required: true,
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，按 JS 替换语义展开，支持 $1、$&、$$ 等；空串等价于删除命中内容',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+- MessageAlertRuleConditionItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    mode: {
+      description: '匹配模式',
+      type: "string<'simple' | 'regex'>",
+      required: true,
+    },
+    field: {
+      description: '匹配字段',
+      type: "string<'title' | 'content'>",
+      required: true,
+    },
+    operator: {
+      description: '匹配运算符，simple 模式取 include / not_include / equal / not_equal / starts_with / ends_with / empty / not_empty，regex 模式取 regex / not_regex',
+      type: 'string',
+      required: true,
+    },
+    value: {
+      description: '匹配值，运算符为 empty / not_empty 时为空串',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>
+
+- MessageAlertRuleChannelItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    channelId: {
+      description: '渠道唯一标识',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>

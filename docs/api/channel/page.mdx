@@ -26,7 +26,11 @@ import { GET } from '@/components/RequestTag';
     type: {
       description: '渠道类型过滤',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+    },
+    tags: {
+      description: '标签过滤，逗号分隔多个标签名，逐个精确匹配取交集',
+      type: 'string',
     },
     order: {
       description: '排序方向，0=升序，1=降序',
@@ -48,7 +52,7 @@ import { GET } from '@/components/RequestTag';
   type={{
     data: {
       description: '数据项',
-      type: 'AlertChannel[]',
+      type: 'NotificationChannel[]',
       required: true,
     },
     page: {
@@ -69,7 +73,7 @@ import { GET } from '@/components/RequestTag';
   }}
 />
 
-- AlertChannel
+- NotificationChannel（分页不含 config，配置通过[详情](/docs/api/channel/detail)获取）
 
 <TypeTable
   noRequiredMark={true}
@@ -87,11 +91,11 @@ import { GET } from '@/components/RequestTag';
     type: {
       description: '渠道类型',
       type: 'string',
-      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
+      typeDescription: '取值 apprise、bark、dingding、discord、feishu、googlechat、gotify、kook、pushplus、qqbot、serverchan、telegram、webhook、wecomapp、wecombot、wpush、wxpusher',
       required: true,
     },
-    config: {
-      description: '渠道配置，JSON 字符串，字段结构见数据关系模型中的渠道配置',
+    tags: {
+      description: '标签列表，逗号分隔字符串（首尾各带一个逗号）',
       type: 'string',
       required: true,
     },

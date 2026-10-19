@@ -1,0 +1,100 @@
+---
+title: 数据关系模型
+---
+
+一对一规则是[全局规则](/docs/api/message/alert/rule/schema)的二次告警拓展：全局规则命中后，按收信人逐行匹配消息正文，命中的行推送给该收信人绑定的通知渠道。规则不独立触发，未绑定全局规则时保持待机。
+
+## 工作原理
+
+<Mermaid
+  chart="
+graph TD
+  A[绑定的全局规则命中] --> B[匹配前替换处理整条正文]
+  B --> C[正文按行切分]
+  C --> D{按收信人逐行匹配}
+  D -->|无命中| X[跳过]
+  D -->|匹配失败| Y[计入失败汇总]
+  D -->|命中| E[匹配后替换清洗命中行]
+  E --> F[按推送单元聚合并渲染替换标题]
+  F --> G[推送给该单元绑定的渠道]
+  G --> Z[结束]"
+/>
+
+### 流程说明
+
+| 阶段 | 说明 |
+|------|------|
+| 触发 | 命中全局规则所绑定的一对一规则并发进入本流程；同一规则被多条命中规则绑定时，一条消息只处理一次 |
+| 匹配前替换 | `pre_replaces` 中 scope 为 both / content 的条目作用于整条正文，命中行即推送行，见[告警内容替换](/docs/api/message/alert#告警内容替换) |
+| 行切分 | 正文按换行切分，去除行首尾空白并跳过空行；只匹配正文，不匹配标题 |
+| 收信人匹配 | 只处理启用的收信人。匹配串按收信人自定义 > 规则正则 > 标识包含三级回退；正则区分大小写、无修饰符，逐行独立求值（`^` / `$` 按行生效），`{{receiver}}` 展开为转义后的收信人标识；单次匹配超时按失败处理并计入失败汇总 |
+| 匹配后替换 | 命中行按该收信人的有效 `post_replaces` 替换，不影响匹配，替换后为空串的行不再推送；查找内容与替换串支持 `{{title}}` / `{{rule}}` / `{{receiver}}` |
+| 聚合推送 | 以推送单元为单位，单元内命中行去重后按原文顺序合并为一条；本域不做截断，渠道自身的长度上限在发送时处理。默认每位收信人的每个渠道各成一个单元，`channel_merge=1` 时同渠道下有效标题形态一致的收信人并为一单元 |
+| 标题渲染 | 按推送单元的有效标题配置渲染：`original` 沿用原标题，`template` 渲染模板占位符（合并单元的 `{{receiver}}` 为标识去重后以、连接），再依次按 `pre_replaces` 与 `post_replaces` 中 scope 为 both / title 的条目替换；`title_merge` 对无标题渠道的影响见[无标题渠道仅发正文](/docs/api/message/alert#无标题渠道仅发正文) |
+
+推送队列、节流与失败汇总为两域共同行为，见[推送管线](/docs/api/message/alert#推送管线)。
+
+## 推送自定义
+
+收信人级配置覆盖（`overrides`）：键存在 = 覆盖规则主体对应项，键缺失 = 沿用规则主体，表以外的键直接报错。可自定义五项，键名与规则表列名对齐：`pattern`、`title_mode`、`title_template`、`title_merge`、`post_replaces`。
+
+写入、读取与名单交换共用同一对象结构，字段逐项见[收信人创建](/docs/api/message/alert/direct/receiver/create)、[收信人更新](/docs/api/message/alert/direct/receiver/update)与[收信人名单分页](/docs/api/message/alert/direct/receiver/page)。
+
+## 数据模型
+
+```prisma
+model messageAlertDirectRule {
+  id             Int                              @id @default(autoincrement())
+  name           String // 规则名称，接口保证唯一（与全局规则共用命名空间，DB 不设 unique）
+  enabled        Int                              @default(1) // 1 启用 / 0 禁用
+  title_mode     String                           @default("original") // original 原标题 | template 自定义模板
+  title_template String                           @default("") // title_mode=template 时的标题模板
+  pre_replaces   String                           @default("") // 告警内容替换(匹配前)，JSON 数组串，空=不启用
+  post_replaces  String                           @default("") // 告警内容替换(匹配后)，JSON 数组串，空=不启用
+  title_merge    Int                              @default(1) // 无标题渠道仅发正文
+  common_pattern String                           @default("") // 规则正则匹配，对本规则下未自定义正则的收信人生效，空=不启用
+  channel_merge  Int                              @default(0) // 同渠道合并推送
+  create_time    DateTime                         @default(now())
+  update_time    DateTime                         @default(now()) @updatedAt
+  receivers      messageAlertDirectRuleReceiver[]
+  bindings       messageAlertDirectRuleBinding[]
+}
+
+// 正文按行切割后逐行匹配，命中行推送给绑定的渠道
+model messageAlertDirectRuleReceiver {
+  id           Int                                     @id @default(autoincrement())
+  directRuleId Int
+  directRule   messageAlertDirectRule                  @relation(fields: [directRuleId], references: [id])
+  receiver     String // 收信人标识，同规则内唯一；无自定义正则时兼作匹配目标
+  overrides    String                                  @default("") // 推送自定义，JSON 对象串，空串=全部沿用规则主体
+  remark       String                                  @default("") // 备注
+  enabled      Int                                     @default(1) // 1 启用 / 0 禁用，启用需至少绑定 1 个渠道
+  update_time  DateTime                                @default(now()) @updatedAt
+  channels     messageAlertDirectRuleReceiverChannel[]
+
+  @@unique([directRuleId, receiver])
+}
+
+model messageAlertDirectRuleReceiverChannel {
+  id         Int                            @id @default(autoincrement())
+  receiverId Int
+  receiver   messageAlertDirectRuleReceiver @relation(fields: [receiverId], references: [id])
+  channelId  Int
+  channel    notificationChannel            @relation(fields: [channelId], references: [id])
+
+  @@unique([receiverId, channelId]) // 同一收信人不能重复绑同一渠道
+}
+
+// 一对一规则与全局规则的多对多绑定
+model messageAlertDirectRuleBinding {
+  id           Int                    @id @default(autoincrement())
+  alertRuleId  Int
+  alertRule    messageAlertRule       @relation(fields: [alertRuleId], references: [id])
+  directRuleId Int
+  directRule   messageAlertDirectRule @relation(fields: [directRuleId], references: [id])
+
+  @@unique([alertRuleId, directRuleId]) // 同一一对一规则不能重复绑定同一全局规则
+}
+```
+
+收信人的渠道关联只存渠道 ID，渠道配置修改即时生效。收信人数量不设上限，名单一律通过分页接口读取。

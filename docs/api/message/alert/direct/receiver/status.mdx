@@ -1,0 +1,36 @@
+---
+title: 批量启停
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/message/alert/direct/rule/receiver/status</PUT>
+
+## 请求
+
+<TypeTable
+  type={{
+    ids: {
+      description: '收信人 id 数组，非空',
+      type: 'number[]',
+      required: true,
+    },
+    enabled: {
+      description: '目标启用状态',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    count: {
+      description: '实际更新的行数，enabled 为 1 时未关联渠道的行不更新',
+      type: 'number',
+      required: true,
+    },
+  }}
+/>

@@ -5,6 +5,7 @@
     "schema",
     "page",
     "list",
+    "tags",
     "detail",
     "create",
     "update",

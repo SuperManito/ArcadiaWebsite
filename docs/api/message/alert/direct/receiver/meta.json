@@ -1,0 +1,14 @@
+{
+  "title": "收信人名单",
+  "defaultOpen": false,
+  "pages": [
+    "page",
+    "create",
+    "update",
+    "status",
+    "delete",
+    "batch",
+    "export",
+    "test"
+  ]
+}

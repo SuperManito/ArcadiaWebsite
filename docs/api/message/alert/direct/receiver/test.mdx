@@ -1,0 +1,129 @@
+---
+title: 命中测试
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/direct/rule/receiver/test</POST>
+
+不落库、不发送通知，处理链路与真实推送一致，见[一对一规则 · 工作原理](/docs/api/message/alert/direct/schema#工作原理)
+
+## 请求
+
+<TypeTable
+  type={{
+    ruleId: {
+      description: '所属一对一规则唯一标识，提供正则匹配、标题配置与替换配置',
+      type: 'number',
+      required: true,
+    },
+    receiver: {
+      description: '收信人标识，去首尾空格后非空、≤ 50 字符',
+      type: 'string',
+      required: true,
+    },
+    overrides: {
+      description: '推送自定义，见下方 ReceiverOverrideInput',
+      type: 'ReceiverOverrideInput',
+    },
+    message: {
+      description: '模拟消息，见下方 TestMessage',
+      type: 'TestMessage',
+      required: true,
+    },
+  }}
+/>
+
+- ReceiverOverrideInput
+
+键存在 = 覆盖规则主体对应项，键缺失或值为 `null` = 沿用规则主体，表以外的键直接报错；不传该字段按无自定义处理。详见[推送自定义](/docs/api/message/alert/direct/schema#推送自定义)。
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '收信人正则匹配，≤ 512 字符，支持 {{receiver}} 占位符，展开成该收信人的标识后必须是有效正则',
+      type: 'string',
+    },
+    title_mode: {
+      description: '标题模式，自定义时标题模板整体接管、不与规则模板混合',
+      type: "string<'original' | 'template'>",
+    },
+    title_template: {
+      description: '标题模板，≤ 256 字符，须与 title_mode 同时提供',
+      type: 'string',
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文',
+      type: 'number<0 | 1>',
+    },
+    post_replaces: {
+      description: '告警内容替换(匹配后)，上限 20 条，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；允许空串，等价于删除命中内容；需要换行时提交真实换行符',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容，执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+- TestMessage
+
+<TypeTable
+  type={{
+    title: {
+      description: '模拟消息标题，与 content 至少一项去空格后非空',
+      type: 'string',
+    },
+    content: {
+      description: '模拟消息内容，与 title 至少一项去空格后非空；匹配只看正文，标题不参与',
+      type: 'string',
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    matched: {
+      description: '该收信人是否有推送内容，无命中行、或命中行被匹配后替换全部清空时均为 false',
+      type: 'boolean',
+      required: true,
+    },
+    title: {
+      description: '渲染后的推送标题，未命中时为空串',
+      type: 'string',
+      required: true,
+    },
+    content: {
+      description: '提取的推送正文，多行以换行连接，未命中时为空串',
+      type: 'string',
+      required: true,
+    },
+    pattern_source: {
+      description: '生效匹配串的来源',
+      type: "string<'receiver' | 'common' | 'identifier'>",
+      typeDescription: 'receiver 收信人自定义正则匹配，common 规则正则匹配，identifier 按收信人标识包含匹配',
+      required: true,
+    },
+  }}
+/>

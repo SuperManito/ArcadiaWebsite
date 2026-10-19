@@ -1,0 +1,132 @@
+---
+title: 批量添加
+---
+import { POST } from '@/components/RequestTag';
+
+<POST>/message/alert/direct/rule/receiver/batch</POST>
+
+逐条校验，合法项一次性写入，失败项不阻断其余条目。新建行一律禁用且不含渠道，需另行绑定渠道后启用。
+
+## 请求
+
+<TypeTable
+  type={{
+    ruleId: {
+      description: '所属规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    receivers: {
+      description: '添加项数组，非空、单次最多 1000 个',
+      type: 'ReceiverBatchItem[]',
+      required: true,
+    },
+  }}
+/>
+
+- ReceiverBatchItem
+
+<TypeTable
+  type={{
+    receiver: {
+      description: '收信人标识，去首尾空格，≤ 50 字符、同规则内唯一',
+      type: 'string',
+      required: true,
+    },
+    overrides: {
+      description: '推送自定义，见下方 ReceiverOverrideInput',
+      type: 'ReceiverOverrideInput',
+    },
+    remark: {
+      description: '备注，去首尾空格，≤ 200 字符',
+      type: 'string',
+    },
+  }}
+/>
+
+- ReceiverOverrideInput
+
+键存在 = 覆盖规则主体对应项，键缺失或值为 `null` = 沿用规则主体，表以外的键直接报错。缺省 = 全部沿用规则主体。详见[推送自定义](/docs/api/message/alert/direct/schema#推送自定义)。
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '收信人正则匹配，≤ 512 字符，支持 {{receiver}} 占位符，展开成该收信人的标识后必须是有效正则',
+      type: 'string',
+    },
+    title_mode: {
+      description: '标题模式，自定义时标题模板整体接管、不与规则模板混合',
+      type: "string<'original' | 'template'>",
+    },
+    title_template: {
+      description: '标题模板，≤ 256 字符，须与 title_mode 同时提供',
+      type: 'string',
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文',
+      type: 'number<0 | 1>',
+    },
+    post_replaces: {
+      description: '告警内容替换(匹配后)，上限 20 条，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；允许空串，等价于删除命中内容；需要换行时提交真实换行符',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容，执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    created: {
+      description: '实际新建的收信人数量',
+      type: 'number',
+      required: true,
+    },
+    failed: {
+      description: '失败项列表，全部成功时为空数组',
+      type: 'FailedItem[]',
+      required: true,
+    },
+  }}
+/>
+
+- FailedItem
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    receiver: {
+      description: '对应条目的收信人标识',
+      type: 'string',
+      required: true,
+    },
+    reason: {
+      description: '失败原因',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

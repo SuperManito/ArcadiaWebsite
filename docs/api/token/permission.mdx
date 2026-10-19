@@ -25,6 +25,7 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
 | `env:manage` | 管理环境变量 |
 | `file:list` | 列出文件目录 |
 | `message:query` | 查询消息 |
+| `dependency:query` | 查询依赖 |
 
 ## 权限键一览
 
@@ -35,6 +36,7 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
     <TabsTrigger value="file">文件系统 (file)</TabsTrigger>
     <TabsTrigger value="exec">命令执行 (exec)</TabsTrigger>
     <TabsTrigger value="message">消息中心 (message)</TabsTrigger>
+    <TabsTrigger value="dependency">依赖管理 (dependency)</TabsTrigger>
     <TabsTrigger value="extra">其它 (extra)</TabsTrigger>
   </TabsList>
 
@@ -142,6 +144,25 @@ OpenAPI 令牌采用细粒度的 `资源:操作` 权限模型。每个令牌在�
   | `/message/v1/readStatus` | POST | `message:manage` |
   | `/message/v1/readAll` | POST | `message:manage` |
   | `/message/v1/delete` | POST | `message:manage` |
+
+  </TabsContent>
+
+  <TabsContent id="dependency" value="dependency">
+
+  | 权限键 | 说明 | 默认启用 | 危险 |
+  | ----- | --- | :----: | :--: |
+  | `dependency:query` | 分页查询、获取依赖详情和错误日志 | ✅ | — |
+  | `dependency:manage` | 创建、删除依赖记录 | — | ⚠️ |
+  | `dependency:operate` | 安装、卸载依赖包及同步安装状态 | — | ⚠️ |
+
+  | 接口路径 | 方法 | 所需权限 |
+  | ------ | --- | --- |
+  | `/dependency/v1/page` | GET | `dependency:query` |
+  | `/dependency/v1/query` | GET | `dependency:query` |
+  | `/dependency/v1/error` | GET | `dependency:query` |
+  | `/dependency/v1/create` | POST | `dependency:manage` |
+  | `/dependency/v1/delete` | POST | `dependency:manage` |
+  | `/dependency/v1/operate` | POST | `dependency:operate` |
 
   </TabsContent>
 

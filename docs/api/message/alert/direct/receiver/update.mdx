@@ -1,0 +1,134 @@
+---
+title: 更新
+---
+import { PUT } from '@/components/RequestTag';
+
+<PUT>/message/alert/direct/rule/receiver</PUT>
+
+## 请求
+
+<TypeTable
+  type={{
+    id: {
+      description: '收信人唯一标识',
+      type: 'number',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态，始终必填；未关联渠道时不能启用',
+      type: 'number<1 | 0>',
+      required: true,
+    },
+    receiver: {
+      description: '收信人标识，去首尾空格后非空、≤ 50 字符、同规则内唯一（排除自身），只传 id 与 enabled 时省略，否则必填',
+      type: 'string',
+    },
+    overrides: {
+      description: '推送自定义，整体替换语义，见下方 ReceiverOverrideInput',
+      type: 'ReceiverOverrideInput',
+    },
+    remark: {
+      description: '备注，去首尾空格，≤ 200 字符',
+      type: 'string',
+    },
+    channelIds: {
+      description: '绑定的渠道 id 数组，逐项必须存在、自动去重、上限 50 个；渠道间无顺序语义，缺省或空数组=清空绑定',
+      type: 'number[]',
+    },
+  }}
+/>
+
+- ReceiverOverrideInput
+
+键存在 = 覆盖规则主体对应项，键缺失或值为 `null` = 沿用规则主体，表以外的键直接报错。提供该字段即整体替换现有自定义：缺省的键清除对应自定义，不传该字段则清除全部自定义。详见[推送自定义](/docs/api/message/alert/direct/schema#推送自定义)。
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '收信人正则匹配，≤ 512 字符，支持 {{receiver}} 占位符，展开成该收信人的标识后必须是有效正则',
+      type: 'string',
+    },
+    title_mode: {
+      description: '标题模式，自定义时标题模板整体接管、不与规则模板混合',
+      type: "string<'original' | 'template'>",
+    },
+    title_template: {
+      description: '标题模板，≤ 256 字符，须与 title_mode 同时提供',
+      type: 'string',
+    },
+    title_merge: {
+      description: '无标题渠道仅发正文',
+      type: 'number<0 | 1>',
+    },
+    post_replaces: {
+      description: '告警内容替换(匹配后)，上限 20 条，元素结构见下方 ReplacePair',
+      type: 'ReplacePair[]',
+    },
+  }}
+/>
+
+- ReplacePair
+
+<TypeTable
+  type={{
+    pattern: {
+      description: '查找内容，正则表达式，去首尾空格后非空、≤ 512 字符且通过语法校验',
+      type: 'string',
+      required: true,
+    },
+    replacement: {
+      description: '替换串，≤ 256 字符，按 JS 替换语义展开，支持 $1、$&、$$ 等；允许空串，等价于删除命中内容；需要换行时提交真实换行符',
+      type: 'string',
+      required: true,
+    },
+    scope: {
+      description: '替换作用域：both 标题和内容、title 仅标题、content 仅内容，执行时只取 both 或与目标一致的条目',
+      type: "string<'both' | 'title' | 'content'>",
+      required: true,
+    },
+  }}
+/>
+
+## 响应
+
+<TypeTable
+  noRequiredMark={true}
+  type={{
+    id: {
+      description: '唯一标识',
+      type: 'number',
+      required: true,
+    },
+    directRuleId: {
+      description: '所属规则唯一标识',
+      type: 'number',
+      required: true,
+    },
+    receiver: {
+      description: '收信人标识',
+      type: 'string',
+      required: true,
+    },
+    overrides: {
+      description: '推送自定义，JSON 对象串，未自定义时为空串，键结构见上方 ReceiverOverrideInput',
+      type: 'string',
+      required: true,
+    },
+    remark: {
+      description: '备注，无备注时为空串',
+      type: 'string',
+      required: true,
+    },
+    enabled: {
+      description: '启用状态',
+      type: 'number<1 | 0>',
+      typeDescription: '1 启用，0 停用',
+      required: true,
+    },
+    update_time: {
+      description: '更新时间',
+      type: 'string',
+      required: true,
+    },
+  }}
+/>

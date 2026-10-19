@@ -2,12 +2,7 @@
   "title": "监控告警",
   "defaultOpen": false,
   "pages": [
-    "schema",
-    "page",
-    "detail",
-    "create",
-    "update",
-    "delete",
-    "test"
+    "rule",
+    "direct"
   ]
 }
