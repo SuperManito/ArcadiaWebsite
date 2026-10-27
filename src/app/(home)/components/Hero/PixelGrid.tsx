@@ -200,14 +200,20 @@ export default function PixelGrid({ className = '' }: PixelGridProps) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const uniforms = {
-      uResolution: { value: [canvas.width, canvas.height] },
+      uResolution: {
+        value: [canvas.width, canvas.height],
+      },
       uTime: { value: 0 },
-      uSeed: { value: [Math.random() * 16 - 8, Math.random() * 16 - 8] },
+      uSeed: {
+        value: [Math.random() * 16 - 8, Math.random() * 16 - 8],
+      },
       uWaveSpeed: { value: WAVE_SPEED },
       uWaveFrequency: { value: WAVE_FREQUENCY },
       uWaveAmplitude: { value: WAVE_AMPLITUDE },
       uWaveColor: { value: WAVE_COLOR },
-      uMouse: { value: [0, 0] },
+      uMouse: {
+        value: [0, 0],
+      },
       uMouseRadius: { value: MOUSE_RADIUS },
       uMouseAmount: { value: 0 },
       uScatterPush: { value: SCATTER_PUSH },
@@ -257,7 +263,9 @@ export default function PixelGrid({ className = '' }: PixelGridProps) {
       uniforms.uResolution.value = [canvas.width, canvas.height]
       // Portrait screens sample a narrower slice of the noise field, which
       // lands on denser regions. Nudge the cutoff up to keep the same feel.
-      uniforms.uBias.value = cssWidth / cssHeight < 0.85 ? BIAS + 0.1 : BIAS
+      uniforms.uBias.value = cssWidth / cssHeight < 0.85
+        ? BIAS + 0.1
+        : BIAS
     }
 
     const setMouseFromEvent = (event: PointerEvent) => {

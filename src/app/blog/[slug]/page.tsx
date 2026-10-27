@@ -52,7 +52,9 @@ export default async function Page(props: PageProps<'/blog/[slug]'>) {
 }
 
 export function generateStaticParams() {
-  return blogSource.getPages().map(page => ({ slug: page.slugs.join('/') }))
+  return blogSource.getPages().map(page => ({
+    slug: page.slugs.join('/'),
+  }))
 }
 
 export const dynamic = 'force-static'

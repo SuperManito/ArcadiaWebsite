@@ -8,9 +8,11 @@ import {
 } from 'fumadocs-ui/layouts/home/navbar'
 import { BookOpen, Plug, Shapes, Terminal } from 'lucide-react'
 
-export const releaseNotice = '📢 Release 1.2.0（2026-10-19）现已推出'
+export const releaseNotice = {
+  version: '1.2.0',
+  date: '2026-10-19',
+}
 
-// fill this with your actual GitHub info, for example:
 export const gitConfig = {
   user: 'SuperManito',
   repo: 'Arcadia',

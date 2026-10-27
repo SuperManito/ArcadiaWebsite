@@ -17,7 +17,11 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     return null
   }
 
-  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '16px'
+  const fontSize = size
+    ? (typeof size === 'number'
+        ? `${size}px`
+        : size)
+    : '16px'
   const verticalAlign = style?.verticalAlign ? style?.verticalAlign : '-0.15em'
 
   const svgStyle: React.CSSProperties = {
@@ -28,9 +32,23 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
     maxWidth: '16px',
     height: '16px',
     maxHeight: '16px',
-    ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : {}),
-    ...(height != null ? { height: typeof height === 'number' ? `${height}px` : height } : {}),
-    ...(color != null ? { color } : {}),
+    ...(width != null
+      ? {
+          width: typeof width === 'number'
+            ? `${width}px`
+            : width,
+        }
+      : {}),
+    ...(height != null
+      ? {
+          height: typeof height === 'number'
+            ? `${height}px`
+            : height,
+        }
+      : {}),
+    ...(color != null
+      ? { color }
+      : {}),
     ...(style ?? {}),
   }
 
@@ -48,7 +66,17 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
 export function CHECK() {
   return (
     <span>
-      <IconifyIcon icon="mdi:check" height="24" style={{ verticalAlign: '-0.35em', color: '#22c55e', display: 'inline-flex', alignItems: 'center' }}></IconifyIcon>
+      <IconifyIcon
+        icon="mdi:check"
+        height="24"
+        style={{
+          verticalAlign: '-0.35em',
+          color: '#22c55e',
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
+      </IconifyIcon>
     </span>
   )
 }
@@ -56,7 +84,17 @@ export function CHECK() {
 export function CLOSE() {
   return (
     <span>
-      <IconifyIcon icon="mdi:close" height="24" style={{ verticalAlign: '-0.35em', color: '#ef4444', display: 'inline-flex', alignItems: 'center' }}></IconifyIcon>
+      <IconifyIcon
+        icon="mdi:close"
+        height="24"
+        style={{
+          verticalAlign: '-0.35em',
+          color: '#ef4444',
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
+      </IconifyIcon>
     </span>
   )
 }

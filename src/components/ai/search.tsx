@@ -337,7 +337,9 @@ function ThinkingBlock({ text, isThinking }: { text: string, isThinking: boolean
       >
         {(!isThinking || !!text.trim()) && <ChevronDown className={cn('size-3 shrink-0 transition-transform duration-200', !expanded && '-rotate-90')} />}
         <span className="font-medium">
-          {isThinking ? <AnimatedShinyText>正在思考</AnimatedShinyText> : '已思考'}
+          {isThinking
+            ? <AnimatedShinyText>正在思考</AnimatedShinyText>
+            : '已思考'}
         </span>
       </button>
       {expanded && (
@@ -384,7 +386,9 @@ function Message({ message, isActive = false, ...props }: { message: ChatUIMessa
       <div
         className={cn(
           'mb-1 flex items-center gap-1.5',
-          message.role === 'assistant' ? 'text-fd-primary' : 'text-fd-muted-foreground',
+          message.role === 'assistant'
+            ? 'text-fd-primary'
+            : 'text-fd-muted-foreground',
         )}
       >
         <span className="text-sm font-medium">{roleName[message.role] ?? 'unknown'}</span>

@@ -31,9 +31,15 @@ function ThreeDMarquee({
           >
             {chunks.map((subarray, colIndex) => (
               <motion.div
-                animate={{ y: colIndex % 2 === 0 ? 100 : -100 }}
+                animate={{
+                  y: colIndex % 2 === 0
+                    ? 100
+                    : -100,
+                }}
                 transition={{
-                  duration: colIndex % 2 === 0 ? 10 : 15,
+                  duration: colIndex % 2 === 0
+                    ? 10
+                    : 15,
                   repeat: Infinity,
                   repeatType: 'reverse',
                 }}

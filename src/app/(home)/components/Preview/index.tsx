@@ -24,6 +24,7 @@ const DARK_IMAGE_PATHS = [
   '/images/preview/login-dark.png',
 ]
 
+// eslint-disable-next-line antfu/reasonable-newline
 const marqueeIndices = [9, 1, 2, 4, 5, 7, 0, 6, 5, 4, 2, 1, 9, 3, 0, 4, 1, 5, 0, 7, 0, 8, 6, 2, 8, 1, 9, 1, 9, 2, 4, 5, 0, 7]
 
 const darkMarqueeImgs = marqueeIndices.map(i => DARK_IMAGE_PATHS[i])
@@ -109,7 +110,15 @@ function PreviewContentMobile() {
           </Safari>
         </div>
       </div>
-      <span className="text-neutral-600 dark:text-neutral-400 text-base" style={{ paddingTop: '1rem', width: '100%', textAlign: 'center', display: 'block' }}>
+      <span
+        className="text-neutral-600 dark:text-neutral-400 text-base"
+        style={{
+          paddingTop: '1rem',
+          width: '100%',
+          textAlign: 'center',
+          display: 'block',
+        }}
+      >
         {previewTitle}
       </span>
     </div>
@@ -131,7 +140,9 @@ export default function Preview() {
           className="w-full justify-center flex"
         >
           <section className={clsx('w-full', styles.features)}>
-            {!isMobile ? <PreviewContentDefault /> : <PreviewContentMobile />}
+            {!isMobile
+              ? <PreviewContentDefault />
+              : <PreviewContentMobile />}
           </section>
         </motion.div>
       </div>

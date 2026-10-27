@@ -60,7 +60,9 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
                 return (
                   <HoverCard>
                     <HoverCardTrigger
-                      href={found.hash ? `${found.page.url}#${found.hash}` : found.page.url}
+                      href={found.hash
+                        ? `${found.page.url}#${found.hash}`
+                        : found.page.url}
                       {...props}
                     >
                       {props.children}

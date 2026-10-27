@@ -17,7 +17,10 @@ export async function TypeTableServer({
       const highlightedType = typeof value.type === 'string'
         ? await highlight(value.type, { lang: 'ts', themes: shikiThemes, defaultColor: false })
         : value.type
-      return [key, { ...value, type: highlightedType }] as [string, TypeNode]
+      return [
+        key,
+        { ...value, type: highlightedType },
+      ] as [string, TypeNode]
     }),
   )
   return <TypeTable type={Object.fromEntries(entries)} {...props} />

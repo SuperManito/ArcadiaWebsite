@@ -64,7 +64,9 @@ export function TOCItems({ ref, className, thumbBox = true, children, ...props }
         d += ` M${x} ${top} L${x} ${bottom}`
       }
       else {
-        const [, upperBottom, upperX] = i > 0 ? positions[i - 1] : [0, 0, 0]
+        const [, upperBottom, upperX] = i > 0
+          ? positions[i - 1]
+          : [0, 0, 0]
 
         d += ` C ${upperX} ${top - 4} ${x} ${upperBottom + 4} ${x} ${top} L${x} ${bottom}`
       }
@@ -103,7 +105,9 @@ export function TOCItems({ ref, className, thumbBox = true, children, ...props }
       const n = path.getTotalLength()
       for (let i = 0; i < positions.length; i++) {
         const [top, bottom] = positions[i]
-        let l = i > 0 ? itemLineLengths[i - 1][1] + (top - positions[i - 1][1]) : top
+        let l = i > 0
+          ? itemLineLengths[i - 1][1] + (top - positions[i - 1][1])
+          : top
         while (l < n && path.getPointAtLength(l).y < top) l++
 
         // vertical line distance = bottom - top
@@ -191,7 +195,9 @@ function ThumbTrack({ computed, thumbBox }: { computed: ComputedSVG, thumbBox: b
       out['--offset-distance'] = isUp
         ? `${computed.itemLineLengths[startIdx][0]}px`
         : `${computed.itemLineLengths[endIdx][1]}px`
-      out['--opacity'] = items[isUp ? startIdx : endIdx].original._step !== undefined ? '0' : '1'
+      out['--opacity'] = items[isUp ? startIdx : endIdx].original._step !== undefined
+        ? '0'
+        : '1'
     }
 
     return out
@@ -270,8 +276,12 @@ export function TOCItem({
     const isLast = index === items.length - 1
 
     const l1 = getLineOffset(item.depth)
-    const l0 = isFirst ? l1 : getLineOffset(items[index - 1].depth)
-    const l2 = isLast ? l1 : getLineOffset(items[index + 1].depth)
+    const l0 = isFirst
+      ? l1
+      : getLineOffset(items[index - 1].depth)
+    const l2 = isLast
+      ? l1
+      : getLineOffset(items[index + 1].depth)
 
     return {
       isFirst,
@@ -298,14 +308,19 @@ export function TOCItem({
           )}
           <line
             x1={l1 + 0.5}
-            y1={l0 === l1 ? '6' : '12'}
+            y1={l0 === l1
+              ? '6'
+              : '12'}
             x2={l1 + 0.5}
             y2="100%"
             strokeWidth="1"
             className="stroke-fd-foreground/10"
           />
           {item._step !== undefined && (
-            <g transform={`translate(${l1 + 0.5}, ${l1 === l2 ? '3' : '6'})`}>
+            <g transform={`translate(${l1 + 0.5}, ${l1 === l2
+              ? '3'
+              : '6'})`}
+            >
               <circle cx="0" cy="50%" r="8" className="fill-fd-muted" />
               <text
                 x="0"

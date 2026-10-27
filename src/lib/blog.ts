@@ -73,7 +73,9 @@ export function getPosts(pages: BlogPage[], authors: Record<string, BlogAuthor> 
       url,
       title: data.title,
       description: data.description,
-      date: data.date === undefined ? undefined : new Date(data.date),
+      date: data.date === undefined
+        ? undefined
+        : new Date(data.date),
       image: data.image,
       tags: [],
       authors: [],
@@ -81,7 +83,11 @@ export function getPosts(pages: BlogPage[], authors: Record<string, BlogAuthor> 
 
     for (const name of data.tags ?? []) {
       const slug = tagSlug(name)
-      post.tags.push({ name, slug, url: getBlogUrl(['tags', slug], locale) })
+      post.tags.push({
+        name,
+        slug,
+        url: getBlogUrl(['tags', slug], locale),
+      })
     }
     for (const id of data.authors ?? []) post.authors.push(authors[id] ?? { name: id })
     posts.push(post)

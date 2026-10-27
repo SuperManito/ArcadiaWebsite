@@ -19,7 +19,9 @@ export default function HeroSection() {
   }
 
   const item: Variants = {
-    hidden: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, filter: 'blur(4px)' },
+    hidden: reduceMotion
+      ? { opacity: 0 }
+      : { opacity: 0, y: 18, filter: 'blur(4px)' },
     visible: {
       opacity: 1,
       y: 0,

@@ -16,7 +16,11 @@ export function Icon({ icon, size, width, height, color, style, children }: Icon
   if (!iconName)
     return null
 
-  const fontSize = size ? (typeof size === 'number' ? `${size}px` : size) : '1.125em'
+  const fontSize = size
+    ? (typeof size === 'number'
+        ? `${size}px`
+        : size)
+    : '1.125em'
   const verticalAlign = style?.verticalAlign ?? '-0.15em'
 
   return (

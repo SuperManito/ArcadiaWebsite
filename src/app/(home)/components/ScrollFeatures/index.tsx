@@ -11,7 +11,12 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
     <div className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-20 mb-20 md:mb-40 last:mb-0 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
       <motion.div
         className="w-full lg:w-1/2 flex flex-col items-center lg:items-start"
-        initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
+        initial={{
+          opacity: 0,
+          x: isReversed
+            ? 50
+            : -50,
+        }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         viewport={{ once: true, margin: '-100px' }}
@@ -30,7 +35,12 @@ function ScrollFeature({ feature, index }: { feature: ScrollFeatureItem, index: 
 
       <motion.div
         className="w-full lg:w-1/2"
-        initial={{ opacity: 0, x: isReversed ? -50 : 50 }}
+        initial={{
+          opacity: 0,
+          x: isReversed
+            ? -50
+            : 50,
+        }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
         viewport={{ once: true, margin: '-100px' }}

@@ -39,7 +39,9 @@ export function rehypeWrapWords() {
           properties: {
             class: 'animate-fd-fade-in',
           },
-          children: [{ type: 'text', value: word }],
+          children: [
+            { type: 'text', value: word },
+          ],
         }
       })
 

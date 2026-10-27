@@ -53,7 +53,9 @@ export function LLMCopyButton({
       )}
       onClick={onClick}
     >
-      {checked ? <Check /> : <Copy />}
+      {checked
+        ? <Check />
+        : <Copy />}
       复制页面
     </button>
   )
@@ -74,7 +76,9 @@ export function ViewOptions({
   githubUrl: string
 }) {
   const items = useMemo(() => {
-    const pageUrl = typeof window !== 'undefined' ? window.location.href : 'loading'
+    const pageUrl = typeof window !== 'undefined'
+      ? window.location.href
+      : 'loading'
     const q = `Read ${pageUrl}, I want to ask questions about it.`
 
     return [

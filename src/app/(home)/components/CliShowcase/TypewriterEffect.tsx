@@ -38,7 +38,9 @@ export default function TypewriterEffect({
               key={`char-${index}`}
               className={cn('dark:text-white text-black', word.className)}
             >
-              {char === ' ' ? '\u00A0' : char}
+              {char === ' '
+                ? '\u00A0'
+                : char}
             </span>
           ))}
           &nbsp;
@@ -64,7 +66,9 @@ export default function TypewriterEffect({
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ delay: index * 0.03 }}
         >
-          {char === ' ' ? '\u00A0' : char}
+          {char === ' '
+            ? '\u00A0'
+            : char}
         </motion.span>
       ))}
     </motion.div>

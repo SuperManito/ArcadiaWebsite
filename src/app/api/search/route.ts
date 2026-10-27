@@ -13,7 +13,9 @@ export const { staticGET: GET } = createFromSource(source, {
       url: page.url,
       id: page.url,
       structuredData: page.data.structuredData,
-      tag: page.path.startsWith('(main)') ? 'main' : page.slugs[0],
+      tag: page.path.startsWith('(main)')
+        ? 'main'
+        : page.slugs[0],
     }
   },
   tokenizer: createTokenizer({

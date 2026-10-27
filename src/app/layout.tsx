@@ -7,7 +7,6 @@ import { NextProvider } from 'fumadocs-core/framework/next'
 import { Inter } from 'next/font/google'
 import Banner from '@/components/Banner'
 import { Provider } from '@/components/provider'
-import { releaseNotice } from '@/lib/layout.shared'
 
 import './global.css'
 
@@ -40,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang="zh-CN" className={inter.className} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
         <NextProvider>
-          <Banner>{releaseNotice}</Banner>
+          <Banner />
           <Provider>
             <AntdRegistry>
               {children}

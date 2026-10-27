@@ -34,7 +34,9 @@ function useInstallSharedState() {
   const isMobile = windowWidth !== null && windowWidth < 997
 
   const { resolvedTheme } = useTheme()
-  const algorithm = useMemo(() => (resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm), [resolvedTheme])
+  const algorithm = useMemo(() => (resolvedTheme === 'dark'
+    ? theme.darkAlgorithm
+    : theme.defaultAlgorithm), [resolvedTheme])
 
   const mirrorOptions = [
     { label: '无', value: '' },
@@ -51,7 +53,10 @@ function useInstallSharedState() {
     e.preventDefault()
     const target = mirrorInput
     if (target && !mirrorItems.some(item => item.value === target)) {
-      setMirrorItems([...mirrorItems, { label: target, value: target }])
+      setMirrorItems([
+        ...mirrorItems,
+        { label: target, value: target },
+      ])
     }
     setMirror(target)
     setTimeout(() => {
@@ -60,7 +65,13 @@ function useInstallSharedState() {
     }, 0)
   }
 
-  const [selectedMounts, setSelectedMounts] = useState(['config', 'log', 'scripts', 'repo', 'raw'])
+  const [selectedMounts, setSelectedMounts] = useState([
+    'config',
+    'log',
+    'scripts',
+    'repo',
+    'raw',
+  ])
   const [useCurrentDir, setUseCurrentDir] = useState(false)
   const [containerName, setContainerName] = useState('arcadia')
   const [hostname, setHostname] = useState('arcadia')
@@ -92,8 +103,12 @@ function useInstallSharedState() {
 
   const mountPrefix = useCurrentDir ? '.' : '/opt/arcadia'
 
-  const getComposeMountLines = () => (selectedMounts.length > 0 ? `\n    volumes:\n${selectedMounts.map(mount => `      - ${mountPrefix}/${mount}:/arcadia/${mount}`).join('\n')}` : '')
-  const getRunMountLines = () => (selectedMounts.length > 0 ? `\n${selectedMounts.map(mount => `-v ${useCurrentDir ? '$(pwd)' : '/opt/arcadia'}/${mount}:/arcadia/${mount} \\`).join('\n')}` : '')
+  const getComposeMountLines = () => (selectedMounts.length > 0
+    ? `\n    volumes:\n${selectedMounts.map(mount => `      - ${mountPrefix}/${mount}:/arcadia/${mount}`).join('\n')}`
+    : '')
+  const getRunMountLines = () => (selectedMounts.length > 0
+    ? `\n${selectedMounts.map(mount => `-v ${useCurrentDir ? '$(pwd)' : '/opt/arcadia'}/${mount}:/arcadia/${mount} \\`).join('\n')}`
+    : '')
 
   return {
     isMobile,
@@ -258,7 +273,18 @@ function PopoverContent({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
               <span>挂载至当前目录</span>
               <Switch size="small" checked={useCurrentDir} onChange={setUseCurrentDir} />
             </Flex>
-            <Checkbox.Group style={{ userSelect: 'none', marginTop: '2px', display: 'flex', gap: '8px', maxWidth: '212px' }} options={mountOptions} value={selectedMounts} onChange={setSelectedMounts} />
+            <Checkbox.Group
+              style={{
+                userSelect: 'none',
+                marginTop: '2px',
+                display: 'flex',
+                gap: '8px',
+                maxWidth: '212px',
+              }}
+              options={mountOptions}
+              value={selectedMounts}
+              onChange={setSelectedMounts}
+            />
           </Flex>
         </Col>
       </Row>
@@ -289,7 +315,16 @@ ${mirror || 'docker.io/'}supermanito/arcadia`
 
   return (
     <div>
-      <Space wrap size="small" style={{ paddingBottom: '10px', lineHeight: '0', justifyContent: 'space-between', width: '100%' }}>
+      <Space
+        wrap
+        size="small"
+        style={{
+          paddingBottom: '10px',
+          lineHeight: '0',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         <Segmented
           className="select-none"
           options={[
@@ -300,17 +335,26 @@ ${mirror || 'docker.io/'}supermanito/arcadia`
           onChange={(value) => { setType(value) }}
         />
         <Popover
-          trigger={!isMobile ? 'click' : 'hover'}
-          placement={!isMobile ? 'leftTop' : undefined}
+          trigger={!isMobile
+            ? 'click'
+            : 'hover'}
+          placement={!isMobile
+            ? 'leftTop'
+            : undefined}
           content={<PopoverContent s={s} />}
         >
           <Button type="text" color="default" variant="filled" icon={<Icon size={20}>line-md:cog-loop</Icon>} style={{ padding: '0 4px' }}>
-            { !isMobile ? '高级配置' : undefined }
+            { !isMobile
+              ? '高级配置'
+              : undefined }
           </Button>
         </Popover>
       </Space>
       <div>
-        <CodeBlock code={type === 'docker' ? docker : podman} />
+        <CodeBlock code={type === 'docker'
+          ? docker
+          : podman}
+        />
       </div>
     </div>
   )
@@ -320,10 +364,14 @@ function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
   const { isMobile, getComposeMountLines, mirror, containerName, hostname, network, port, useCurrentDir } = s
   const [type, setType] = useState('docker-compose-v2') // 类型
 
-  const composeFileName = type === 'podman-compose' ? 'podman-compose.yaml' : 'docker-compose.yaml'
+  const composeFileName = type === 'podman-compose'
+    ? 'podman-compose.yaml'
+    : 'docker-compose.yaml'
   const composeFileContent = type === 'podman-compose'
     ? `services:\n  arcadia:\n    image: ${mirror || 'docker.io/'}supermanito/arcadia\n    container_name: ${containerName}\n    hostname: ${hostname}\n    tty: true\n    cap_add:\n      - SYS_PTRACE\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
-    : `${type === 'docker-compose-v1' ? 'version: \'2.0\'\n' : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    cap_add:\n      - SYS_PTRACE\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
+    : `${type === 'docker-compose-v1'
+      ? 'version: \'2.0\'\n'
+      : ''}services:\n  arcadia:\n    image: ${mirror}supermanito/arcadia\n    container_name: ${containerName}\n    hostname: ${hostname}\n    restart: always\n    tty: true\n    cap_add:\n      - SYS_PTRACE\n    network_mode: ${network}\n    ports:\n      - ${port}:5678${getComposeMountLines()}`
 
   return (
     <div>
@@ -331,20 +379,38 @@ function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
         <Segmented
           className="select-none"
           options={[
-            { label: isMobile ? 'V2' : 'Docker V2', value: 'docker-compose-v2', icon: <DockerIcon /> },
-            { label: isMobile ? 'V1' : 'Docker V1', value: 'docker-compose-v1', icon: <DockerIcon /> },
-            { label: isMobile ? 'Podman' : 'Podman', value: 'podman-compose', icon: <PodmanIcon /> },
+            {
+              label: isMobile ? 'V2' : 'Docker V2',
+              value: 'docker-compose-v2',
+              icon: <DockerIcon />,
+            },
+            {
+              label: isMobile ? 'V1' : 'Docker V1',
+              value: 'docker-compose-v1',
+              icon: <DockerIcon />,
+            },
+            {
+              label: isMobile ? 'Podman' : 'Podman',
+              value: 'podman-compose',
+              icon: <PodmanIcon />,
+            },
           ]}
           value={type}
           onChange={(value) => { setType(value) }}
         />
         <Popover
-          trigger={!isMobile ? 'click' : 'hover'}
-          placement={!isMobile ? 'leftTop' : undefined}
+          trigger={!isMobile
+            ? 'click'
+            : 'hover'}
+          placement={!isMobile
+            ? 'leftTop'
+            : undefined}
           content={<PopoverContent s={s} />}
         >
           <Button type="text" color="default" variant="filled" icon={<Icon size={20}>line-md:cog-loop</Icon>} style={{ padding: '0 4px' }}>
-            { !isMobile ? '高级配置' : undefined }
+            { !isMobile
+              ? '高级配置'
+              : undefined }
           </Button>
         </Popover>
       </Space>
@@ -352,7 +418,9 @@ function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
         <ul>
           <li>新建 YAML 文件</li>
           <CodeBlock
-            code={`${useCurrentDir ? `touch ${composeFileName}` : `mkdir -p /opt/arcadia && cd /opt/arcadia\ntouch ${composeFileName}`}`}
+            code={`${useCurrentDir
+              ? `touch ${composeFileName}`
+              : `mkdir -p /opt/arcadia && cd /opt/arcadia\ntouch ${composeFileName}`}`}
           />
           <li>
             编辑
@@ -361,7 +429,10 @@ function ComposeInstall({ s }: { s: ReturnType<typeof useInstallSharedState> }) 
           </li>
           <CodeBlock code={composeFileContent} />
           <li>启动容器</li>
-          <CodeBlock code={type === 'podman-compose' ? `podman-compose up -d` : `docker-compose up -d`} />
+          <CodeBlock code={type === 'podman-compose'
+            ? `podman-compose up -d`
+            : `docker-compose up -d`}
+          />
         </ul>
       </div>
     </div>
@@ -404,12 +475,16 @@ export function InstallCommand() {
         token: {
           colorPrimary: primaryColor,
           colorLink: primaryColor,
-          colorBorderSecondary: resolvedTheme === 'dark' ? '#6663' : '#cccccc80',
+          colorBorderSecondary: resolvedTheme === 'dark'
+            ? '#6663'
+            : '#cccccc80',
           borderRadius: 8,
         },
         components: {
           Segmented: {
-            trackBg: resolvedTheme === 'dark' ? '#000' : '#e5e5e5',
+            trackBg: resolvedTheme === 'dark'
+              ? '#000'
+              : '#e5e5e5',
           },
         },
       }}
@@ -444,7 +519,9 @@ export function InstallCommand() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {activeKey === 'cli' ? <CliInstall s={s} /> : <ComposeInstall s={s} />}
+            {activeKey === 'cli'
+              ? <CliInstall s={s} />
+              : <ComposeInstall s={s} />}
           </motion.div>
         </div>
       </motion.div>

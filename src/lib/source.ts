@@ -11,7 +11,10 @@ import { blogPageSchema } from '@/lib/blog'
 export const source = loader({
   baseUrl: '/docs',
   source: docs.toFumadocsSource(),
-  plugins: [lucideIconsPlugin(), openapiPlugin()],
+  plugins: [
+    lucideIconsPlugin(),
+    openapiPlugin(),
+  ],
 })
 
 export function getPageImageUrl(page: (typeof source)['$inferPage']) {

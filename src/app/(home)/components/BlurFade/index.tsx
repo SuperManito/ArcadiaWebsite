@@ -43,13 +43,19 @@ export default function BlurFade({
   const isInView = !inView || inViewResult
   const defaultVariants: Variants = {
     hidden: {
-      [direction === 'left' || direction === 'right' ? 'x' : 'y']:
-        direction === 'right' || direction === 'down' ? -offset : offset,
+      [direction === 'left' || direction === 'right'
+        ? 'x'
+        : 'y']:
+        direction === 'right' || direction === 'down'
+          ? -offset
+          : offset,
       opacity: 0,
       filter: `blur(${blur})`,
     },
     visible: {
-      [direction === 'left' || direction === 'right' ? 'x' : 'y']: 0,
+      [direction === 'left' || direction === 'right'
+        ? 'x'
+        : 'y']: 0,
       opacity: 1,
       filter: 'blur(0px)',
     },

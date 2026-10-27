@@ -47,7 +47,11 @@ function ConcurrencyVisual() {
       <circle cx="118" cy="95" r="3.5" fill="#60a5fa" />
 
       {/* 并行任务终点 */}
-      {[[42, '0'], [95, '0.4s'], [148, '0.8s']].map(([y, delay]) => (
+      {[
+        [42, '0'],
+        [95, '0.4s'],
+        [148, '0.8s'],
+      ].map(([y, delay]) => (
         <g key={y as number}>
           <circle cx="348" cy={y as number} r="8" fill="#3b82f6" opacity="0.25" className="animate-pulse" style={{ animationDelay: delay as string }} />
           <circle cx="348" cy={y as number} r="3.5" fill="#60a5fa" />

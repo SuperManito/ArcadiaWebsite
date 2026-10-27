@@ -92,7 +92,9 @@ function Item({
   item: TypeNode
 }) {
   const [open, setOpen] = useState(false)
-  const id = parentId ? `${parentId}-${name}` : undefined
+  const id = parentId
+    ? `${parentId}-${name}`
+    : undefined
 
   useEffect(() => {
     const hash = window.location.hash
