@@ -3,6 +3,7 @@
 import { useTranslations } from '@fuma-translate/react'
 import { buttonVariants } from 'fumadocs-ui/components/ui/button'
 import { X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/cn'
 import { releaseNotice } from '@/lib/layout.shared'
@@ -26,6 +27,7 @@ const maskImage
  */
 export default function Banner() {
   const t = useTranslations({ note: 'banner' })
+  const pathname = usePathname()
   const [open, setOpen] = useState(true)
 
   useEffect(() => {
@@ -53,7 +55,9 @@ export default function Banner() {
       id={bannerId}
       className={cn(
         'sticky top-0 z-40 flex flex-row items-center justify-center px-4 text-center text-sm font-medium',
-        'bg-fd-background',
+        pathname === '/'
+          ? 'dark text-fd-foreground bg-neutral-950'
+          : 'bg-fd-background',
       )}
       style={{ height }}
     >

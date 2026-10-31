@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       }}
       githubUrl={gitConfig.url}
       links={homeLinks()}
-      className="dark theme-blue bg-neutral-950 scheme-dark [--color-fd-background:var(--color-neutral-950)]"
+      className="dark theme-blue bg-neutral-950 text-fd-foreground scheme-dark [--color-fd-background:var(--color-neutral-950)]"
     >
       {children}
     </HomeLayout>
